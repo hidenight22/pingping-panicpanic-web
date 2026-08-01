@@ -4,7 +4,7 @@
   'use strict';
 
   var app = global.PingPanic || {};
-  app.version = '0.4.17';
+  app.version = '0.4.18';
   app.data = app.data || {};
   app.core = app.core || {};
   app.entities = app.entities || {};
@@ -1924,6 +1924,7 @@
     this.canvas = canvas;
     this.keys = {};
     this.pointer = { active: false, id: null, startX: 0, startY: 0, x: 0, y: 0 };
+    this.pointerRect = null;
     this.sonarRequested = false;
     this.onPause = onPause;
     this.bind();
@@ -1943,6 +1944,7 @@
       self.pointer.id = event.pointerId;
       self.pointer.startX = self.pointer.x = event.clientX;
       self.pointer.startY = self.pointer.y = event.clientY;
+      self.pointerRect = self.measureCanvasRect();
       if (self.canvas.setPointerCapture) self.canvas.setPointerCapture(event.pointerId);
     };
     this.pointerMove = function (event) {
@@ -1954,9 +1956,16 @@
       if (self.pointer.id !== event.pointerId) return;
       self.releasePointerCapture();
       self.pointer = { active: false, id: null, startX: 0, startY: 0, x: 0, y: 0 };
+      self.pointerRect = null;
     };
+    this.invalidatePointerRect = function () { self.pointerRect = null; };
     window.addEventListener('keydown', this.keyDown);
     window.addEventListener('keyup', this.keyUp);
+    window.addEventListener('resize', this.invalidatePointerRect);
+    window.addEventListener('orientationchange', this.invalidatePointerRect);
+    if (window.visualViewport && window.visualViewport.addEventListener) {
+      window.visualViewport.addEventListener('resize', this.invalidatePointerRect);
+    }
     this.canvas.addEventListener('pointerdown', this.pointerDown);
     this.canvas.addEventListener('pointermove', this.pointerMove);
     this.canvas.addEventListener('pointerup', this.pointerEnd);
@@ -1992,8 +2001,11 @@
       /* 이미 브라우저가 capture를 해제한 경우도 중립 상태로 계속 복구합니다. */
     }
   };
+  Input.prototype.measureCanvasRect = function () { return this.canvas.getBoundingClientRect(); };
   Input.prototype.canvasPoint = function (clientX, clientY, world) {
-    var rect = this.canvas.getBoundingClientRect();
+    var rect = this.pointer.active
+      ? (this.pointerRect || (this.pointerRect = this.measureCanvasRect()))
+      : this.measureCanvasRect();
     return {
       x: PP.core.utils.clamp((clientX - rect.left) / Math.max(1, rect.width) * world.width, 0, world.width),
       y: PP.core.utils.clamp((clientY - rect.top) / Math.max(1, rect.height) * world.height, 0, world.height)
@@ -2003,6 +2015,7 @@
     this.releasePointerCapture();
     this.keys = {};
     this.pointer = { active: false, id: null, startX: 0, startY: 0, x: 0, y: 0 };
+    this.pointerRect = null;
     this.sonarRequested = false;
   };
 
@@ -2755,15 +2768,17 @@
       pulse.life -= dt;
       revealables.forEach(function (entity) {
         if (entity.owner === 'extracted') return;
+        if (pulse.contactedEntities.indexOf(entity) >= 0) return;
         var obstacle = entity.entityKind === 'obstacle';
         var distance = obstacle ? PP.core.utils.pointToObbDistance(pulse, entity) : PP.core.utils.distance(pulse, entity);
         var edgeDistance = obstacle ? distance : Math.max(0, distance - (entity.radius || 0));
         var reached = edgeDistance >= pulse.previousRadius && edgeDistance <= pulse.radius;
+        if (!reached) return;
         var obstacleCenter = obstacle ? PP.core.utils.obbCenter(entity) : entity;
         var visiblePath = obstacle
           ? PP.core.utils.hasLineOfSight(pulse, obstacleCenter, walls.filter(function (wall) { return wall !== entity; }))
           : PP.core.utils.hasLineOfSight(pulse, entity, walls);
-        if (!reached || !visiblePath || pulse.contactedEntities.indexOf(entity) >= 0) return;
+        if (!visiblePath) return;
         pulse.contactedEntities.push(entity);
         entity.revealedUntil = Math.max(entity.revealedUntil || 0, now + pulse.revealSeconds);
         if (onReach) onReach(pulse, entity);
@@ -4740,6 +4755,7 @@
     var hubModel = null;
     var stageSelectMaximum = 1;
     var visibilityHidden = !!(PP.platform.current.lifecycle.isHidden && PP.platform.current.lifecycle.isHidden());
+    var hudUpdatePending = false;
     var simulationClock = new PP.core.FixedStepClock(
       PP.data.config.runtime.fixedStepSeconds,
       PP.data.config.runtime.maximumFrameDeltaSeconds,
@@ -5454,6 +5470,7 @@
 
     function update(dt) {
       if (!stage || stage.status !== 'playing' || paused || ads.inFlight) return;
+      hudUpdatePending = true;
       stage.elapsed += dt;
       ads.updateActive(dt);
       stage.player.power = Math.max(0, stage.player.power - (100 / stage.definition.timeLimit)
@@ -5499,7 +5516,6 @@
         if (stage.mode === 'abyss') endAbyss(PP.core.i18n.t('toast.powerEmpty'));
         else finish(false, PP.core.i18n.t('toast.powerEmpty'));
       }
-      ui.setHud(stage);
     }
 
     function showResult(won, resultMessage, stars) {
@@ -5576,7 +5592,6 @@
       stage.damageFeedback = { blinkUntil: 0, shakeUntil: 0, impactUntil: 0, lastSource: '' };
       ui.setPaused(false);
       ui.setAbyssMode(true);
-      ui.setHud(stage);
       ui.toast(PP.core.i18n.t('toast.abyssSegment', {
         segment: nextIndex + 1, tier: stage.definition.difficultyTier
       }));
@@ -5687,6 +5702,9 @@
       var color = style.color || (pulse.source === 'rival' ? '#ff9a6b' : (pulse.boosted ? '#ffd369' : '#57e3d6'));
       var alpha = style.alpha === undefined ? Math.max(0, pulse.life / PP.data.config.sonar.waveSeconds) : style.alpha;
       var segments = 120;
+      var pulseObstacles = pulse.source === 'chorus'
+        ? stage.walls.filter(function (wall) { return wall.blockChorusWave !== false; })
+        : stage.walls.filter(function (wall) { return wall.blockSignals !== false; });
       context.save();
       context.strokeStyle = color;
       context.lineWidth = style.lineWidth || (pulse.boosted ? 12 : (pulse.source === 'rival' ? 5 : 8));
@@ -5696,9 +5714,6 @@
       for (var i = 0; i < segments; i += 1) {
         var a = i * Math.PI * 2 / segments;
         var b = (i + 0.82) * Math.PI * 2 / segments;
-        var pulseObstacles = pulse.source === 'chorus'
-          ? stage.walls.filter(function (wall) { return wall.blockChorusWave !== false; })
-          : stage.walls.filter(function (wall) { return wall.blockSignals !== false; });
         if (!PP.core.utils.waveArcVisible(pulse, a, pulse.radius, pulseObstacles, context.lineWidth)) continue;
         context.beginPath(); context.arc(pulse.x, pulse.y, pulse.radius, a, b); context.stroke();
       }
@@ -6110,6 +6125,10 @@
       var frameDelta = Math.max(0, (now - lastFrame) / 1000);
       lastFrame = now;
       simulationClock.advance(frameDelta, update);
+      if (hudUpdatePending) {
+        hudUpdatePending = false;
+        if (stage) ui.setHud(stage);
+      }
       render();
       window.requestAnimationFrame(frame);
     }
