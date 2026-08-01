@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176 176" width="176" height="176" role="img" aria-labelledby="title desc">
+  <title id="title">합창 감시자</title>
+  <desc id="desc">하나의 원형 외곽 골격 안에서 세 감시 구체가 합창하는 수호자</desc>
+  <circle cx="88" cy="88" r="77" fill="#27323a" stroke="#9fb7b8" stroke-width="8"/>
+  <circle cx="88" cy="88" r="62" fill="#111a21" stroke="#b96b8a" stroke-width="5" stroke-dasharray="24 12"/>
+  <g fill="none" stroke="#d882a1" stroke-width="5" stroke-linejoin="round">
+    <path d="M88 47L53 108h70z"/>
+    <path d="M88 20v15M25 124l14-8M151 124l-14-8" stroke="#9fb7b8" stroke-width="7"/>
+  </g>
+  <g fill="#f0a4bd" stroke="#4b2b3a" stroke-width="5">
+    <circle cx="88" cy="47" r="12"/>
+    <circle cx="53" cy="108" r="12"/>
+    <circle cx="123" cy="108" r="12"/>
+  </g>
+  <circle cx="88" cy="88" r="8" fill="#ffe0e9"/>
+</svg>

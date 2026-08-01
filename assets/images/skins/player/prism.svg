@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-labelledby="title desc">
+  <title id="title">프리즘 회수 드론 외형</title>
+  <desc id="desc">측면 결정 날개와 쌍갈래 집게를 단 능력치 중립 링형 외형</desc>
+  <g stroke-linejoin="round">
+    <path d="M39 28L45 3l15 21-8 15zM39 100l6 25 15-21-8-15z" fill="#8c82bf" stroke="#d9ceff" stroke-width="4"/>
+    <path d="M22 43L5 28l6 29M22 85L5 100l6-29" fill="#253850" stroke="#9e91d0" stroke-width="5"/>
+    <path d="M79 30l10-18 8 24-10 10M79 98l10 18 8-24-10-10" fill="#577c96" stroke="#bbf4ee" stroke-width="4"/>
+  </g>
+  <g fill="none" stroke-linejoin="round">
+    <circle cx="60" cy="64" r="43" stroke="#57e3d6" stroke-width="11" stroke-dasharray="38 6 25 6"/>
+    <circle cx="60" cy="64" r="31" stroke="#b7a8e6" stroke-opacity=".7" stroke-width="5" stroke-dasharray="20 10"/>
+    <path d="M29 36l13-13 9 14M29 92l13 13 9-14M71 25l14 15M71 103l14-15" stroke="#d7f9f5" stroke-width="5"/>
+    <path d="M88 41l28 8-17 15 17 15-28 8 9-23z" fill="#c8fff8" stroke="#57e3d6" stroke-width="4"/>
+    <path d="M99 64h22M104 52l16-8M104 76l16 8" stroke="#e9fffc" stroke-width="4"/>
+  </g>
+  <path d="M55 18l5-8 5 8-5 8zM55 110l5-8 5 8-5 8z" fill="#e7dcff"/>
+  <circle cx="60" cy="64" r="5" fill="#d9fffb"/>
+</svg>

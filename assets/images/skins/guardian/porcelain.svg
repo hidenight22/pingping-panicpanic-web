@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176 176" width="176" height="176" role="img" aria-labelledby="title desc">
+  <title id="title">백자 수호자 공통 내부 하이라이트</title>
+  <desc id="desc">기본 수호자 외곽 골격을 넘지 않는 네 장 백자판과 중앙 금계선 overlay</desc>
+  <g clip-path="url(#guardian-interior-safe)">
+    <g fill="#dce8e4" stroke="#809899" stroke-width="4" stroke-linejoin="round">
+      <path d="M58 59l22-10 8 23-16 13-20-8z"/>
+      <path d="M118 59L96 49l-8 23 16 13 20-8z"/>
+      <path d="M58 117l22 10 8-23-16-13-20 8z"/>
+      <path d="M118 117l-22 10-8-23 16-13 20 8z"/>
+    </g>
+    <path d="M88 55l9 18-9 15 10 17-10 16" fill="none" stroke="#d86f99" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M88 76l12 12-12 12-12-12z" fill="#ffe6ee" stroke="#c86c8d" stroke-width="4"/>
+  </g>
+  <defs><clipPath id="guardian-interior-safe"><path d="M88 54l34 34-34 34-34-34z"/></clipPath></defs>
+</svg>

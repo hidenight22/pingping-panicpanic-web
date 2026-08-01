@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title desc">
+  <title id="title">라이벌 공명 파동</title>
+  <desc id="desc">호박색 점선과 바깥 방향 갈매기표의 라이벌 신호</desc>
+  <g fill="none" stroke-linecap="square">
+    <circle cx="128" cy="128" r="104" stroke="#ff9a6b" stroke-opacity=".15" stroke-width="13"/>
+    <circle cx="128" cy="128" r="102" stroke="#ffad7f" stroke-width="6" stroke-dasharray="21 14"/>
+    <path d="M128 17l14 18-14 18M239 128l-18 14-18-14M128 239l-14-18 14-18M17 128l18-14 18 14" stroke="#ffcfaa" stroke-width="5"/>
+  </g>
+</svg>

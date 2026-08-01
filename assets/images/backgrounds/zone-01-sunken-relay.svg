@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1500" width="1000" height="1500" role="img" aria-labelledby="title desc">
+  <title id="title">침강 중계기지 배경</title>
+  <desc id="desc">깊은 청록 수몰 기지의 아치와 끊긴 격자 실루엣</desc>
+  <defs>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#082c3a"/>
+      <stop offset="0.48" stop-color="#041923"/>
+      <stop offset="1" stop-color="#01080d"/>
+    </linearGradient>
+    <linearGradient id="ruin" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#173b44"/>
+      <stop offset="1" stop-color="#0a222b"/>
+    </linearGradient>
+    <pattern id="silt" width="160" height="190" patternUnits="userSpaceOnUse">
+      <circle cx="28" cy="36" r="3" fill="#74c7c2" opacity=".12"/>
+      <circle cx="128" cy="124" r="2" fill="#d5f2ef" opacity=".08"/>
+    </pattern>
+  </defs>
+  <rect width="1000" height="1500" fill="url(#sea)"/>
+  <rect width="1000" height="1500" fill="url(#silt)"/>
+  <g fill="url(#ruin)" stroke="#87b7b6" stroke-opacity=".11" stroke-width="5">
+    <path d="M0 0h170v340H95v190H0z"/>
+    <path d="M1000 0H820v270h78v265h102z"/>
+    <path d="M0 1040h220v460H0z"/>
+    <path d="M1000 970H790v530h210z"/>
+    <path d="M248 1500v-172c0-134 109-243 243-243h18c134 0 243 109 243 243v172h-98v-172c0-80-65-145-145-145h-18c-80 0-145 65-145 145v172z"/>
+  </g>
+  <g fill="none" stroke="#72b8b4" stroke-opacity=".13" stroke-width="7">
+    <path d="M74 740h190v-94h190"/>
+    <path d="M926 684H735v122H572"/>
+    <path d="M215 235h210v116h164"/>
+    <path d="M785 380H644v115H488"/>
+    <circle cx="500" cy="692" r="155" stroke-dasharray="150 42 58 64"/>
+    <circle cx="500" cy="692" r="103" stroke-dasharray="82 34"/>
+  </g>
+  <g fill="#8ad7d0" opacity=".11">
+    <rect x="64" y="714" width="36" height="12" rx="6"/>
+    <rect x="216" y="714" width="36" height="12" rx="6"/>
+    <rect x="744" y="655" width="36" height="12" rx="6"/>
+    <path d="M476 665l24-14 24 14-24 14z"/>
+  </g>
+  <path d="M0 910c170-44 304 23 463-9 171-35 318-5 537-58v657H0z" fill="#021117" opacity=".36"/>
+</svg>

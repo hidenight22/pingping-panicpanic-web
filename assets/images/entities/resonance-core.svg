@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" width="72" height="72" role="img" aria-labelledby="title desc">
+  <title id="title">공명 코어</title>
+  <desc id="desc">금빛 마름모 핵과 서로 교차하는 이중 타원 궤도</desc>
+  <g fill="none" stroke-linecap="round">
+    <ellipse cx="36" cy="36" rx="29" ry="13" stroke="#f2c760" stroke-opacity=".54" stroke-width="3.5" transform="rotate(30 36 36)"/>
+    <ellipse cx="36" cy="36" rx="29" ry="13" stroke="#fff1b0" stroke-opacity=".38" stroke-width="3.5" transform="rotate(-30 36 36)"/>
+    <circle cx="36" cy="36" r="23" stroke="#ffd369" stroke-opacity=".16" stroke-width="5"/>
+  </g>
+  <path d="M36 15l17 21-17 21-17-21z" fill="#ffd369" stroke="#fff3bd" stroke-width="3"/>
+  <path d="M36 24l9 12-9 12-9-12z" fill="#fff6cf"/>
+</svg>

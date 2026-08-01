@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192" role="img" aria-labelledby="title desc">
+  <title id="title">공명 흡수장</title>
+  <desc id="desc">소나 에너지를 삼키는 안쪽 화살표와 끊긴 검은 고리</desc>
+  <g fill="none" stroke-linejoin="round">
+    <circle cx="96" cy="96" r="77" fill="#070b13" fill-opacity=".72" stroke="#7a6f99" stroke-opacity=".48" stroke-width="10" stroke-dasharray="48 24"/>
+    <circle cx="96" cy="96" r="42" stroke="#b79cff" stroke-opacity=".28" stroke-width="8"/>
+    <path d="M31 96h36l-15-15m15 15-15 15M161 96h-36l15-15m-15 15 15 15M96 31v36L81 52m15 15 15-15M96 161v-36l-15 15m15-15 15 15" stroke="#b79cff" stroke-opacity=".7" stroke-width="7"/>
+  </g>
+  <path d="M96 78l18 18-18 18-18-18z" fill="#2e2744"/>
+</svg>

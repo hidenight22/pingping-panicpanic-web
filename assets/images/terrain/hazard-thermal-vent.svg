@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 256" width="192" height="256" role="img" aria-labelledby="title desc">
+  <title id="title">열수 분출구</title>
+  <desc id="desc">비활성 저채도 암적색을 기준으로 런타임 적색 tint와 제한 glow를 받는 상태 중립 열수 분출구</desc>
+  <path d="M22 246l17-104 30-36h54l30 36 17 104z" fill="#291a20" stroke="#75504d" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M39 142l30-36h54l30 36-14 28H53z" fill="#4b292d" fill-opacity=".58"/>
+  <path d="M64 110l10-50 22-42 22 42 10 50z" fill="#5a3033" fill-opacity=".28"/>
+  <g fill="none" stroke="#74474a" stroke-linecap="round">
+    <path d="M67 107c-19-31 9-45-2-72M96 103c-15-31 14-50 0-82M125 107c18-31-9-45 2-72" stroke-opacity=".48" stroke-width="7"/>
+    <path d="M58 177h76" stroke="#8a5551" stroke-opacity=".72" stroke-width="6" stroke-dasharray="14 9"/>
+  </g>
+  <path d="M69 115h54l-13 22H82z" fill="#160f13" stroke="#704541" stroke-width="5" stroke-linejoin="round"/>
+</svg>

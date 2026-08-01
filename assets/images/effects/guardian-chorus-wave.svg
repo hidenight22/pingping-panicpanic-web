@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title desc">
+  <title id="title">합창 감시자 원형파동</title>
+  <desc id="desc">자홍 삼각 경고편이 연결된 공격 파동</desc>
+  <circle cx="128" cy="128" r="105" fill="none" stroke="#d86f99" stroke-opacity=".18" stroke-width="16"/>
+  <circle cx="128" cy="128" r="104" fill="none" stroke="#f08aae" stroke-width="6" stroke-dasharray="30 18 10 18"/>
+  <g fill="#ffc2d5">
+    <path d="M128 13l12 21h-24z"/>
+    <path d="M243 128l-21 12v-24z"/>
+    <path d="M128 243l-12-21h24z"/>
+    <path d="M13 128l21-12v24z"/>
+  </g>
+</svg>

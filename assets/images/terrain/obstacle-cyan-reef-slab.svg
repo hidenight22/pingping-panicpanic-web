@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 192" width="256" height="192" role="img" aria-labelledby="title desc">
+  <title id="title">청록 경계 암초 판</title>
+  <desc id="desc">작은 화면에서도 충돌 경계가 읽히는 불투명 암초 장애물</desc>
+  <path d="M9 165L27 72l38-18 24-38 54 17 28-20 50 39 26 113-38 18H48z" fill="#082b34" stroke="#57e3d6" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M27 72l50 20 36-31 42 25 66-34M48 165l33-42 44 21 34-31 50 70" fill="none" stroke="#96d8d2" stroke-opacity=".48" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M28 157h194" stroke="#c8fff8" stroke-opacity=".38" stroke-width="4" stroke-dasharray="24 14"/>
+  <g fill="#57e3d6">
+    <path d="M65 54l7-17 8 20-9 8z"/>
+    <path d="M171 36l8-16 7 21-9 7z"/>
+    <path d="M219 72l7-14 7 19-8 6z"/>
+  </g>
+</svg>

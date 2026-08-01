@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "audio": [
+    { "id": "ambient", "src": "assets/audio/ambient-loop.wav", "volume": 0.16, "loop": true },
+    { "id": "ui", "src": "assets/audio/ui.wav", "volume": 0.32 },
+    { "id": "sonar", "src": "assets/audio/sonar.wav", "volume": 0.48 },
+    { "id": "core", "src": "assets/audio/core.wav", "volume": 0.45 },
+    { "id": "guardian-alert", "src": "assets/audio/guardian-alert.wav", "volume": 0.5 },
+    { "id": "rival-shot", "src": "assets/audio/rival-shot.wav", "volume": 0.42 },
+    { "id": "extract", "src": "assets/audio/extract.wav", "volume": 0.48 },
+    { "id": "hit", "src": "assets/audio/hit.wav", "volume": 0.52 },
+    { "id": "win", "src": "assets/audio/win.wav", "volume": 0.5 },
+    { "id": "fail", "src": "assets/audio/fail.wav", "volume": 0.5 }
+  ]
+}

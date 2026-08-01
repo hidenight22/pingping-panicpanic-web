@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 256" width="160" height="256" role="img" aria-labelledby="title desc">
+  <title id="title">라이벌 회수 경계</title>
+  <desc id="desc">사각 절단선과 바깥을 향하는 호박색 갈매기표</desc>
+  <rect x="22" y="10" width="116" height="236" rx="8" fill="#1d1720" fill-opacity=".62" stroke="#ff9a6b" stroke-opacity=".7" stroke-width="8" stroke-dasharray="24 16"/>
+  <g fill="none" stroke="#ffcfaa" stroke-width="12" stroke-linejoin="bevel">
+    <path d="M48 56l38 32-38 32"/>
+    <path d="M74 136l38 32-38 32"/>
+  </g>
+  <path d="M132 0v256" stroke="#ff7652" stroke-width="10"/>
+</svg>

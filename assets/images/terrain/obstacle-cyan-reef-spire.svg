@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 256" width="192" height="256" role="img" aria-labelledby="title desc">
+  <title id="title">청록 경계 암초 첨탑</title>
+  <desc id="desc">세로 통로에서 불투명 실루엣과 청록 외곽으로 구분되는 장애물</desc>
+  <path d="M18 244L30 139l23-31 8-62L96 9l27 48 9 51 29 38 13 98z" fill="#072832" stroke="#57e3d6" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M31 139l41 18 24-35 27 30 38-6M53 108l31 11 12-45 22 40 14-6M45 213l42-27 32 22 45-25" fill="none" stroke="#8dc9c7" stroke-opacity=".5" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M42 235h111" stroke="#c8fff8" stroke-opacity=".42" stroke-width="4" stroke-dasharray="20 12"/>
+  <g fill="#57e3d6">
+    <path d="M56 101l-16-8 18-7 8 9z"/>
+    <path d="M130 104l17-9-18-7-8 9z"/>
+    <path d="M83 184l13-18 13 18-13 10z"/>
+  </g>
+</svg>

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1500" width="1000" height="1500" role="img" aria-labelledby="title desc">
+  <title id="title">적열 동력수로 배경</title>
+  <desc id="desc">흑자색 제련 수로와 육각 용광로 실루엣</desc>
+  <defs>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#321c2e"/>
+      <stop offset=".52" stop-color="#160f1d"/>
+      <stop offset="1" stop-color="#08080e"/>
+    </linearGradient>
+    <linearGradient id="heat" x1="0" y1="1" x2="0" y2="0">
+      <stop stop-color="#c94d35" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#efb34d" stop-opacity="0"/>
+    </linearGradient>
+    <pattern id="embers" width="170" height="220" patternUnits="userSpaceOnUse">
+      <path d="M34 178l4-18 4 18-4 10z" fill="#ff8b55" opacity=".1"/>
+      <circle cx="135" cy="76" r="3" fill="#ffd279" opacity=".09"/>
+    </pattern>
+  </defs>
+  <rect width="1000" height="1500" fill="url(#sea)"/>
+  <rect width="1000" height="1500" fill="url(#embers)"/>
+  <g fill="#251826" stroke="#c26a53" stroke-opacity=".13" stroke-width="6">
+    <path d="M0 0h215v455l-74 80H0z"/>
+    <path d="M1000 0H785v455l74 80h141z"/>
+    <path d="M0 1050h170l80 100v350H0z"/>
+    <path d="M1000 1050H830l-80 100v350h250z"/>
+  </g>
+  <g fill="none" stroke="#c76b50" stroke-opacity=".16" stroke-width="18">
+    <path d="M70 792h245l54-54h262l54 54h245"/>
+    <path d="M100 865h234l52 52h228l52-52h234"/>
+  </g>
+  <g fill="#3b222c" stroke="#e08757" stroke-opacity=".16" stroke-width="7">
+    <path d="M500 216l144 83v166l-144 83-144-83V299z"/>
+    <path d="M500 1092l126 73v146l-126 73-126-73v-146z"/>
+  </g>
+  <g fill="none" stroke="#ffad66" stroke-opacity=".14" stroke-width="8">
+    <circle cx="500" cy="382" r="82" stroke-dasharray="70 28"/>
+    <circle cx="500" cy="1238" r="64" stroke-dasharray="44 24"/>
+  </g>
+  <path d="M346 1500c12-264 64-384 154-384s142 120 154 384z" fill="url(#heat)"/>
+  <g fill="#ff7652" opacity=".12">
+    <path d="M472 1040l28-48 28 48-28 24z"/>
+    <path d="M236 730l20-34 20 34-20 18z"/>
+    <path d="M764 730l-20-34-20 34 20 18z"/>
+  </g>
+</svg>

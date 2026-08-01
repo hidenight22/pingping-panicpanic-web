@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176 176" width="176" height="176" role="img" aria-labelledby="title desc">
+  <title id="title">암초 수호자 공통 내부 하이라이트</title>
+  <desc id="desc">기본 수호자 외곽 골격 안쪽에만 합성하는 산호 가지와 결절 overlay</desc>
+  <g clip-path="url(#guardian-interior-safe)">
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M54 112c15-7 17-24 26-33 8-9 12-16 9-29M72 87L55 77m25 2-16-16M122 64c-14 7-17 23-26 32-8 9-12 17-9 30M104 89l17 10M96 97l16 16" stroke="#79ad96" stroke-width="8"/>
+      <path d="M62 119c16 8 36 8 52-1M62 57c16-8 36-8 52 1" stroke="#a3ccb7" stroke-width="5" stroke-dasharray="13 8"/>
+      <path d="M72 80l16 8-13 15M104 76L88 88l15 15" stroke="#d86f99" stroke-width="5"/>
+    </g>
+    <g fill="#b8dcc9" stroke="#315b50" stroke-width="3">
+      <circle cx="55" cy="77" r="6"/><circle cx="64" cy="63" r="5"/><circle cx="89" cy="50" r="6"/>
+      <circle cx="121" cy="99" r="6"/><circle cx="112" cy="113" r="5"/><circle cx="87" cy="126" r="6"/>
+    </g>
+    <circle cx="88" cy="88" r="8" fill="#ffd2df"/>
+  </g>
+  <defs><clipPath id="guardian-interior-safe"><path d="M88 54l34 34-34 34-34-34z"/></clipPath></defs>
+</svg>

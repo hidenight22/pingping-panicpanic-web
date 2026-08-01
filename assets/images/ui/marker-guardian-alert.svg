@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-labelledby="title desc">
+  <title id="title">수호자 위험 표식</title>
+  <desc id="desc">색 없이도 위험 역할이 읽히는 뾰족한 삼각 UI 표식</desc>
+  <path d="M32 5l28 51H4z" fill="#2c1620" stroke="#ff7891" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M32 19v20" stroke="#ffd1db" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="32" cy="48" r="4" fill="#ffd1db"/>
+</svg>

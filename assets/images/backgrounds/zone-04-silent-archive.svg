@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1500" width="1000" height="1500" role="img" aria-labelledby="title desc">
+  <title id="title">무음 기록해구 배경</title>
+  <desc id="desc">먹색 기록 회랑의 빈 문틀과 끊어진 회로</desc>
+  <defs>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#111c2a"/>
+      <stop offset=".48" stop-color="#070d16"/>
+      <stop offset="1" stop-color="#02050a"/>
+    </linearGradient>
+    <linearGradient id="wall" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#172430"/>
+      <stop offset="1" stop-color="#0b141f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1000" height="1500" fill="url(#sea)"/>
+  <g fill="url(#wall)" stroke="#a8bed2" stroke-opacity=".09" stroke-width="5">
+    <path d="M0 0h202v1500H0z"/>
+    <path d="M1000 0H798v1500h202z"/>
+    <path d="M282 166h436v82H364v226h-82z"/>
+    <path d="M718 1002H282v82h354v226h82z"/>
+  </g>
+  <g fill="none" stroke="#8fb7d2" stroke-opacity=".13" stroke-width="8" stroke-linecap="square">
+    <path d="M72 100v312h58v156m0 106v286H72v440"/>
+    <path d="M928 100v448h-58v228m0 106v218h58v300"/>
+    <path d="M334 540h84v-88h164v88h84"/>
+    <path d="M334 930h84v88h164v-88h84"/>
+    <rect x="374" y="598" width="252" height="274" rx="4" stroke-dasharray="112 46"/>
+  </g>
+  <g fill="#b6d7ea" opacity=".09">
+    <rect x="118" y="542" width="24" height="24"/>
+    <rect x="858" y="752" width="24" height="24"/>
+    <rect x="406" y="440" width="24" height="24"/>
+    <rect x="570" y="1006" width="24" height="24"/>
+  </g>
+  <g fill="none" stroke="#6e8da5" stroke-opacity=".09" stroke-width="3">
+    <path d="M248 0v1500M752 0v1500"/>
+    <path d="M0 742h1000" stroke-dasharray="24 38"/>
+  </g>
+</svg>

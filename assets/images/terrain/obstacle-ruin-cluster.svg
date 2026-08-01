@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 192" width="256" height="192" role="img" aria-labelledby="title desc">
+  <title id="title">유적 잔해 장애물</title>
+  <desc id="desc">회전과 반전에 대응하는 각진 저대비 잔해 묶음</desc>
+  <g fill="#0a252e" stroke="#66898c" stroke-opacity=".5" stroke-width="8" stroke-linejoin="round">
+    <path d="M7 172l34-73 63-19 24 92z"/>
+    <path d="M92 172l31-112 67 12 19 100z"/>
+    <path d="M172 172l17-74 46-43 14 117z"/>
+  </g>
+  <g fill="none" stroke="#a3c1be" stroke-opacity=".22" stroke-width="6">
+    <path d="M47 103l34 21 10 42M137 71l18 47 38 18M207 91l17 58"/>
+  </g>
+</svg>

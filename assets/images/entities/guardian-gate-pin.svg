@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160" role="img" aria-labelledby="title desc">
+  <title id="title">문지기 핀</title>
+  <desc id="desc">가로세로 네 팔의 십자가형 외곽 골격과 중앙 감청 눈을 가진 수호자</desc>
+  <g stroke-linejoin="round">
+    <path d="M64 10h32l4 44h50v52h-50l-4 44H64l-4-44H10V54h50z" fill="#243039" stroke="#9bb6b7" stroke-width="8"/>
+    <path d="M70 18h20l3 45h45v34H93l-3 45H70l-3-45H22V63h45z" fill="#6d8a8b" fill-opacity=".38"/>
+    <path d="M80 30v32M80 98v32M30 80h32M98 80h32" fill="none" stroke="#c56b8b" stroke-width="6" stroke-linecap="square"/>
+    <path d="M80 57l23 23-23 23-23-23z" fill="#141b22" stroke="#e18aab" stroke-width="5"/>
+  </g>
+  <circle cx="80" cy="80" r="7" fill="#ffc0d3"/>
+</svg>

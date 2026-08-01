@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 144" width="144" height="144" role="img" aria-labelledby="title desc">
+  <title id="title">라이벌 운반형 드론</title>
+  <desc id="desc">외부 코어 운반 고리와 넓은 각진 차체</desc>
+  <g stroke-linejoin="round">
+    <path d="M16 72l27-39h48l37 39-37 39H43z" fill="#3a272e" stroke="#ff9a6b" stroke-width="8"/>
+    <path d="M43 33l16 25h38l-6-25M43 111l16-25h38l-6 25" fill="#74493f" fill-opacity=".6" stroke="#ffc09a" stroke-width="4"/>
+    <path d="M106 52l29 20-29 20 9-20z" fill="#ffcfaa"/>
+    <path d="M19 53L5 42l6 30L5 102l14-11" fill="#92594b" stroke="#ff9a6b" stroke-width="4"/>
+  </g>
+  <circle cx="78" cy="72" r="20" fill="#140f18" stroke="#ffba88" stroke-width="5" stroke-dasharray="22 9"/>
+  <path d="M78 61l9 11-9 11-9-11z" fill="#ffd369"/>
+</svg>

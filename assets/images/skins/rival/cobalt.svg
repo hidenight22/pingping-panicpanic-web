@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 144" width="144" height="144" role="img" aria-labelledby="title desc">
+  <title id="title">코발트 라이벌 탐침 외형</title>
+  <desc id="desc">긴 쌍갈래 탐침과 측면 감지판을 강조한 능력치 중립 라이벌 외형</desc>
+  <g stroke-linejoin="round">
+    <path d="M8 72l35-37 47 10 35 27-35 27-47 10z" fill="#16314e" stroke="#5f9ed7" stroke-width="8"/>
+    <path d="M43 35l15 28h40L90 45M43 109l15-28h40l-8 18" fill="#294e70" stroke="#9bc8e8" stroke-width="4"/>
+    <path d="M93 53l44-24-16 31 16 12-16 12 16 31-44-24 15-19z" fill="#214566" stroke="#76b2df" stroke-width="5"/>
+    <path d="M111 53l27-10M111 91l27 10" stroke="#ffcfaa" stroke-width="6" stroke-linecap="round"/>
+    <path d="M19 52L3 42l7 30-7 30 16-10" fill="#1d3b58" stroke="#5f9ed7" stroke-width="4"/>
+    <path d="M36 27l-11-17M36 117l-11 17" stroke="#86b9dc" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <path d="M58 60h31l13 12-13 12H58L45 72z" fill="#0b1726" stroke="#ff9a6b" stroke-width="5"/>
+  <circle cx="75" cy="72" r="7" fill="#ffe2c5"/>
+</svg>

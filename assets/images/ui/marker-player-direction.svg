@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-labelledby="title desc">
+  <title id="title">플레이어 방향 표식</title>
+  <desc id="desc">완전한 원과 진행 화살표로 구성한 청록 UI 표식</desc>
+  <circle cx="32" cy="32" r="26" fill="#07191f" fill-opacity=".76" stroke="#57e3d6" stroke-width="5"/>
+  <path d="M24 46l8-29 8 29-8-7z" fill="#c8fff8" stroke="#57e3d6" stroke-width="3" stroke-linejoin="round"/>
+</svg>

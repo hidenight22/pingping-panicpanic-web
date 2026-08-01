@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-labelledby="title desc">
+  <title id="title">중계문</title>
+  <desc id="desc">큰 원형 이중 아치와 하단 귀환 정렬 표시</desc>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="120" cy="120" r="98" stroke="#57e3d6" stroke-opacity=".14" stroke-width="10"/>
+    <circle cx="120" cy="120" r="82" stroke="#6b9295" stroke-width="14" stroke-dasharray="148 24 86 36 62 24"/>
+    <circle cx="120" cy="120" r="61" stroke="#31545b" stroke-width="8" stroke-dasharray="82 24"/>
+    <path d="M82 191h76l-14 24H96z" fill="#132e35" stroke="#6b9295" stroke-width="6"/>
+    <path d="M95 120h50M120 95v50" stroke="#8ecac7" stroke-opacity=".48" stroke-width="5"/>
+  </g>
+  <g fill="#c8fff8">
+    <circle cx="120" cy="22" r="7"/>
+    <path d="M120 50l8 13-8 13-8-13z"/>
+  </g>
+</svg>

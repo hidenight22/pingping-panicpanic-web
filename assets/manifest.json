@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "imagesManifest": "assets/images/manifest.json",
+  "imageLogicalAssetCount": 50,
+  "imageLogicalAssetMaximum": 99,
+  "audioManifest": "assets/audio/manifest.json"
+}

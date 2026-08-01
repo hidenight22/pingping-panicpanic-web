@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 256" width="96" height="256" role="img" aria-labelledby="title desc">
+  <title id="title">유적 벽 기둥</title>
+  <desc id="desc">길이 조절과 회전에 대응하는 저대비 직선 벽</desc>
+  <rect x="5" y="5" width="86" height="246" rx="12" fill="#0b2c35" stroke="#5f888a" stroke-opacity=".6" stroke-width="10"/>
+  <path d="M25 18v55l18 18v74l-18 18v55M71 18v88l-18 18v114" fill="none" stroke="#7db3b0" stroke-opacity=".26" stroke-width="6"/>
+  <path d="M20 115h56M20 145h56" stroke="#b1d5d2" stroke-opacity=".16" stroke-width="4" stroke-dasharray="16 9"/>
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title desc">
+  <title id="title">캠페인 완료 공명망 인장</title>
+  <desc id="desc">다섯 해역 노드가 복구된 중계망과 중앙의 회수 드론, 공명 코어를 연결하는 언어 비종속 엔딩 상징</desc>
+  <circle cx="128" cy="128" r="109" fill="#03141f" fill-opacity=".72" stroke="#173b44" stroke-width="6"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M128 22a106 106 0 0 1 100.8 73.2" stroke="#57e3d6" stroke-opacity=".62" stroke-width="8"/>
+    <path d="M228.8 95.2a106 106 0 0 1-38.5 118.5" stroke="#93e1c7" stroke-opacity=".58" stroke-width="8"/>
+    <path d="M190.3 213.7a106 106 0 0 1-124.6 0" stroke="#ff876f" stroke-opacity=".58" stroke-width="8"/>
+    <path d="M65.7 213.7A106 106 0 0 1 27.2 95.2" stroke="#8fb7d2" stroke-opacity=".6" stroke-width="8"/>
+    <path d="M27.2 95.2A106 106 0 0 1 128 22" stroke="#d4b46d" stroke-opacity=".58" stroke-width="8"/>
+    <circle cx="128" cy="128" r="76" stroke="#8daeb1" stroke-opacity=".32" stroke-width="4" stroke-dasharray="10 9"/>
+    <path d="M128 52v31M200.3 104.5l-29.5 9.6M172.7 190l-18.2-25M83.3 190l18.2-25M55.7 104.5l29.5 9.6" stroke="#8daeb1" stroke-opacity=".38" stroke-width="4"/>
+  </g>
+  <g fill="#effffc" stroke="#03141f" stroke-width="3">
+    <circle cx="128" cy="32" r="8"/>
+    <circle cx="219.3" cy="98.3" r="8"/>
+    <circle cx="184.4" cy="205.7" r="8"/>
+    <circle cx="71.6" cy="205.7" r="8"/>
+    <circle cx="36.7" cy="98.3" r="8"/>
+  </g>
+  <g fill="none" stroke="#57e3d6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="128" cy="128" r="48" stroke-opacity=".28" stroke-width="12"/>
+    <circle cx="128" cy="128" r="48" stroke-width="5"/>
+    <circle cx="128" cy="128" r="29" stroke-width="8"/>
+    <path d="M151 111l17-10 9 8-19 18M151 145l17 10 9-8-19-18M101 112l-14-8v18M101 144l-14 8v-18" stroke-width="7"/>
+  </g>
+  <path d="M128 105l20 23-20 23-20-23z" fill="#ffd369" fill-opacity=".22" stroke="#ffd369" stroke-width="6" stroke-linejoin="round"/>
+  <circle cx="128" cy="128" r="5" fill="#effffc"/>
+</svg>

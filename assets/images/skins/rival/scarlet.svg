@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 144" width="144" height="144" role="img" aria-labelledby="title desc">
+  <title id="title">진홍 라이벌 무장 운반 외형</title>
+  <desc id="desc">상하 무장 포드와 외부 운반 크래들을 강조한 능력치 중립 라이벌 외형</desc>
+  <g stroke-linejoin="round">
+    <path d="M14 72l34-35h53l31 35-31 35H48z" fill="#491d27" stroke="#e86058" stroke-width="8"/>
+    <path d="M48 37l13 24h48l-8-24M48 107l13-24h48l-8 24" fill="#742b32" stroke="#f49a7b" stroke-width="4"/>
+    <rect x="43" y="9" width="65" height="24" rx="6" fill="#5b222c" stroke="#e86058" stroke-width="5"/>
+    <rect x="43" y="111" width="65" height="24" rx="6" fill="#5b222c" stroke="#e86058" stroke-width="5"/>
+    <path d="M53 9V2m22 7V2m22 7V2M53 135v7m22-7v7m22-7v7" stroke="#ffd2b6" stroke-width="5"/>
+    <path d="M104 50l34 7-20 15 20 15-34 7 11-22z" fill="#ffcfaa" stroke="#ff9a6b" stroke-width="4"/>
+    <path d="M19 50L4 41l7 31-7 31 15-9" fill="#5a252e" stroke="#e86058" stroke-width="4"/>
+  </g>
+  <path d="M52 108v24h48v-24" fill="none" stroke="#ff9a6b" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M61 58l18 14-18 14M80 58l18 14-18 14" fill="none" stroke="#ffd2b6" stroke-width="6" stroke-linejoin="bevel"/>
+</svg>

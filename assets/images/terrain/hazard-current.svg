@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 128" width="256" height="128" role="img" aria-labelledby="title desc">
+  <title id="title">해류 표식</title>
+  <desc id="desc">반복 가능한 청록 흐름선과 진행 방향 갈매기표</desc>
+  <g fill="none" stroke="#75d4ff" stroke-linecap="round">
+    <path d="M8 29c43-25 74 25 117 0s74 25 117 0M8 64c43-25 74 25 117 0s74 25 117 0M8 99c43-25 74 25 117 0s74 25 117 0" stroke-opacity=".3" stroke-width="6"/>
+    <path d="M178 43l28 21-28 21" stroke-opacity=".72" stroke-width="8"/>
+  </g>
+</svg>

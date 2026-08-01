@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-labelledby="title desc">
+  <title id="title">무인 회수 드론</title>
+  <desc id="desc">중앙이 빈 청록 고리와 전면 집게, 후면 꼬리 핀</desc>
+  <g fill="none" stroke-linejoin="round">
+    <circle cx="61" cy="64" r="45" stroke="#57e3d6" stroke-opacity=".16" stroke-width="8"/>
+    <path d="M28 39A40 40 0 1 0 28 89" stroke="#57e3d6" stroke-width="10"/>
+    <path d="M35 46A30 30 0 1 0 35 82" stroke="#174e54" stroke-width="7"/>
+    <path d="M88 44l25 9-17 11 17 11-25 9 8-20z" fill="#c9fff8" stroke="#57e3d6" stroke-width="4"/>
+    <path d="M19 45L6 34l4 23M19 83L6 94l4-23" fill="#204c53" stroke="#8ecac7" stroke-width="4"/>
+    <path d="M28 39l-9 6M28 89l-9-6" stroke="#c9fff8" stroke-width="5"/>
+  </g>
+  <circle cx="61" cy="64" r="5" fill="#c9fff8"/>
+  <path d="M48 25a40 40 0 0 1 26 0M48 103a40 40 0 0 0 26 0" fill="none" stroke="#b6fff5" stroke-width="4" stroke-linecap="round"/>
+</svg>

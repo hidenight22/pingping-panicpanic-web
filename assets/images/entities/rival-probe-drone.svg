@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-labelledby="title desc">
+  <title id="title">라이벌 탐침형 드론</title>
+  <desc id="desc">중앙 구멍이 없는 각진 호박색 탐침 차체</desc>
+  <g stroke-linejoin="round">
+    <path d="M18 64L45 31h37l28 19-17 14 17 14-28 19H45z" fill="#37252b" stroke="#ff9a6b" stroke-width="7"/>
+    <path d="M45 31l10 23h29l-2-23M45 97l10-23h29l-2 23" fill="#7a493f" fill-opacity=".55" stroke="#ffbd94" stroke-width="4"/>
+    <path d="M93 64l25-18-8 18 8 18z" fill="#ffcfaa"/>
+    <path d="M18 64L6 47l3 17-3 17z" fill="#8b5b4b" stroke="#ff9a6b" stroke-width="3"/>
+  </g>
+  <circle cx="68" cy="64" r="8" fill="#fff0cf"/>
+  <path d="M42 20h36" stroke="#ff9a6b" stroke-width="4" stroke-dasharray="9 7"/>
+</svg>

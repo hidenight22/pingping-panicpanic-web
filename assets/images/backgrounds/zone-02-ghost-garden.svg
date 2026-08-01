@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1500" width="1000" height="1500" role="img" aria-labelledby="title desc">
+  <title id="title">유령 배양정원 배경</title>
+  <desc id="desc">남보라 수중 정원과 음차 산호의 대칭 실루엣</desc>
+  <defs>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#241d45"/>
+      <stop offset=".5" stop-color="#0c1830"/>
+      <stop offset="1" stop-color="#030910"/>
+    </linearGradient>
+    <linearGradient id="bed" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#173c3d"/>
+      <stop offset="1" stop-color="#071d24"/>
+    </linearGradient>
+    <pattern id="spores" width="180" height="210" patternUnits="userSpaceOnUse">
+      <circle cx="34" cy="56" r="4" fill="#93e1c7" opacity=".1"/>
+      <circle cx="145" cy="146" r="2" fill="#d9f5ff" opacity=".1"/>
+    </pattern>
+  </defs>
+  <rect width="1000" height="1500" fill="url(#sea)"/>
+  <rect width="1000" height="1500" fill="url(#spores)"/>
+  <g fill="none" stroke="#83cbb6" stroke-opacity=".16" stroke-width="14" stroke-linecap="round">
+    <path d="M94 1500c52-242 26-464 154-656 62-94 59-204 50-340"/>
+    <path d="M906 1500c-52-242-26-464-154-656-62-94-59-204-50-340"/>
+    <path d="M230 886l-116-98m141 24 92-134m-74 55-19-170"/>
+    <path d="M770 886l116-98m-141 24-92-134m74 55 19-170"/>
+  </g>
+  <g fill="url(#bed)" stroke="#a9e5da" stroke-opacity=".1" stroke-width="5">
+    <path d="M0 1270c104-76 210-66 302 13 112 96 237 70 342-4 125-88 244-48 356 20v201H0z"/>
+    <path d="M0 0h155v335l-48 82-39-104V0z"/>
+    <path d="M1000 0H845v335l48 82 39-104V0z"/>
+  </g>
+  <g fill="none" stroke="#b6fff0" stroke-opacity=".13" stroke-width="8">
+    <path d="M404 1088V718m-74 0v-144m148 144V574M330 574h148"/>
+    <path d="M596 1088V718m-74 0v-144m148 144V574M522 574h148"/>
+    <ellipse cx="500" cy="1088" rx="232" ry="72" stroke-dasharray="86 34"/>
+  </g>
+  <g fill="#99efd4" opacity=".13">
+    <path d="M240 746l18-28 18 28-18 28z"/>
+    <path d="M760 746l-18-28-18 28 18 28z"/>
+    <circle cx="330" cy="565" r="12"/>
+    <circle cx="670" cy="565" r="12"/>
+  </g>
+</svg>

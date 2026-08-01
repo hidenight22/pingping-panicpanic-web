@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title desc">
+  <title id="title">플레이어 소나 파동</title>
+  <desc id="desc">청록 문양 조각이 원주를 따라 확산하는 소나 링</desc>
+  <g fill="none" stroke-linecap="round">
+    <circle cx="128" cy="128" r="105" stroke="#57e3d6" stroke-opacity=".12" stroke-width="14"/>
+    <circle cx="128" cy="128" r="103" stroke="#7ff9ec" stroke-width="6" stroke-dasharray="54 18 12 22 72 26 18 34"/>
+    <circle cx="128" cy="128" r="86" stroke="#b8fff7" stroke-opacity=".38" stroke-width="3" stroke-dasharray="34 28"/>
+  </g>
+  <g fill="#c9fff8">
+    <path d="M128 15l7 12-7 12-7-12z"/>
+    <path d="M241 128l-12 7-12-7 12-7z"/>
+    <path d="M128 241l-7-12 7-12 7 12z"/>
+    <path d="M15 128l12-7 12 7-12 7z"/>
+  </g>
+</svg>

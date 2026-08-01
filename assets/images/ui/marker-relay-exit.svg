@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-labelledby="title desc">
+  <title id="title">중계문 귀환 표식</title>
+  <desc id="desc">이중 원과 안쪽 화살표의 귀환 UI 표식</desc>
+  <circle cx="32" cy="32" r="26" fill="#07191f" fill-opacity=".76" stroke="#57e3d6" stroke-width="5"/>
+  <circle cx="32" cy="32" r="17" fill="none" stroke="#c8fff8" stroke-opacity=".55" stroke-width="4" stroke-dasharray="14 6"/>
+  <path d="M32 48V22m0 0L21 33m11-11 11 11" fill="none" stroke="#c8fff8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

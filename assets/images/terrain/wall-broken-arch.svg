@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" width="320" height="220" role="img" aria-labelledby="title desc">
+  <title id="title">부서진 유적 아치</title>
+  <desc id="desc">진행 통로와 구분되는 끊긴 반원형 구조물</desc>
+  <path d="M12 218v-66C12 75 74 13 151 13h18c77 0 139 62 139 139v66h-52v-66c0-48-39-87-87-87h-18c-48 0-87 39-87 87v66z" fill="#0c2932" stroke="#6d9797" stroke-opacity=".58" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M99 54l26 35-19 32M217 54l-25 35 18 31" fill="none" stroke="#9ec4c1" stroke-opacity=".25" stroke-width="7"/>
+  <path d="M132 17l17 28 17-28" fill="#06171d"/>
+</svg>

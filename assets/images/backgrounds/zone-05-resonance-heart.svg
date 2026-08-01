@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1500" width="1000" height="1500" role="img" aria-labelledby="title desc">
+  <title id="title">공명의 심장 배경</title>
+  <desc id="desc">군청 심장부의 거대 고리와 나선형 기록 문양</desc>
+  <defs>
+    <radialGradient id="sea" cx="50%" cy="47%" r="72%">
+      <stop stop-color="#172847"/>
+      <stop offset=".48" stop-color="#090f23"/>
+      <stop offset="1" stop-color="#02040a"/>
+    </radialGradient>
+    <linearGradient id="opal" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#8ad8d1"/>
+      <stop offset=".5" stop-color="#b9a8dc"/>
+      <stop offset="1" stop-color="#d4b46d"/>
+    </linearGradient>
+    <pattern id="dust" width="190" height="210" patternUnits="userSpaceOnUse">
+      <circle cx="38" cy="50" r="3" fill="#d8e2ef" opacity=".08"/>
+      <circle cx="154" cy="162" r="2" fill="#e5c983" opacity=".08"/>
+    </pattern>
+  </defs>
+  <rect width="1000" height="1500" fill="url(#sea)"/>
+  <rect width="1000" height="1500" fill="url(#dust)"/>
+  <g fill="none" stroke="url(#opal)" stroke-opacity=".12">
+    <circle cx="500" cy="720" r="390" stroke-width="76" stroke-dasharray="540 170 250 310"/>
+    <circle cx="500" cy="720" r="282" stroke-width="38" stroke-dasharray="250 74 96 120"/>
+    <circle cx="500" cy="720" r="178" stroke-width="16" stroke-dasharray="120 44"/>
+  </g>
+  <g fill="#111b32" stroke="#b4b4d5" stroke-opacity=".09" stroke-width="6">
+    <path d="M0 0h184v230l92 92-92 110v246L0 774z"/>
+    <path d="M1000 0H816v230l-92 92 92 110v246l184 96z"/>
+    <path d="M0 1500v-310l186-96 112 176-96 230z"/>
+    <path d="M1000 1500v-310l-186-96-112 176 96 230z"/>
+  </g>
+  <g fill="none" stroke="#d6bb77" stroke-opacity=".14" stroke-width="7">
+    <path d="M98 982c120 96 237 106 324 24 92-88 88-248 21-336-51-66-42-169 57-240 99-71 108-174 57-292"/>
+    <path d="M902 982c-120 96-237 106-324 24"/>
+  </g>
+  <g fill="#d9c27c" opacity=".13">
+    <path d="M500 680l40 40-40 40-40-40z"/>
+    <circle cx="500" cy="720" r="10"/>
+    <path d="M288 1006l14-24 14 24-14 14z"/>
+    <path d="M712 1006l-14-24-14 24 14 14z"/>
+  </g>
+</svg>

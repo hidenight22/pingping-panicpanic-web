@@ -1,2 +1,7 @@
-# pingping-panicpanic-web
-소나 쏠래말래 쏠래말래 — public web playtest build
+# 소나 쏠래말래 쏠래말래
+
+PingPing PanicPanic 공개 웹 플레이테스트 빌드입니다.
+
+- 버전: 0.4.16
+- 용도: 브라우저 플레이 테스트
+- 주의: GM 도구와 모의 광고가 포함된 개발 프로필이며 출시 빌드가 아닙니다.
