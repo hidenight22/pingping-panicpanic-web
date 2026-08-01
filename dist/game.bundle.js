@@ -4,7 +4,7 @@
   'use strict';
 
   var app = global.PingPanic || {};
-  app.version = '0.4.19';
+  app.version = '0.4.20';
   app.data = app.data || {};
   app.core = app.core || {};
   app.entities = app.entities || {};
@@ -344,5884 +344,324 @@
       'prep.normal': '일반 소나 장비', 'prep.boosted': '증폭 소나 장비', 'prep.cancel': '취소',
       'prep.contest': '준비가 끝나면 일반 소나로 잠수를 시작하세요.',
       'prep.adCancelled': '광고가 취소되었습니다. 일반 소나로 시작할 수 있습니다.',
-      'prep.adNoReward': '보상이 확인되지 않았습니다. 일반 소나로 시작하거나 다시 시도하세요.',
-      'result.next': '다음 스테이지', 'result.retry': '다시 하기', 'result.select': '해역 선택',
-      'result.win': '회수 완료', 'result.fail': '회수 실패',
-      'result.score': '점수', 'result.stars': '별', 'result.credits': '공명 크레딧',
-      'result.hits': '피격', 'result.power': '동력', 'result.time': '시간', 'result.sonars': '소나',
-      'stars.summary': '별 조건 · 클리어 / 동력 20% 초과 / 코어 {cores}개 직접 회수',
-      'stars.clearKept': '★ 클리어',
-      'stars.powerKept': '★ 동력 20% 초과', 'stars.powerLost': '☆ 동력 20% 이하',
-      'stars.coreKept': '★ 코어 {cores}개 직접 회수', 'stars.coreLost': '☆ 라이벌 코어 반출',
-      'stars.earnedAria': '획득 {stars}/3',
-      'result.emergency': '긴급 동력 복구 · 광고 확인', 'result.double': '광고 보고 이번 보상 2배',
-      'ending.title': '중계망 완전 복구', 'ending.copy': '100개의 신호가 다시 이어졌습니다.',
-      'ending.unlockCopy': '100개의 신호가 다시 이어졌습니다. {difficulty} 난이도가 열렸습니다.',
-      'ending.startDifficulty': '{difficulty} 시작', 'ending.result': '결과 확인', 'ending.main': '메인으로',
-      'zone.sunken-relay': '침강 중계기지', 'zone.ghost-garden': '유령 정원',
-      'zone.red-channel': '적색 수로', 'zone.silent-trench': '무음 해구', 'zone.resonance-heart': '공명 심장부',
-      'rival.destroyed': '파괴', 'rival.extracted': '반출', 'rival.retreat': '도주',
-      'rival.corePickup': '코어 회수', 'rival.relayMove': '중계문 이동',
-      'rival.coreMove': '코어 이동', 'rival.search': '탐색', 'rival.combat': '교전',
-      'rival.sonar': '소나 발사', 'rival.guardianDetected': '수호자 발각', 'rival.guardianHit': '수호자 피격',
-      'onboarding.1.title': '1 · 끌어서 회수',
-      'onboarding.1.text': '{core}를 모은 뒤 {relay}으로 귀환하세요.',
-      'onboarding.2.title': '2 · 소나로 세 코어 찾기',
-      'onboarding.2.text': '소나는 보이지 않는 사물과 코어 3개를 잠시 보여 줍니다. 세 코어를 찾아 회수하세요.',
-      'onboarding.3.title': '3 · 벽 뒤의 신호',
-      'onboarding.3.text': '벽은 이동과 소나를 막습니다. 위치를 바꿔 다시 쏘세요.',
-      'onboarding.4.title': '4 · 수호자',
-      'onboarding.4.text': '소나가 닿거나 가까이 가면 수호자에게 발각됩니다. 벽 뒤로 이동하세요.',
-      'onboarding.5.title': '5 · 열수 분출',
-      'onboarding.5.text': '열수는 예고 뒤 분출해 플레이어와 수호자에게 피해를 줍니다. 5번 맞은 수호자는 파괴됩니다.',
-      'onboarding.7.title': '7 · 공명 흡수 구역',
-      'onboarding.7.text': '흡수 구역 안에서는 소나가 짧아지고 충전이 느려집니다. 구역 밖에서 쏘세요.',
-      'onboarding.8.title': '8 · 전역·구역 해류',
-      'onboarding.8.text': '전 맵 해류 위의 직사각 밴드는 방향을 바꾸거나 같은 방향 흐름을 가속합니다. 밴드 화살표를 보고 보정하세요.',
-      'onboarding.9.title': '9 · 가변 통로',
-      'onboarding.9.text': '통로는 카운터가 0이면 개폐됩니다. 가까이 가도 열리지 않으며 지나가는 동안 닫힘이 미뤄집니다.',
-      'onboarding.21.title': '21 · 자물쇠 사냥개',
-      'onboarding.21.text': '잠금 사냥개는 빠르게 추격합니다. 벽을 돌아 경로를 끊으세요.',
-      'onboarding.22.title': '22 · 라이벌',
-      'onboarding.22.text': '라이벌이 코어를 반출하면 별 1개를 잃습니다. 먼저 회수하거나 충돌해 저지하세요.',
-      'onboarding.23.title': '23 · 미끼 파형',
-      'onboarding.23.text': '소나 뒤 코어처럼 보이는 신호가 있을 수 있습니다. 가까이 가면 가짜는 조용히 사라집니다.',
-      'onboarding.62.title': '62 · 합창 감시자',
-      'onboarding.62.text': '합창 감시자는 예고 뒤 원형 파동을 쏩니다. 벽 뒤 안전 음영으로 피하세요.',
-      'onboarding.67.title': '67 · 신호 잔향',
-      'onboarding.67.text': '청록 신호 증폭 구역을 지난 소나는 더 멀리 퍼지고 더 오래 보여 주지만 위험 신호도 커집니다.',
-      'hud.stage': '{zone} · STAGE {stage}', 'hud.abyss': '무저갱 · 구획 {segment}',
-      'hud.rival': '라이벌 · {broadcast}', 'hud.relay': '중계문', 'hud.return': '귀환',
-      'hud.rivalRelay': '라이벌 중계문',
-      'passage.open': '열림 {seconds}', 'passage.closed': '닫힘 {seconds}',
-      'unit.count': '{value}회', 'unit.seconds': '{value}초',
-      'toast.hand': '{hand} 소나 조작으로 변경했습니다.',
-      'toast.language': '언어가 변경되었습니다.',
-      'toast.difficulty': '{difficulty}을 선택했습니다.',
-      'toast.objective': '코어를 회수하고 중계문으로 귀환하세요.',
-      'toast.sonarLow': '공명 충전이 부족합니다.', 'toast.sonar': '소나 파동이 퍼집니다.',
-      'toast.sonarBoosted': '증폭 소나 · 범위 1.5배 · 5초 탐지',
-      'toast.core': '공명 코어 {current} / {required}',
-      'toast.thermal': '열수 분출에 피격됐습니다.',
-      'thermal.countdown': '분출까지 {seconds}초',
-      'toast.guardianDetected': '수호자에게 발각되었습니다',
-      'toast.rivalSignal': '라이벌과 서로를 인식했습니다.', 'toast.rivalSonar': '라이벌 소나와 접촉해 서로를 인식했습니다.',
-      'toast.rivalDestroyedCore': '라이벌 파괴! 운반 코어를 회수했습니다.',
-      'toast.rivalDestroyed': '라이벌 파괴! 동력 10을 잃었습니다.',
-      'toast.chorusWarning': '합창 감시자가 원형파동을 준비합니다.',
-      'toast.chorusHit': '합창 파동 피격!', 'toast.guardianHit': '수호자 충돌! 동력 {damage} 감소',
-      'toast.guardianDrop': '수호자가 라이벌의 코어를 떨어뜨렸습니다.',
-      'toast.rivalExtracted': '라이벌이 코어 1개를 반출했습니다.', 'toast.rivalShotHit': '라이벌 직선탄 피격!',
-      'toast.stageInvalid': '코어 상태 오류로 판을 안전 종료했습니다.',
-      'toast.stageClear': '공명 코어를 중계망에 연결했습니다.', 'toast.powerEmpty': '잔여 동력이 모두 소진됐습니다.',
-      'toast.credits': ' 신규 별 {stars}개로 공명 크레딧 {credits}을 획득했습니다.',
-      'toast.record': ' 최고 기록을 갱신했습니다.',
-      'toast.abyssStart': '무저갱 구획 1 · 중간 저장 없이 연속 탐사합니다.',
-      'toast.abyssSegment': '무저갱 구획 {segment} · 난이도 {tier}',
-      'toast.abyssResult': '{message} 완료 구획 {segment} · {score}점',
-      'toast.recovery': '동력 35 복구. 계속하기를 눌러 재개하세요.',
-      'toast.noReward': '보상 미지급: {status}',
-      'toast.abyssStopped': '탐사를 종료했습니다.', 'toast.ownedOnly': '보유한 외형만 장착할 수 있습니다.',
-      'toast.contentError': '콘텐츠 데이터 오류: 개발자 콘솔을 확인하세요.',
-      'toast.saveError': '저장하지 못했습니다. 변경 사항을 적용하지 않았습니다.',
-      'result.saveError': ' 저장 실패: 진행도와 보상이 적용되지 않았습니다. 다시 완료해 주세요.',
-      'toast.adRecovery': '광고 종료 화면을 안전 모드로 복구했습니다. 다시 시도해 주세요.',
-      'toast.creditShort': '공명 크레딧이 {amount} 부족합니다.', 'toast.creditInsufficient': '공명 크레딧이 부족합니다.',
-      'toast.cosmeticUnlocked': '{name} 해금 완료', 'toast.boostStatus': '증폭 미적용: {status}',
-      'toast.doubleGranted': '공명 크레딧 추가 지급 완료', 'toast.doubleNone': '추가 지급 없음',
-      'result.recoveryClosed': '광고를 닫아 복구되지 않았습니다.', 'result.recoveryFailed': '광고 실패로 복구되지 않았습니다.',
-      'result.doubleGranted': '이번 신규 별 보상에 크레딧 {credits}이 추가 지급됐습니다.',
-      'result.doubleNone': '추가 보상이 지급되지 않았습니다.',
-      'ad.emergency': '긴급 동력 복구 광고입니다. 확인 뒤 일시정지 상태로 복귀합니다.',
-      'ad.boosted': '이번 도전 전체에 적용할 증폭 소나 광고입니다. 보상 확인 뒤에만 잠수를 시작합니다.',
-      'ad.double': '신규 별 크레딧 2배 광고입니다. 확인 후 결과로 복귀합니다.',
-      'ad.interstitial': '자동 전면 광고입니다. 확인 후 결과로 복귀합니다.',
-      'cosmetic.category.player': '플레이어 3종', 'cosmetic.category.guardian': '수호자 3종', 'cosmetic.category.rival': '라이벌 2종',
-      'cosmetic.base': '기본 외형', 'cosmetic.equipped': '장착 중', 'cosmetic.owned': '보유 · 장착 가능',
-      'cosmetic.locked': '잠금 · {price} 크레딧', 'cosmetic.aria': '{name} · {state} · 잔액 {balance}',
-      'cosmetic.purchaseTitle': '{name} 구매', 'cosmetic.purchaseCopy': '{price} 크레딧을 사용합니다. 현재 잔액 {balance} 크레딧',
-      'cosmetic.prism': '프리즘 회수 드론', 'cosmetic.archive': '기록보관 회수 드론', 'cosmetic.ember': '적열 회수 드론',
-      'cosmetic.porcelain': '백자 수호자', 'cosmetic.reef': '산호초 수호자', 'cosmetic.obsidian': '흑요석 수호자',
-      'cosmetic.cobalt': '코발트 라이벌', 'cosmetic.scarlet': '스칼렛 라이벌',
-      'product.description': '자동 전면 광고와 고정 배너 광고를 제거하는 상품입니다.',
-      'product.title': '광고 제거권', 'product.soon': '결제 연동 예정',
-      'cosmetic.title': '외형 모듈', 'cosmetic.wallet': '크레딧 지갑', 'cosmetic.copy': '모든 외형은 능력 중립입니다.',
-      'common.close': '닫기', 'common.back': '메인으로', 'common.cancel': '취소', 'common.confirm': '확인', 'common.buy': '구매 확인',
-      'ad.title': '광고 출력 예정', 'ad.default': '실제 SDK 연결 전 UX 확인 화면입니다.',
-      'banner.title': '심해 신호 후원', 'banner.copy': '검증용 배너 · 실제 광고가 아닙니다', 'banner.confirm': '광고 확인',
-      'aria.sonar': '소나 발사', 'aria.settings': '설정 열기', 'aria.pause': '일시정지',
-      'aria.canvas': '심해 회수 구역', 'aria.zoneTabs': '해역 전환',
-      'aria.banner': '고정 배너 광고 검증 영역'
-    },
-    en: {
-      'language.ko': '한국어', 'language.en': 'English',
-      'sound.on': 'Turn sound off', 'sound.off': 'Turn sound on',
-      'hub.first': 'Start First Dive', 'hub.next': 'Next Dive · STAGE {stage}',
-      'hub.abyss': 'Enter the Abyss', 'hub.difficultyReplay': 'Replay {difficulty}',
-      'hub.stageSelect': 'Zones', 'hub.cosmetics': 'Skins',
-      'hub.tagline': 'Ping to see. Panic when they hear it.',
-      'hub.progress': 'Campaign progress', 'hub.removeAds': 'Remove Ads · Coming Soon',
-      'hub.removeAdsOwned': 'Ads Removed', 'hub.complete': 'CAMPAIGN COMPLETE', 'hub.nextDive': 'NEXT DIVE',
-      'hub.completeMeta': 'All 100 stages recovered', 'hub.nextMeta': '{zone} · STAGE {stage}',
-      'hub.abyssBest': 'Abyss best segment {segment} · {score} pts',
-      'select.title': 'Zones',
-      'select.zone': 'Zone {zone}', 'select.locked': 'Locked', 'select.stageAria': 'Stage {stage} · {state}',
-      'select.zoneStarsAria': 'Earned {stars}/60',
-      'onboarding.start': 'Start', 'onboarding.confirm': 'Confirm',
-      'guide.core': 'Resonance Core', 'guide.relay': 'Relay',
-      'difficulty.normal': 'Normal', 'difficulty.hard': 'Hard', 'difficulty.extreme': 'Extreme',
-      'difficulty.locked': '{difficulty} · Clear all 100 stages of the previous difficulty',
-      'settings.title': 'Settings', 'settings.language': 'Language', 'settings.hand': 'Sonar Hand',
-      'settings.currentLanguage': 'Language · English',
-      'settings.close': 'Close', 'hand.left': 'Left', 'hand.right': 'Right',
-      'settings.open': 'Open settings', 'settings.handCopy': 'Choose which hand holds the sonar button.',
-      'handChoice.title': 'Which hand fires sonar?',
-      'handChoice.copy': 'The sonar button uses your chosen hand and movement stays opposite. Change it anytime while paused.',
-      'pause.title': 'Paused', 'pause.copy': 'Signals and time are stopped.',
-      'pause.resume': 'Resume', 'pause.restart': 'Restart', 'pause.quit': 'Zones',
-      'pause.abyssEnd': 'End Abyss Run',
-      'hud.core': 'CORE', 'hud.drag': 'Drag to move', 'hud.move': 'Drag or use WASD to move',
-      'hud.boosted': 'This attempt · All sonar boosted',
-      'hud.powerAria': '{power}% power remaining',
-      'prep.title': 'Dive Preparation', 'prep.copy': 'Choose your sonar equipment.',
-      'prep.target': '{difficulty} · {stage}',
-      'prep.normal': 'Standard Sonar', 'prep.boosted': 'Boosted Sonar', 'prep.cancel': 'Cancel',
-      'prep.contest': 'Start the dive with standard sonar when ready.',
-      'prep.adCancelled': 'The ad was cancelled. You can start with standard sonar.',
-      'prep.adNoReward': 'Reward not confirmed. Start with standard sonar or try again.',
-      'result.next': 'Next Stage', 'result.retry': 'Retry', 'result.select': 'Zones',
-      'result.win': 'Recovery Complete', 'result.fail': 'Recovery Failed',
-      'result.score': 'Score', 'result.stars': 'Stars', 'result.credits': 'Resonance Credits',
-      'result.hits': 'Hits', 'result.power': 'Power', 'result.time': 'Time', 'result.sonars': 'Sonar',
-      'stars.summary': 'Stars · Clear / Above 20% power / Recover all {cores} cores yourself',
-      'stars.clearKept': '★ Cleared',
-      'stars.powerKept': '★ Above 20% power', 'stars.powerLost': '☆ 20% power or less',
-      'stars.coreKept': '★ All {cores} cores recovered', 'stars.coreLost': '☆ Rival extracted a core',
-      'stars.earnedAria': 'Earned {stars}/3',
-      'result.emergency': 'Emergency Power Recovery · Watch Ad', 'result.double': 'Watch Ad to Double Reward',
-      'ending.title': 'Relay Network Restored',
-      'ending.copy': 'All 100 signals are connected again.',
-      'ending.unlockCopy': 'All 100 signals are connected again. {difficulty} is now unlocked.',
-      'ending.startDifficulty': 'Start {difficulty}', 'ending.result': 'View Results', 'ending.main': 'Main Menu',
-      'zone.sunken-relay': 'Sunken Relay', 'zone.ghost-garden': 'Ghost Garden',
-      'zone.red-channel': 'Red Channel', 'zone.silent-trench': 'Silent Trench', 'zone.resonance-heart': 'Resonance Heart',
-      'rival.destroyed': 'Destroyed', 'rival.extracted': 'Extracted', 'rival.retreat': 'Retreating',
-      'rival.corePickup': 'Recovering Core', 'rival.relayMove': 'Moving to Relay',
-      'rival.coreMove': 'Moving to Core', 'rival.search': 'Searching', 'rival.combat': 'Engaging',
-      'rival.sonar': 'Firing Sonar', 'rival.guardianDetected': 'Guardian Alert', 'rival.guardianHit': 'Hit by Guardian',
-      'onboarding.1.title': '1 · Drag and Recover',
-      'onboarding.1.text': 'Collect the {core}, then return to the {relay}.',
-      'onboarding.2.title': '2 · Find Three Cores',
-      'onboarding.2.text': 'Sonar briefly reveals unseen objects and three cores. Find and recover all three.',
-      'onboarding.3.title': '3 · Signals Behind Walls',
-      'onboarding.3.text': 'Walls block movement and sonar. Change position and fire again.',
-      'onboarding.4.title': '4 · Guardians',
-      'onboarding.4.text': 'A guardian detects you when sonar touches it or you get close. Move behind a wall.',
-      'onboarding.5.title': '5 · Thermal Vents',
-      'onboarding.5.text': 'Thermal vents erupt after a warning and damage players and guardians. Five hits destroy a guardian.',
-      'onboarding.7.title': '7 · Resonance Sink',
-      'onboarding.7.text': 'Sonar is shorter and recharges slower inside a sink zone. Fire from outside.',
-      'onboarding.8.title': '8 · Global and Band Currents',
-      'onboarding.8.text': 'Rectangular bands over the global current redirect or accelerate its flow. Follow the arrows inside each band.',
-      'onboarding.9.title': '9 · Variable Passage',
-      'onboarding.9.text': 'A passage changes when its counter reaches 0. Proximity never opens it, and closing waits while you pass.',
-      'onboarding.21.title': '21 · Lock Hound',
-      'onboarding.21.text': 'Lock Hounds chase quickly. Turn around walls to break their path.',
-      'onboarding.22.title': '22 · Rival',
-      'onboarding.22.text': 'You lose one star if the rival extracts a core. Recover first or stop it by collision.',
-      'onboarding.23.title': '23 · Decoy Wave',
-      'onboarding.23.text': 'A signal may look like a core after sonar. A fake silently disappears when you approach.',
-      'onboarding.62.title': '62 · Chorus Watcher',
-      'onboarding.62.text': 'The Chorus Watcher fires a circular wave after warning. Hide in a safe shadow behind a wall.',
-      'onboarding.67.title': '67 · Signal Echo',
-      'onboarding.67.text': 'Sonar crossing a cyan amplification zone travels farther and reveals longer, but also spreads more danger.',
-      'hud.stage': '{zone} · {stage}', 'hud.abyss': 'ABYSS · SEGMENT {segment}',
-      'hud.rival': 'RIVAL · {broadcast}', 'hud.relay': 'Relay', 'hud.return': 'Return',
-      'hud.rivalRelay': 'Rival Relay',
-      'passage.open': 'OPEN {seconds}', 'passage.closed': 'CLOSED {seconds}',
-      'unit.count': '{value}', 'unit.seconds': '{value}s',
-      'toast.hand': '{hand}-hand sonar controls selected.',
-      'toast.language': 'Language changed.',
-      'toast.difficulty': '{difficulty} selected.',
-      'toast.objective': 'Recover the cores and return to the relay.',
-      'toast.sonarLow': 'Not enough resonance charge.', 'toast.sonar': 'Sonar wave emitted.',
-      'toast.sonarBoosted': 'Boosted sonar · 1.5× range · 5s reveal',
-      'toast.core': 'Resonance core {current} / {required}',
-      'toast.thermal': 'Thermal vent hit!',
-      'thermal.countdown': 'VENT IN {seconds}s',
-      'toast.guardianDetected': 'A guardian detected you.',
-      'toast.rivalSignal': 'You and the rival detected each other.', 'toast.rivalSonar': 'Rival sonar contact. Mutual detection.',
-      'toast.rivalDestroyedCore': 'Rival destroyed! Carried core recovered.',
-      'toast.rivalDestroyed': 'Rival destroyed! Lost 10 power.',
-      'toast.chorusWarning': 'Chorus Watcher is charging a circular wave.',
-      'toast.chorusHit': 'Hit by a chorus wave!', 'toast.guardianHit': 'Guardian collision! Power −{damage}',
-      'toast.guardianDrop': 'The guardian forced the rival to drop its core.',
-      'toast.rivalExtracted': 'The rival extracted one core.', 'toast.rivalShotHit': 'Hit by a rival projectile!',
-      'toast.stageInvalid': 'The run ended safely after a core state error.',
-      'toast.stageClear': 'Resonance cores connected to the relay.', 'toast.powerEmpty': 'All remaining power was depleted.',
-      'toast.credits': ' Earned {credits} resonance credits from {stars} new stars.',
-      'toast.record': ' New best record.',
-      'toast.abyssStart': 'Abyss segment 1 · Continuous run without checkpoints.',
-      'toast.abyssSegment': 'Abyss segment {segment} · Tier {tier}',
-      'toast.abyssResult': '{message} Completed segments: {segment} · {score} pts',
-      'toast.recovery': 'Power restored to 35. Press Continue to resume.',
-      'toast.noReward': 'Reward not granted: {status}',
-      'toast.abyssStopped': 'Exploration ended.', 'toast.ownedOnly': 'Only owned skins can be equipped.',
-      'toast.contentError': 'Content data error. Check the developer console.',
-      'toast.saveError': 'Could not save. The change was not applied.',
-      'result.saveError': ' Save failed: progress and rewards were not applied. Please complete the stage again.',
-      'toast.adRecovery': 'The post-ad screen was restored in safe mode. Please try again.',
-      'toast.creditShort': 'You need {amount} more resonance credits.', 'toast.creditInsufficient': 'Not enough resonance credits.',
-      'toast.cosmeticUnlocked': '{name} unlocked', 'toast.boostStatus': 'Boost not applied: {status}',
-      'toast.doubleGranted': 'Additional resonance credits granted', 'toast.doubleNone': 'No additional reward',
-      'result.recoveryClosed': 'The ad was closed; power was not restored.', 'result.recoveryFailed': 'Ad failure; power was not restored.',
-      'result.doubleGranted': 'Added {credits} credits for the new-star reward.',
-      'result.doubleNone': 'No additional reward was granted.',
-      'ad.emergency': 'Emergency power recovery ad. Returns to the game paused after confirmation.',
-      'ad.boosted': 'Boosted sonar ad for the full attempt. The dive starts only after reward confirmation.',
-      'ad.double': 'Double new-star credit ad. Returns to results after confirmation.',
-      'ad.interstitial': 'Interstitial ad. Returns to results after confirmation.',
-      'cosmetic.category.player': '3 Player Skins', 'cosmetic.category.guardian': '3 Guardian Skins', 'cosmetic.category.rival': '2 Rival Skins',
-      'cosmetic.base': 'Base Skin', 'cosmetic.equipped': 'Equipped', 'cosmetic.owned': 'Owned · Ready to equip',
-      'cosmetic.locked': 'Locked · {price} credits', 'cosmetic.aria': '{name} · {state} · Balance {balance}',
-      'cosmetic.purchaseTitle': 'Buy {name}', 'cosmetic.purchaseCopy': 'Spend {price} credits. Current balance: {balance}',
-      'cosmetic.prism': 'Prism Recovery Drone', 'cosmetic.archive': 'Archive Recovery Drone', 'cosmetic.ember': 'Ember Recovery Drone',
-      'cosmetic.porcelain': 'Porcelain Guardian', 'cosmetic.reef': 'Reef Guardian', 'cosmetic.obsidian': 'Obsidian Guardian',
-      'cosmetic.cobalt': 'Cobalt Rival', 'cosmetic.scarlet': 'Scarlet Rival',
-      'product.description': 'Removes automatic interstitial ads and fixed banner ads.',
-      'product.title': 'Remove Ads', 'product.soon': 'Payment integration coming soon',
-      'cosmetic.title': 'Skins', 'cosmetic.wallet': 'Credit Wallet', 'cosmetic.copy': 'All skins are power-neutral.',
-      'common.close': 'Close', 'common.back': 'Back to main', 'common.cancel': 'Cancel', 'common.confirm': 'Confirm', 'common.buy': 'Confirm Purchase',
-      'ad.title': 'Ad Preview', 'ad.default': 'UX preview before the real SDK is connected.',
-      'banner.title': 'Deep Signal Sponsor', 'banner.copy': 'Test banner · Not a real ad', 'banner.confirm': 'View Ad',
-      'aria.sonar': 'Fire sonar', 'aria.settings': 'Open settings', 'aria.pause': 'Pause',
-      'aria.canvas': 'Deep-sea recovery zone', 'aria.zoneTabs': 'Switch zones',
-      'aria.banner': 'Fixed banner ad test area'
-    }
-  };
-
-  var locale = 'ko';
-  function normalizeLocale(value) { return value === 'en' ? 'en' : 'ko'; }
-  function t(key, values) {
-    var table = TABLES[locale] || TABLES.ko;
-    var text = table[key] === undefined ? (TABLES.ko[key] === undefined ? key : TABLES.ko[key]) : table[key];
-    Object.keys(values || {}).forEach(function (name) {
-      text = text.replace(new RegExp('\\{' + name + '\\}', 'g'), String(values[name]));
-    });
-    return text;
-  }
-  function setLocale(value) {
-    locale = normalizeLocale(value);
-    if (typeof document !== 'undefined' && document.documentElement) document.documentElement.lang = locale;
-    return locale;
-  }
-  function systemLocale() {
-    if (typeof navigator === 'undefined') return 'ko';
-    var values = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
-    return values.some(function (value) { return /^ko(?:-|$)/i.test(String(value)); }) ? 'ko' : 'en';
-  }
-
-  PP.core.i18n = {
-    tables: TABLES,
-    supported: Object.freeze(['ko', 'en']),
-    normalizeLocale: normalizeLocale,
-    systemLocale: systemLocale,
-    setLocale: setLocale,
-    getLocale: function () { return locale; },
-    t: t
-  };
-})(window.PingPanic);
-
-// ---- src/data/obstacles.js ----
-(function (PP) {
-  'use strict';
-
-  var ROTATIONS = Object.freeze([0, 45, 90, 135]);
-  var SOLID_BLOCKS = Object.freeze({ movement: true, projectiles: true, sonar: true, chorusWave: true });
-  var DECORATION_BLOCKS = Object.freeze({ movement: false, projectiles: false, sonar: false, chorusWave: false });
-  var PROFILE_CODES = Object.freeze({
-    FQ: 'foundation-square-large',
-    CQ: 'column-square',
-    RS: 'ruin-segment',
-    WP: 'wall-pillar'
-  });
-
-  function solidProfile(code, id, assetId, width, height, scales) {
-    return Object.freeze({
-      code: code,
-      id: id,
-      assetId: assetId,
-      baseSize: Object.freeze({ width: width, height: height }),
-      allowedRotations: ROTATIONS,
-      allowedScales: Object.freeze(scales.slice()),
-      collisionFrameWidth: 5,
-      decorationOnly: false,
-      collision: 'solid',
-      blocks: SOLID_BLOCKS
-    });
-  }
-  function decorationProfile(code, id, assetId, width, height, scales) {
-    return Object.freeze({
-      code: code,
-      id: id,
-      assetId: assetId,
-      baseSize: Object.freeze({ width: width, height: height }),
-      allowedRotations: ROTATIONS,
-      allowedScales: Object.freeze(scales.slice()),
-      collisionFrameWidth: 0,
-      decorationOnly: true,
-      collision: 'decorationOnly',
-      blocks: DECORATION_BLOCKS
-    });
-  }
-  function parseSolid(patternId, spec) {
-    if (!spec) return Object.freeze([]);
-    return Object.freeze(spec.split(',').map(function (token, index) {
-      var parts = token.trim().split(/[@/]/);
-      return Object.freeze({
-        id: patternId + '-solid-' + (index + 1),
-        profileId: PROFILE_CODES[parts[0]],
-        slotId: parts[1],
-        rotationDegrees: Number(parts[2]),
-        scale: Number(parts[3])
-      });
-    }));
-  }
-  function parseDecorations(patternId, spec) {
-    if (!spec) return Object.freeze([]);
-    return Object.freeze(spec.split(',').map(function (token, index) {
-      var parts = token.trim().split('@');
-      return Object.freeze({
-        id: patternId + '-decoration-' + (index + 1),
-        profileId: parts[0],
-        slotId: parts[1],
-        rotationDegrees: 0,
-        scale: 1
-      });
-    }));
-  }
-  function pattern(id, density, solidSpec, decorationSpec, safeShadowCount) {
-    return Object.freeze({
-      id: id,
-      density: density,
-      groups: parseSolid(id, solidSpec),
-      decorations: parseDecorations(id, decorationSpec),
-      safeShadowCount: safeShadowCount
-    });
-  }
-
-  var solidProfiles = {
-    'foundation-square-large': solidProfile('FQ', 'foundation-square-large', 'terrain-obstacle-foundation-square', 288, 288, [1]),
-    'column-square': solidProfile('CQ', 'column-square', 'terrain-obstacle-foundation-square', 96, 96, [1]),
-    'ruin-segment': solidProfile('RS', 'ruin-segment', 'terrain-obstacle-ruin-segment', 240, 120, [0.85, 1, 1.15]),
-    'wall-pillar': solidProfile('WP', 'wall-pillar', 'terrain-wall-pillar', 72, 192, [1])
-  };
-  var solidAssetIds = [];
-  Object.keys(solidProfiles).forEach(function (id) {
-    var assetId = solidProfiles[id].assetId;
-    if (solidAssetIds.indexOf(assetId) < 0) solidAssetIds.push(assetId);
-  });
-  var decorationProfiles = {
-    DS: decorationProfile('DS', 'cyan-spire-decoration', 'terrain-obstacle-cyan-reef-spire', 96, 128, [1, 1.15]),
-    DL: decorationProfile('DL', 'cyan-slab-decoration', 'terrain-obstacle-cyan-reef-slab', 160, 120, [1, 1.15]),
-    DA: decorationProfile('DA', 'broken-arch-decoration', 'terrain-wall-broken-arch', 280, 193, [1]),
-    DC: decorationProfile('DC', 'ruin-cluster-decoration', 'terrain-obstacle-ruin-cluster', 220, 165, [1])
-  };
-  var slots = {
-    A: { x: 180, y: 340 }, B: { x: 500, y: 340 }, C: { x: 820, y: 340 },
-    D: { x: 230, y: 650 }, E: { x: 500, y: 650 }, F: { x: 770, y: 650 },
-    G: { x: 200, y: 940 }, H: { x: 500, y: 960 }, I: { x: 800, y: 940 },
-    J: { x: 330, y: 1180 }, K: { x: 670, y: 1180 }
-  };
-  Object.keys(slots).forEach(function (id) { slots[id] = Object.freeze(slots[id]); });
-
-  var patterns = {
-    S00: pattern('S00', 'sparse', '', '', 0),
-    S01: pattern('S01', 'sparse', 'RS@D/0/1.0, CQ@I/0/1.0', '', 1),
-    S02: pattern('S02', 'sparse', 'CQ@D/0/1.0, CQ@I/45/1.0', '', 1),
-    S03: pattern('S03', 'sparse', 'RS@G/90/1.0, CQ@C/0/1.0', '', 1),
-    S04: pattern('S04', 'sparse', 'FQ@E/0/1.0', '', 2),
-    S05: pattern('S05', 'sparse', 'WP@D/45/1.0, WP@F/135/1.0, CQ@H/0/1.0', '', 1),
-    S06: pattern('S06', 'sparse', 'RS@H/0/1.0, CQ@B/45/1.0', '', 1),
-    N01: pattern('N01', 'standard', 'RS@D/90/1.0, RS@F/90/1.0, CQ@B/45/1.0, CQ@H/135/1.0', '', 2),
-    N02: pattern('N02', 'standard', 'WP@D/45/1.0, WP@F/135/1.0, CQ@B/0/1.0, CQ@H/45/1.0', '', 2),
-    N03: pattern('N03', 'standard', 'WP@D/45/1.0, WP@F/135/1.0, CQ@B/0/1.0, CQ@I/0/1.0', '', 2),
-    N04: pattern('N04', 'standard', 'RS@B/0/1.0, RS@H/0/1.0, CQ@D/45/1.0, CQ@F/135/1.0', '', 2),
-    N05: pattern('N05', 'standard', 'RS@D/90/1.0, WP@F/135/1.0, CQ@B/0/1.0, CQ@I/0/1.0', '', 2),
-    N06: pattern('N06', 'standard', 'RS@F/90/1.0, WP@D/45/1.0, CQ@C/0/1.0, CQ@G/0/1.0', '', 2),
-    N07: pattern('N07', 'standard', 'RS@D/90/1.0, RS@F/90/1.0, CQ@G/45/1.0, CQ@I/135/1.0', '', 2),
-    N08: pattern('N08', 'standard', 'WP@B/0/1.0, WP@H/0/1.0, CQ@D/45/1.0, CQ@F/135/1.0', '', 2),
-    D01: pattern('D01', 'dense', 'WP@D/45/1.0, WP@F/135/1.0, CQ@A/0/1.0, CQ@C/0/1.0, CQ@G/0/1.0, CQ@I/0/1.0', '', 3),
-    D02: pattern('D02', 'dense', 'RS@D/90/1.0, RS@F/90/1.0, CQ@A/45/1.0, CQ@C/135/1.0, CQ@G/0/1.0, CQ@I/0/1.0', '', 3),
-    D03: pattern('D03', 'dense', 'RS@B/0/1.0, RS@H/0/1.0, CQ@D/45/1.0, CQ@F/135/1.0, CQ@G/0/1.0, CQ@I/0/1.0', '', 3),
-    D04: pattern('D04', 'dense', 'WP@B/0/1.0, WP@H/0/1.0, CQ@A/45/1.0, CQ@C/135/1.0, CQ@G/0/1.0, CQ@I/0/1.0', '', 3),
-    D05: pattern('D05', 'dense', 'RS@D/90/1.0, RS@F/90/1.0, WP@B/0/1.0, WP@H/0/1.0, CQ@G/45/1.0, CQ@I/135/1.0', '', 3),
-    D06: pattern('D06', 'dense', 'RS@A/0/1.0, RS@C/0/1.0, RS@G/0/1.0, RS@I/0/1.0, CQ@D/45/1.0, CQ@F/135/1.0', '', 3)
-  };
-
-  var matrixRows = [
-    '1|S00|sparse|I|V0|onboarding-clear', '2|S00|sparse|I|V0|sonar-only-onboarding', '3|S06|sparse|MY|V0|sonar-shielding-onboarding', '4|N01|standard|MXY|V0|cover-fork', '5|S03|sparse|I|V1|sonar-exposed',
-    '6|N02|standard|MX|V1|projectile-cover', '7|S04|sparse|MY|V1|soft-fork', '8|D01|dense|MXY|V1|multi-cover', '9|S05|sparse|I|V2|sonar-exposed', '10|N03|standard|MX|V2|projectile-cover',
-    '11|S06|sparse|MY|V2|soft-fork', '12|D02|dense|MXY|V2|multi-cover', '13|N04|standard|MXY|V0|core-detour', '14|D03|dense|MXY|V3|compound-detour', '15|S01|sparse|MY|V3|soft-fork',
-    '16|N05|standard|MXY|V3|cover-fork', '17|D04|dense|MXY|V0|short-decide', '18|S02|sparse|MX|V0|recovery-space', '19|N06|standard|MY|V0|return-branch', '20|D05|dense|MXY|V1|multi-cover',
-    '21|S03|sparse|I|V1|sonar-exposed', '22|N07|standard|MX|V1|projectile-cover', '23|D06|dense|MY|V1|route-compress', '24|N08|standard|MXY|V1|cover-fork', '25|S04|sparse|I|V2|sonar-exposed',
-    '26|N01|standard|MX|V2|projectile-cover', '27|S05|sparse|MY|V2|soft-fork', '28|D01|dense|MXY|V0|multi-cover', '29|S06|sparse|I|V3|sonar-exposed', '30|N02|standard|MX|V3|projectile-cover',
-    '31|S01|sparse|MY|V3|soft-fork', '32|D02|dense|MXY|V0|multi-cover', '33|N03|standard|I|V0|core-detour', '34|D03|dense|MX|V0|compound-detour', '35|S02|sparse|MY|V0|soft-fork',
-    '36|N04|standard|MXY|V0|cover-fork', '37|D04|dense|MY|V2|short-decide', '38|S03|sparse|MX|V1|recovery-space', '39|N05|standard|MY|V1|return-branch', '40|D05|dense|MXY|V1|multi-cover',
-    '41|S04|sparse|I|V2|sonar-exposed', '42|N06|standard|MX|V1|projectile-cover', '43|D06|dense|MY|V2|route-compress', '44|N07|standard|MXY|V2|cover-fork', '45|S05|sparse|I|V3|sonar-exposed',
-    '46|N08|standard|MXY|V1|projectile-cover', '47|S06|sparse|MY|V3|soft-fork', '48|D01|dense|MXY|V3|multi-cover', '49|S01|sparse|I|V0|sonar-exposed', '50|N01|standard|MX|V0|projectile-cover',
-    '51|S02|sparse|MY|V0|soft-fork', '52|D02|dense|MXY|V0|multi-cover', '53|N02|standard|I|V1|core-detour', '54|D03|dense|MXY|V1|compound-detour', '55|S03|sparse|MY|V1|soft-fork',
-    '56|N03|standard|MXY|V1|cover-fork', '57|D04|dense|I|V2|short-decide', '58|S04|sparse|MX|V2|recovery-space', '59|N04|standard|MX|V0|return-branch', '60|D05|dense|MXY|V2|multi-cover',
-    '61|S05|sparse|I|V3|pre-chorus-shadow-read', '62|N05|standard|MX|V3|first-chorus-shadow-2', '63|D06|dense|MY|V1|locked-fire-shadow-3', '64|N06|standard|MXY|V3|cover-fork', '65|S06|sparse|I|V0|chorus-shadow-1-open',
-    '66|N07|standard|MX|V0|chorus-shadow-2-balance', '67|S01|sparse|MY|V0|soft-fork', '68|D01|dense|MXY|V0|chorus-shadow-3-dense', '69|S02|sparse|I|V1|chorus-shadow-1-open', '70|N08|standard|MXY|V1|chorus-shadow-2-balance',
-    '71|S03|sparse|MY|V1|chorus-shadow-1-open', '72|D02|dense|MXY|V1|chorus-shadow-3-dense', '73|N01|standard|I|V2|chorus-shadow-2-balance', '74|D03|dense|I|V0|chorus-shadow-3-dense', '75|S04|sparse|MY|V2|chorus-shadow-1-open',
-    '76|N02|standard|MXY|V2|chorus-shadow-2-balance', '77|D04|dense|MY|V2|chorus-shadow-3-dense', '78|S05|sparse|MX|V3|chorus-shadow-1-open', '79|N03|standard|MY|V3|chorus-shadow-2-balance', '80|D05|dense|MXY|V3|chorus-shadow-3-dense',
-    '81|S06|sparse|I|V0|chorus-shadow-1-open', '82|N04|standard|MX|V0|chorus-shadow-2-balance', '83|D06|dense|MY|V0|route-compress', '84|N05|standard|MXY|V0|chorus-shadow-2-balance', '85|S01|sparse|I|V1|chorus-shadow-1-open',
-    '86|N06|standard|MX|V1|projectile-cover', '87|S02|sparse|MY|V1|chorus-shadow-1-open', '88|D01|dense|MXY|V1|chorus-shadow-3-dense', '89|S03|sparse|I|V2|chorus-shadow-1-open', '90|N07|standard|MX|V2|chorus-shadow-2-balance',
-    '91|S04|sparse|MY|V2|chorus-shadow-1-open', '92|D02|dense|MXY|V2|chorus-shadow-3-dense', '93|N08|standard|MXY|V3|chorus-shadow-2-balance', '94|D06|dense|I|V0|chorus-shadow-3-dense', '95|S05|sparse|MY|V3|chorus-shadow-1-open',
-    '96|N01|standard|MXY|V3|chorus-shadow-2-balance', '97|D04|dense|MY|V2|chorus-shadow-3-dense', '98|S06|sparse|MX|V0|chorus-shadow-1-open', '99|N02|standard|MY|V0|chorus-shadow-2-balance', '100|D05|dense|MXY|V1|chorus-shadow-3-dense'
-  ];
-  var stageLayouts = {};
-  matrixRows.forEach(function (row) {
-    var fields = row.split('|');
-    var stageId = Number(fields[0]);
-    stageLayouts[String(stageId)] = Object.freeze({
-      stageId: stageId,
-      patternId: fields[1],
-      density: fields[2],
-      transform: fields[3],
-      variant: fields[4],
-      designIntent: fields[5]
-    });
-  });
-
-  PP.data.obstacles = Object.freeze({
-    schemaVersion: 1,
-    allowedRotationDegrees: ROTATIONS,
-    maxLogicalGroupsPerStage: 8,
-    maxCollidersPerStage: 8,
-    maxDecorationsPerStage: 0,
-    minimumPassageWidth: 180,
-    profiles: Object.freeze(solidProfiles),
-    solidAssetIds: Object.freeze(solidAssetIds),
-    decorationProfiles: Object.freeze(decorationProfiles),
-    unusedDecorationProfileIds: Object.freeze(Object.keys(decorationProfiles)),
-    slots: Object.freeze(slots),
-    patterns: Object.freeze(patterns),
-    transforms: Object.freeze(['I', 'MX', 'MY', 'MXY']),
-    variants: Object.freeze(['V0', 'V1', 'V2', 'V3']),
-    densities: Object.freeze(['sparse', 'standard', 'dense']),
-    stageLayouts: Object.freeze(stageLayouts)
-  });
-})(window.PingPanic);
-
-// ---- src/data/stages.js ----
-(function (PP) {
-  'use strict';
-
-  // 5개 해역은 각각 20개의 고유 설계 의도와 고정 시드를 가집니다.
-  // 런타임은 아래 데이터만 읽으며 스테이지 ID별 규칙 분기를 두지 않습니다.
-  var ZONES = [
-    {
-      id: 'sunken-relay', name: '침강 중계기지',
-      intents: [
-        '이동과 중계문 확인', '소나와 공명 충전', '코어 3개 회수', '문지기 핀 회피',
-        '열수 분출 타이밍', '열수·벽 복습', '공명 흡수 구역 통과', '방향 해류 적응',
-        '가변 통로 개폐', '복수 장애물 경로 선택', '수호자에게 신호 유도', '긴 귀환로 동력 관리',
-        '교차 통로 안전 선택', '낮은 충전 탐색', '두 핀의 표적 분산', '소나 없이 근접 회수',
-        '강한 횡해류 적응', '장거리 파동 판단', '강해류 귀환 경로 최적화', '중계기지 종합'
-      ]
-    },
-    {
-      id: 'ghost-garden', name: '유령 배양정원',
-      intents: [
-        '식생 장벽 우회', '첫 라이벌 출현과 탐색 방송', '숨은 코어 근접 탐색', '잔향 속 귀환',
-        '라이벌 근접 인식과 후퇴', '두 갈래 해류 선택', '코어 밀집지 진입', '충전 회복 구간 확보',
-        '라이벌 직선탄과 엄폐', '사냥개 추적과 식생 엄폐', '벽을 이용한 탄 회피', '코어 밀집지 우선순위',
-        '장거리 반출 경로 차단', '저동력 귀환', '복수 신호 분리', '운반 라이벌 반출과 합산 게이트',
-        '핀·사냥개 교대', '소나 접촉 최소화', '복수 수호자 신호 분산', '배양정원 종합'
-      ]
-    },
-    {
-      id: 'red-channel', name: '적열 동력수로',
-      intents: [
-        '강한 횡해류 진입', '해류 속 근접 회수', '사냥개와 긴 직선로', '벽 뒤 안전 충전',
-        '해류 속 라이벌 직선탄', '반대 해류 귀환', '연속 코어 경로', '최소 소나 항해',
-        '복수 사냥개 수색', '급류와 사냥개 엄폐', '수호자 충돌선 우회', '코어 반출 후 합산 귀환',
-        '긴 추격의 마지막 위치', '급류 속 동력 보존', '핀·사냥개 혼합', '밸브 통로 라이벌 반출 차단',
-        '충전 제한과 장거리 파동', '해류 방향 전환', '역해류 코어 회수', '동력수로 종합'
-      ]
-    },
-    {
-      id: 'silent-trench', name: '무음 기록해구',
-      intents: [
-        '합창 감시자 소개', '원형파동 예고 확인', '벽으로 합창 취소', '파동 사이 코어 회수',
-        '합창과 사냥개 표적 분리', '라이벌 신호와 합창 표적 전환', '두 수호자 수색 교대', '좁은 안전 지대',
-        '소나 접촉 순서 제어', '합창·사냥개 추격 분리', '직선탄과 원형파동 구분', '운반 코어 충돌 회수',
-        '복수 벽 시야 차단', '장거리 마지막 위치 수색', '합창 파동 단회 피격', '라이벌 탄과 합창 파동 종합',
-        '세 수호자 순차 조합', '무신호 근접 회수', '합창 파동 감점 관리', '기록해구 종합'
-      ]
-    },
-    {
-      id: 'resonance-heart', name: '공명의 심장',
-      intents: [
-        '세 수호자 역할 판독', '강해류와 합창 조합', '장거리 코어 최적화', '복수 추격 끊기',
-        '저동력 정밀 귀환', '벽을 이용한 탄·파동 회피', '소나 없는 첫 코어', '최종 해역 라이벌 선점전',
-        '세 수호자 표적 전환', '세 수호자 교전 종합', '위험 통로 코어 회수', '반출 허용 후 빠른 귀환',
-        '최대 장애물 경로', '충전과 동력 동시 관리', '합창 연속 예고', '해류 역방향 귀환',
-        '완벽 회수 도전', '라이벌 파괴 비용과 별 감점', '최종 귀환 경로 최적화', '중계망 완전 복구'
-      ]
-    }
-  ];
-
-  var RIVAL_PRESETS = {
-    22: 'probe', 25: 'probe', 29: 'carrier', 36: 'carrier', 45: 'probe',
-    56: 'carrier', 66: 'probe', 76: 'carrier', 88: 'probe', 98: 'carrier'
-  };
-
-  var OVERRIDES = {
-    1: { guardianCount: 0, currentStrength: 0, timeLimit: 70, coreTotal: 1, requiredCores: 1, startRevealedCores: true },
-    2: { guardianCount: 0, currentStrength: 0, timeLimit: 88, coreTotal: 3, requiredCores: 3 },
-    3: {
-      guardianCount: 0, currentStrength: 0, timeLimit: 92,
-      coreTotal: 3, requiredCores: 3,
-      fixedCoreSpots: [{ x: 500, y: 315 }, { x: 150, y: 280 }, { x: 840, y: 355 }]
-    },
-    4: { guardianCount: 1, guardianTypes: ['pin'], currentStrength: 4, timeLimit: 98 },
-    5: { guardianCount: 1, guardianTypes: ['pin'], fixedGuardianSpots: [{ x: 500, y: 790 }] },
-    7: { guardianCount: 0, guardianTypes: [] },
-    8: { guardianCount: 0, guardianTypes: [], currentStrength: 9, currentPhase: 0 },
-    9: { guardianCount: 0, guardianTypes: [] },
-    21: { guardianCount: 1, guardianTypes: ['hound'] },
-    22: { guardianCount: 0, guardianTypes: [] },
-    23: { guardianCount: 0, guardianTypes: [] },
-    44: { guardianCount: 0, guardianTypes: [] },
-    41: { currentStrength: 30, currentPhase: 0 },
-    48: { currentStrength: 38, currentPhase: Math.PI },
-    53: { currentStrength: 38, currentPhase: 0 },
-    62: { guardianCount: 1, guardianTypes: ['chorus'] },
-    67: { guardianCount: 1, guardianTypes: ['pin'] },
-    100: { timeLimit: 190, guardianCount: 3, guardianTypes: ['pin', 'hound', 'chorus'], currentStrength: 48 }
-  };
-
-  function environmentForStage(id) {
-    var mechanics = [];
-    if (id === 5) mechanics.push({ type: 'thermalVent', x: 500, y: 790, radius: 210, period: 3.2, activeSeconds: 1.9, phase: 0 });
-    if (id === 6) mechanics.push({ type: 'thermalVent', x: 500, y: 790, radius: 160, period: 3.2, activeSeconds: 1.7, phase: 0.8 });
-    if (id === 7) mechanics.push({ type: 'absorptionZone', x: 450, y: 650, radius: 230, strength: 0.45 });
-    if (id === 8) mechanics.push({
-      type: 'currentBand', mode: 'override',
-      x: 500, y: 760, width: 720, height: 300, rotationDegrees: 90, feather: 90,
-      currentStrength: 14, currentPhase: -Math.PI / 2
-    });
-    if (id === 9) mechanics.push({ type: 'variablePassage', x: 500, y: 760, width: 420, height: 72, rotationDegrees: 0, period: 4.2, openSeconds: 2.1, phase: 0 });
-    if (id === 10) mechanics.push({
-      type: 'currentBand', mode: 'boost',
-      x: 500, y: 1040, width: 760, height: 240, rotationDegrees: 333, feather: 72,
-      boostMultiplier: 1.6
-    });
-
-    if (id === 41) mechanics.push({
-      type: 'currentBand', mode: 'override',
-      x: 380, y: 920, width: 720, height: 260, rotationDegrees: 45, feather: 80,
-      currentStrength: 36, currentPhase: -Math.PI / 2
-    });
-    if (id === 48) mechanics.push({
-      type: 'currentBand', mode: 'boost',
-      x: 500, y: 1040, width: 720, height: 260, rotationDegrees: 180, feather: 80,
-      boostMultiplier: 1.45
-    });
-    if (id === 53) mechanics.push({
-      type: 'currentBand', mode: 'override',
-      x: 620, y: 1040, width: 680, height: 250, rotationDegrees: 90, feather: 76,
-      currentStrength: 40, currentPhase: Math.PI / 2
-    });
-    if (id === 76) mechanics.push({
-      type: 'currentBand', mode: 'boost',
-      x: 500, y: 1040, width: 740, height: 240, rotationDegrees: 354, feather: 72,
-      boostMultiplier: 1.7
-    });
-
-    if ([23, 33].indexOf(id) >= 0) {
-      mechanics.push({ type: 'decoyWave', x: 300, y: 520, radius: 34 });
-    }
-    if ([42, 52, 57].indexOf(id) >= 0) {
-      mechanics.push({ type: 'thermalVent', x: 500, y: 760, radius: 175, period: 3, activeSeconds: 1.65, phase: id % 3 });
-    }
-    if ([44, 47, 58].indexOf(id) >= 0) {
-      mechanics.push({
-        type: 'variablePassage',
-        x: 500,
-        y: id === 44 ? 700 : (id === 58 ? 850 : 820),
-        width: 360,
-        height: 68,
-        rotationDegrees: 0,
-        period: id === 44 ? 4.4 : (id === 47 ? 4 : 3.8),
-        openSeconds: id === 44 ? 2.3 : (id === 47 ? 2 : 1.8),
-        phase: id === 47 ? 1 : (id === 58 ? 0.6 : 0)
-      });
-    }
-    if ([67, 73].indexOf(id) >= 0) {
-      mechanics.push({ type: 'signalEcho', x: 510, y: 700, radius: 185, radiusMultiplier: 1.2, revealMultiplier: 1.35 });
-    }
-    if ([61, 68, 72, 78].indexOf(id) >= 0) {
-      mechanics.push({ type: 'absorptionZone', x: 500, y: id === 61 || id === 78 ? 750 : 780, radius: 190, strength: 0.5 });
-    }
-    if ([81, 91, 96].indexOf(id) >= 0) {
-      mechanics.push({
-        type: 'variablePassage',
-        x: id === 91 ? 300 : 500,
-        y: id === 96 ? 700 : (id === 91 ? 750 : 760),
-        width: 430, height: 76, rotationDegrees: id === 91 ? 90 : 0,
-        period: 3.8, openSeconds: 1.7, phase: id % 2
-      });
-    }
-    if (id >= 97) {
-      mechanics.push({
-        type: 'thermalVent',
-        x: id === 98 ? 740 : (id === 99 ? 260 : 500),
-        y: id === 97 || id === 100 ? 750 : 590,
-        radius: 145, period: 2.8, activeSeconds: 1.55, phase: id % 2
-      });
-      mechanics.push({
-        type: 'absorptionZone',
-        x: id === 99 ? 500 : (id === 100 ? 150 : 720),
-        y: id === 99 ? 750 : (id === 100 ? 700 : 980),
-        radius: 150, strength: 0.4
-      });
-    }
-    return mechanics;
-  }
-
-  function guardianRoster(zoneIndex, order, count) {
-    var unlocked = zoneIndex === 0 ? ['pin'] : (zoneIndex < 3 ? ['pin', 'hound'] : ['pin', 'hound', 'chorus']);
-    var result = [];
-    for (var i = 0; i < count; i += 1) result.push(unlocked[(order + i + zoneIndex) % unlocked.length]);
-    return result;
-  }
-
-  function makeStage(index) {
-    var id = index + 1;
-    var zoneIndex = Math.floor(index / 20);
-    var order = index % 20;
-    var zone = ZONES[zoneIndex];
-    var rivalPreset = RIVAL_PRESETS[id] || null;
-    var obstacleLayout = PP.data.obstacles.stageLayouts[String(id)];
-    var obstaclePattern = PP.data.obstacles.patterns[obstacleLayout.patternId];
-    var guardianCount = id < 4 ? 0 : Math.min(3, 1 + Math.floor((order + zoneIndex * 3) / 9));
-    var layoutVariant = (order * 2 + zoneIndex) % 7;
-    var base = {
-      schemaVersion: 2,
-      contentVersion: '100-stage-v1',
-      id: id,
-      zoneId: zone.id,
-      zoneName: zone.name,
-      orderInZone: order + 1,
-      title: zone.name + ' ' + (order + 1),
-      designIntent: zone.intents[order],
-      unlockAfterStageId: id === 1 ? 0 : id - 1,
-      mapPreset: zone.id + '-layout-' + (layoutVariant + 1),
-      layoutVariant: layoutVariant,
-      obstaclePatternId: obstacleLayout.patternId,
-      obstacleDensity: obstacleLayout.density,
-      obstacleTransform: obstacleLayout.transform,
-      obstacleVariant: obstacleLayout.variant,
-      obstacleDesignIntent: obstacleLayout.designIntent,
-      corePattern: (order * 3 + zoneIndex * 2) % 8,
-      seed: 7300 + id * 97 + zoneIndex * 1009,
-      seedPolicy: 'fixed',
-      timeLimit: 104 + zoneIndex * 13 + order * 2,
-      coreTotal: rivalPreset ? 3 : 3,
-      requiredCores: 3,
-      startRevealedCores: false,
-      guardianCount: guardianCount,
-      guardianTypes: guardianRoster(zoneIndex, order, guardianCount),
-      obstacleCount: obstaclePattern.groups.length,
-      currentStrength: (zoneIndex === 2 || zoneIndex === 4 ? 22 : 5) + zoneIndex * 4 + (order % 5) * 4,
-      currentPhase: ((order * 37 + zoneIndex * 53) % 360) * Math.PI / 180,
-      sonarCost: 26 + Math.min(8, zoneIndex * 2 + Math.floor(order / 8)),
-      sonarRechargePerSecond: Math.max(8, 13 - zoneIndex - Math.floor(order / 10)),
-      rivalPreset: rivalPreset,
-      rivalBulletSpeed: PP.data.config.rival.projectileSpeed,
-      environment: environmentForStage(id),
-      onboardingStageId: PP.data.config.campaign.onboardingStageIds.indexOf(id) >= 0 ? id : 0
-    };
-    var override = OVERRIDES[id] || {};
-    Object.keys(override).forEach(function (key) { base[key] = override[key]; });
-    return Object.freeze(base);
-  }
-
-  PP.data.zones = Object.freeze(ZONES.map(function (zone) {
-    return Object.freeze({ id: zone.id, name: zone.name });
-  }));
-  PP.data.stages = Object.freeze(Array.from({ length: 100 }, function (_, index) { return makeStage(index); }));
-})(window.PingPanic);
-
-// ---- src/core/utils.js ----
-(function (PP) {
-  'use strict';
-
-  function clamp(value, min, max) { return Math.max(min, Math.min(max, value)); }
-  function distance(a, b) {
-    var dx = a.x - b.x;
-    var dy = a.y - b.y;
-    return Math.sqrt(dx * dx + dy * dy);
-  }
-  function normalize(x, y) {
-    var length = Math.sqrt(x * x + y * y);
-    return length > 0.0001 ? { x: x / length, y: y / length, length: length } : { x: 0, y: 0, length: 0 };
-  }
-  function seededRandom(seed) {
-    var value = seed >>> 0;
-    return function () {
-      value += 0x6D2B79F5;
-      var t = value;
-      t = Math.imul(t ^ (t >>> 15), t | 1);
-      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-  }
-  function shuffle(items, random) {
-    var result = items.slice();
-    for (var i = result.length - 1; i > 0; i -= 1) {
-      var j = Math.floor(random() * (i + 1));
-      var temp = result[i];
-      result[i] = result[j];
-      result[j] = temp;
-    }
-    return result;
-  }
-  function normalizeObbDegrees(value) {
-    var normalized = Number(value) || 0;
-    normalized = ((normalized % 180) + 180) % 180;
-    return Math.abs(normalized - 180) < 0.000001 ? 0 : normalized;
-  }
-  function prepareObb(source) {
-    if (source && source.obbPrepared) return source;
-    if (!source) throw new Error('OBB source is required.');
-    var width = Number.isFinite(source.width) ? source.width : source.w;
-    var height = Number.isFinite(source.height) ? source.height : source.h;
-    if (!(width > 0) || !(height > 0)) throw new Error('OBB width/height must be positive.');
-    var cx = Number.isFinite(source.cx) ? source.cx : Number(source.x) + width / 2;
-    var cy = Number.isFinite(source.cy) ? source.cy : Number(source.y) + height / 2;
-    var rotationDegrees = normalizeObbDegrees(source.rotationDegrees);
-    var rotationRadians = rotationDegrees * Math.PI / 180;
-    var halfWidth = width / 2;
-    var halfHeight = height / 2;
-    var cos = Math.cos(rotationRadians);
-    var sin = Math.sin(rotationRadians);
-    var aabbHalfWidth = Math.abs(cos) * halfWidth + Math.abs(sin) * halfHeight;
-    var aabbHalfHeight = Math.abs(sin) * halfWidth + Math.abs(cos) * halfHeight;
-    source.cx = cx;
-    source.cy = cy;
-    source.width = width;
-    source.height = height;
-    source.w = width;
-    source.h = height;
-    if (!Number.isFinite(source.x)) source.x = cx - halfWidth;
-    if (!Number.isFinite(source.y)) source.y = cy - halfHeight;
-    source.rotationDegrees = rotationDegrees;
-    source.rotationRadians = rotationRadians;
-    source.cos = cos;
-    source.sin = sin;
-    source.halfExtents = { x: halfWidth, y: halfHeight };
-    source.aabb = {
-      minX: cx - aabbHalfWidth, minY: cy - aabbHalfHeight,
-      maxX: cx + aabbHalfWidth, maxY: cy + aabbHalfHeight
-    };
-    source.obbPrepared = true;
-    return source;
-  }
-  function createObb(definition) {
-    return prepareObb(Object.assign({ entityKind: 'obstacle' }, definition || {}));
-  }
-  function obbCenter(source) {
-    var obb = prepareObb(source);
-    return { x: obb.cx, y: obb.cy };
-  }
-  function toObbLocal(point, source) {
-    var obb = prepareObb(source);
-    var dx = point.x - obb.cx;
-    var dy = point.y - obb.cy;
-    return { x: dx * obb.cos + dy * obb.sin, y: -dx * obb.sin + dy * obb.cos };
-  }
-  function pointToObbDistance(point, source) {
-    var obb = prepareObb(source);
-    var local = toObbLocal(point, obb);
-    var dx = local.x - clamp(local.x, -obb.halfExtents.x, obb.halfExtents.x);
-    var dy = local.y - clamp(local.y, -obb.halfExtents.y, obb.halfExtents.y);
-    return Math.sqrt(dx * dx + dy * dy);
-  }
-  function circleIntersectsObb(point, radius, source) {
-    var distanceToObstacle = pointToObbDistance(point, source);
-    return distanceToObstacle * distanceToObstacle < radius * radius;
-  }
-  function segmentIntersectsLocalAabb(start, end, halfWidth, halfHeight) {
-    var dx = end.x - start.x;
-    var dy = end.y - start.y;
-    var t0 = 0;
-    var t1 = 1;
-    var checks = [
-      [-dx, start.x + halfWidth], [dx, halfWidth - start.x],
-      [-dy, start.y + halfHeight], [dy, halfHeight - start.y]
-    ];
-    for (var i = 0; i < checks.length; i += 1) {
-      var p = checks[i][0];
-      var q = checks[i][1];
-      if (Math.abs(p) < 0.0001 && q < 0) return false;
-      if (Math.abs(p) < 0.0001) continue;
-      var ratio = q / p;
-      if (p < 0) t0 = Math.max(t0, ratio);
-      else t1 = Math.min(t1, ratio);
-      if (t0 > t1) return false;
-    }
-    return true;
-  }
-  function segmentIntersectsObb(start, end, source, padding) {
-    var obb = prepareObb(source);
-    return segmentIntersectsLocalAabb(
-      toObbLocal(start, obb),
-      toObbLocal(end, obb),
-      obb.halfExtents.x + (padding || 0),
-      obb.halfExtents.y + (padding || 0)
-    );
-  }
-  function pointSegmentDistanceSquared(point, start, end) {
-    var dx = end.x - start.x;
-    var dy = end.y - start.y;
-    var lengthSquared = dx * dx + dy * dy;
-    if (lengthSquared < 0.000001) {
-      dx = point.x - start.x;
-      dy = point.y - start.y;
-      return dx * dx + dy * dy;
-    }
-    var t = clamp(((point.x - start.x) * dx + (point.y - start.y) * dy) / lengthSquared, 0, 1);
-    var closestX = start.x + dx * t;
-    var closestY = start.y + dy * t;
-    dx = point.x - closestX;
-    dy = point.y - closestY;
-    return dx * dx + dy * dy;
-  }
-  function orientation(a, b, c) {
-    return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
-  }
-  function segmentsIntersect(a, b, c, d) {
-    var abC = orientation(a, b, c);
-    var abD = orientation(a, b, d);
-    var cdA = orientation(c, d, a);
-    var cdB = orientation(c, d, b);
-    var epsilon = 0.000001;
-    function onSegment(start, end, point) {
-      return point.x >= Math.min(start.x, end.x) - epsilon && point.x <= Math.max(start.x, end.x) + epsilon
-        && point.y >= Math.min(start.y, end.y) - epsilon && point.y <= Math.max(start.y, end.y) + epsilon;
-    }
-    if (((abC > epsilon && abD < -epsilon) || (abC < -epsilon && abD > epsilon))
-      && ((cdA > epsilon && cdB < -epsilon) || (cdA < -epsilon && cdB > epsilon))) return true;
-    if (Math.abs(abC) <= epsilon && onSegment(a, b, c)) return true;
-    if (Math.abs(abD) <= epsilon && onSegment(a, b, d)) return true;
-    if (Math.abs(cdA) <= epsilon && onSegment(c, d, a)) return true;
-    if (Math.abs(cdB) <= epsilon && onSegment(c, d, b)) return true;
-    return false;
-  }
-  function segmentSegmentDistanceSquared(a, b, c, d) {
-    if (segmentsIntersect(a, b, c, d)) return 0;
-    return Math.min(
-      pointSegmentDistanceSquared(a, c, d),
-      pointSegmentDistanceSquared(b, c, d),
-      pointSegmentDistanceSquared(c, a, b),
-      pointSegmentDistanceSquared(d, a, b)
-    );
-  }
-  function sweepCircleIntersectsObb(start, end, radius, source) {
-    var obb = prepareObb(source);
-    if (circleIntersectsObb(start, radius, obb)) return circleIntersectsObb(end, radius, obb);
-    var localStart = toObbLocal(start, obb);
-    var localEnd = toObbLocal(end, obb);
-    if (segmentIntersectsLocalAabb(localStart, localEnd, obb.halfExtents.x, obb.halfExtents.y)) return true;
-    var left = -obb.halfExtents.x;
-    var right = obb.halfExtents.x;
-    var top = -obb.halfExtents.y;
-    var bottom = obb.halfExtents.y;
-    var corners = [
-      { x: left, y: top }, { x: right, y: top },
-      { x: right, y: bottom }, { x: left, y: bottom }
-    ];
-    var radiusSquared = radius * radius;
-    for (var i = 0; i < corners.length; i += 1) {
-      if (segmentSegmentDistanceSquared(localStart, localEnd, corners[i], corners[(i + 1) % corners.length]) < radiusSquared) return true;
-    }
-    return false;
-  }
-  function moveWithObstacles(entity, dx, dy, radius, bounds, obstacles) {
-    var startX = { x: entity.x, y: entity.y };
-    var nextX = { x: clamp(entity.x + dx, radius, bounds.width - radius), y: entity.y };
-    if (!obstacles.some(function (obstacle) { return sweepCircleIntersectsObb(startX, nextX, radius, obstacle); })) entity.x = nextX.x;
-    var startY = { x: entity.x, y: entity.y };
-    var nextY = { x: entity.x, y: clamp(entity.y + dy, 100 + radius, bounds.height - radius) };
-    if (!obstacles.some(function (obstacle) { return sweepCircleIntersectsObb(startY, nextY, radius, obstacle); })) entity.y = nextY.y;
-  }
-  function hasLineOfSight(start, end, walls) {
-    return !walls.some(function (wall) { return segmentIntersectsObb(start, end, wall); });
-  }
-  function hasClearanceLineOfSight(start, end, walls, clearance) {
-    return !walls.some(function (wall) { return segmentIntersectsObb(start, end, wall, clearance || 0); });
-  }
-  function rayObbDistance(origin, angle, source, maxDistance) {
-    var obb = prepareObb(source);
-    maxDistance = Number.isFinite(maxDistance) ? maxDistance : Infinity;
-    var localOrigin = toObbLocal(origin, obb);
-    var worldDx = Math.cos(angle);
-    var worldDy = Math.sin(angle);
-    var dx = worldDx * obb.cos + worldDy * obb.sin;
-    var dy = -worldDx * obb.sin + worldDy * obb.cos;
-    var near = 0;
-    var far = maxDistance;
-    var axes = [
-      { origin: localOrigin.x, direction: dx, min: -obb.halfExtents.x, max: obb.halfExtents.x },
-      { origin: localOrigin.y, direction: dy, min: -obb.halfExtents.y, max: obb.halfExtents.y }
-    ];
-    for (var i = 0; i < axes.length; i += 1) {
-      var axis = axes[i];
-      if (Math.abs(axis.direction) < 0.000001) {
-        if (axis.origin < axis.min || axis.origin > axis.max) return Infinity;
-        continue;
-      }
-      var first = (axis.min - axis.origin) / axis.direction;
-      var second = (axis.max - axis.origin) / axis.direction;
-      if (first > second) { var swap = first; first = second; second = swap; }
-      near = Math.max(near, first);
-      far = Math.min(far, second);
-      if (near > far) return Infinity;
-    }
-    return near >= 0 && near <= maxDistance ? near : Infinity;
-  }
-  function expandedObb(source, padding) {
-    var obb = prepareObb(source);
-    return createObb({
-      cx: obb.cx, cy: obb.cy,
-      width: obb.width + (padding || 0) * 2,
-      height: obb.height + (padding || 0) * 2,
-      rotationDegrees: obb.rotationDegrees
-    });
-  }
-  function circleIntersectsRect(point, radius, rect) { return circleIntersectsObb(point, radius, rect); }
-  function moveWithWalls(entity, dx, dy, radius, bounds, walls) { return moveWithObstacles(entity, dx, dy, radius, bounds, walls); }
-  function segmentIntersectsRect(start, end, rect) { return segmentIntersectsObb(start, end, rect); }
-  function pointToRectDistance(point, rect) { return pointToObbDistance(point, rect); }
-  function expandedRect(rect, padding) { return expandedObb(rect, padding); }
-  function rayRectDistance(origin, angle, rect, maxDistance) { return rayObbDistance(origin, angle, rect, maxDistance); }
-  function waveBlockDistance(origin, angle, walls) {
-    var hit = Infinity;
-    (walls || []).forEach(function (wall) {
-      hit = Math.min(hit, rayObbDistance(origin, angle, wall));
-    });
-    return hit;
-  }
-  function waveArcVisible(origin, angle, radius, walls, padding) {
-    return radius <= waveBlockDistance(origin, angle, walls) + (padding || 0);
-  }
-  function waveTargetVisible(origin, target, walls) {
-    if (!target) return false;
-    var dx = target.x - origin.x;
-    var dy = target.y - origin.y;
-    var centerDistance = Math.sqrt(dx * dx + dy * dy);
-    var radius = Math.max(0, target.radius || 0);
-    if (centerDistance <= radius) return true;
-    var centerAngle = Math.atan2(dy, dx);
-    var tangentOffset = Math.asin(Math.min(1, radius / centerDistance));
-    var tangentDistance = Math.sqrt(Math.max(0, centerDistance * centerDistance - radius * radius));
-    var rays = [
-      { angle: centerAngle, distance: Math.max(0, centerDistance - radius) },
-      { angle: centerAngle - tangentOffset, distance: tangentDistance },
-      { angle: centerAngle + tangentOffset, distance: tangentDistance }
-    ];
-    return rays.some(function (ray) {
-      return ray.distance <= waveBlockDistance(origin, ray.angle, walls) + 0.0001;
-    });
-  }
-  function findGridPath(start, goal, radius, bounds, walls, cellSize) {
-    var size = cellSize || 50;
-    var cols = Math.floor(bounds.width / size);
-    var rows = Math.floor(bounds.height / size);
-    function cellOf(point) {
-      return { c: clamp(Math.floor(point.x / size), 0, cols - 1), r: clamp(Math.floor(point.y / size), 0, rows - 1) };
-    }
-    function key(cell) { return cell.c + ',' + cell.r; }
-    function center(cell) { return { x: (cell.c + 0.5) * size, y: (cell.r + 0.5) * size }; }
-    function blocked(cell) {
-      var point = center(cell);
-      if (point.x < radius || point.x > bounds.width - radius || point.y < 100 + radius || point.y > bounds.height - radius) return true;
-      return walls.some(function (wall) { return circleIntersectsObb(point, radius, wall); });
-    }
-    var startCell = cellOf(start);
-    var goalCell = cellOf(goal);
-    var queue = [startCell];
-    var cameFrom = {};
-    var visited = {};
-    var startKey = key(startCell);
-    visited[startKey] = true;
-    var best = startCell;
-    var bestDistance = Math.abs(startCell.c - goalCell.c) + Math.abs(startCell.r - goalCell.r);
-    while (queue.length) {
-      var current = queue.shift();
-      var currentDistance = Math.abs(current.c - goalCell.c) + Math.abs(current.r - goalCell.r);
-      if (currentDistance < bestDistance) { best = current; bestDistance = currentDistance; }
-      if (currentDistance === 0) { best = current; break; }
-      [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (offset) {
-        var next = { c: current.c + offset[0], r: current.r + offset[1] };
-        var nextKey = key(next);
-        if (next.c < 0 || next.r < 0 || next.c >= cols || next.r >= rows || visited[nextKey] || blocked(next)) return;
-        visited[nextKey] = true;
-        cameFrom[nextKey] = current;
-        queue.push(next);
-      });
-    }
-    var path = [best];
-    while (key(path[0]) !== startKey && cameFrom[key(path[0])]) path.unshift(cameFrom[key(path[0])]);
-    if (path.length <= 1) return [];
-    return path.slice(1).map(center);
-  }
-
-  PP.core.utils = {
-    clamp: clamp,
-    distance: distance,
-    normalize: normalize,
-    seededRandom: seededRandom,
-    shuffle: shuffle,
-    normalizeObbDegrees: normalizeObbDegrees,
-    prepareObb: prepareObb,
-    createObb: createObb,
-    obbCenter: obbCenter,
-    toObbLocal: toObbLocal,
-    pointToObbDistance: pointToObbDistance,
-    circleIntersectsObb: circleIntersectsObb,
-    segmentIntersectsObb: segmentIntersectsObb,
-    sweepCircleIntersectsObb: sweepCircleIntersectsObb,
-    moveWithObstacles: moveWithObstacles,
-    rayObbDistance: rayObbDistance,
-    circleIntersectsRect: circleIntersectsRect,
-    moveWithWalls: moveWithWalls,
-    segmentIntersectsRect: segmentIntersectsRect,
-    hasLineOfSight: hasLineOfSight,
-    pointToRectDistance: pointToRectDistance,
-    hasClearanceLineOfSight: hasClearanceLineOfSight,
-    rayRectDistance: rayRectDistance,
-    waveBlockDistance: waveBlockDistance,
-    waveArcVisible: waveArcVisible,
-    waveTargetVisible: waveTargetVisible,
-    findGridPath: findGridPath
-  };
-})(window.PingPanic);
-
-// ---- src/core/assets.js ----
-(function (PP) {
-  'use strict';
-
-  var embedded = (typeof ({"version":1,"imageBasePath":"assets/images/","images":[{"id":"title-key-art","path":"title-key-art.png","category":"brand","format":"png","purpose":"타이틀 화면용 수몰 문명·회수 드론 키 아트","intrinsicSize":[1024,1536],"displaySpace":"screen","recommendedFit":"cover","preloadGroup":"title-only","source":"Graphic/echo-diver/source/title-key-art-ai.png"},{"id":"bg-zone-01-sunken-relay","path":"backgrounds/zone-01-sunken-relay.svg","category":"background","format":"svg","purpose":"해역 1 침강 중계기지 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-02-ghost-garden","path":"backgrounds/zone-02-ghost-garden.svg","category":"background","format":"svg","purpose":"해역 2 유령 배양정원 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-03-thermal-conduit","path":"backgrounds/zone-03-thermal-conduit.svg","category":"background","format":"svg","purpose":"해역 3 적열 동력수로 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-04-silent-archive","path":"backgrounds/zone-04-silent-archive.svg","category":"background","format":"svg","purpose":"해역 4 무음 기록해구 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-05-resonance-heart","path":"backgrounds/zone-05-resonance-heart.svg","category":"background","format":"svg","purpose":"해역 5 공명의 심장 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"entity-player-recovery-drone","path":"entities/player-recovery-drone.svg","category":"entity","format":"svg","purpose":"중앙이 빈 링형 무인 회수 드론","intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"entity-resonance-core","path":"entities/resonance-core.svg","category":"entity","format":"svg","purpose":"바닥·플레이어·라이벌 소유 상태에 공통 사용하는 공명 코어","intrinsicSize":[72,72],"displaySpace":"world","recommendedWorldSize":[64,64],"minimumCssAt320":[18,18],"anchor":"center"},{"id":"entity-player-relay-gate","path":"entities/player-relay-gate.svg","category":"entity","format":"svg","purpose":"출발·귀환·코어 업로드 중계문","intrinsicSize":[240,240],"displaySpace":"world","recommendedWorldSize":[220,220],"minimumCssAt320":[68,68],"anchor":"center"},{"id":"entity-rival-probe-drone","path":"entities/rival-probe-drone.svg","category":"entity","format":"svg","purpose":"라이벌 탐색·교전용 탐침형 외형","intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[120,120],"minimumCssAt320":[38,38],"anchor":"center"},{"id":"entity-rival-carrier-drone","path":"entities/rival-carrier-drone.svg","category":"entity","format":"svg","purpose":"외부 코어 소켓을 포함한 라이벌 운반형 외형","intrinsicSize":[144,144],"displaySpace":"world","recommendedWorldSize":[132,132],"minimumCssAt320":[42,42],"anchor":"center"},{"id":"entity-rival-relay-boundary","path":"entities/rival-relay-boundary.svg","category":"entity","format":"svg","purpose":"라이벌 코어 영구 반출용 화면 가장자리 회수 경계","intrinsicSize":[160,256],"displaySpace":"world","recommendedWorldSize":[96,180],"anchor":"right-center"},{"id":"entity-guardian-gate-pin","path":"entities/guardian-gate-pin.svg","category":"entity","format":"svg","purpose":"십자가 외곽 골격의 문지기 핀 수호자","intrinsicSize":[160,160],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"entity-guardian-lock-hound","path":"entities/guardian-lock-hound.svg","category":"entity","format":"svg","purpose":"길쭉한 마름모 외곽 골격의 잠금 사냥개 수호자","intrinsicSize":[160,160],"displaySpace":"world","recommendedWorldSize":[128,128],"minimumCssAt320":[40,40],"anchor":"center"},{"id":"entity-guardian-chorus-watcher","path":"entities/guardian-chorus-watcher.svg","category":"entity","format":"svg","purpose":"원형 외곽 골격의 합창 감시자 수호자","intrinsicSize":[176,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"effect-sonar-wave-player","path":"effects/sonar-wave-player.svg","category":"effect","format":"svg","purpose":"플레이어 중심 청록 문양 조각 소나 파동","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale square to current pulse diameter","anchor":"center"},{"id":"effect-sonar-wave-rival","path":"effects/sonar-wave-rival.svg","category":"effect","format":"svg","purpose":"라이벌 중심 호박 점선 공명 파동","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale square to current pulse diameter","anchor":"center"},{"id":"effect-guardian-chorus-wave","path":"effects/guardian-chorus-wave.svg","category":"effect","format":"svg","purpose":"합창 감시자의 삼각 경고편 원형 공격 파동","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale square to current attack-wave diameter","anchor":"center"},{"id":"effect-rival-projectile","path":"effects/rival-projectile.svg","category":"effect","format":"svg","purpose":"진행 방향이 고정된 라이벌 직선탄","intrinsicSize":[64,32],"displaySpace":"world","recommendedWorldSize":[52,26],"anchor":"center"},{"id":"effect-impact-fracture","path":"effects/impact-fracture.svg","category":"effect","format":"svg","purpose":"전체 화면 섬광을 대체하는 개체 중심 피격 균열","intrinsicSize":[96,96],"displaySpace":"world","recommendedWorldSize":[84,84],"anchor":"center"},{"id":"terrain-wall-pillar","path":"terrain/wall-pillar.svg","category":"terrain","format":"svg","purpose":"회전·반전·길이 조절하는 직선 벽 모듈","intrinsicSize":[96,256],"displaySpace":"world","runtimeSizing":"stretch along long axis only","anchor":"center"},{"id":"terrain-obstacle-foundation-square","path":"terrain/obstacle-foundation-square.svg","category":"terrain","format":"svg","purpose":"OBB 중앙 대형 정사각형과 소형 정사각 기둥에 공용하는 solid 기반","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale to cached OBB width and height","anchor":"center"},{"id":"terrain-obstacle-ruin-segment","path":"terrain/obstacle-ruin-segment.svg","category":"terrain","format":"svg","purpose":"0/45/90/135도 OBB 건물 폐허 solid 세그먼트","intrinsicSize":[256,128],"displaySpace":"world","runtimeSizing":"scale uniformly to 0.85, 1, or 1.15 profile size","anchor":"center"},{"id":"terrain-wall-broken-arch","path":"terrain/wall-broken-arch.svg","category":"terrain","format":"svg","purpose":"통로 랜드마크용 부서진 반원 아치","intrinsicSize":[320,220],"displaySpace":"world","recommendedWorldSize":[280,193],"anchor":"bottom-center"},{"id":"terrain-obstacle-ruin-cluster","path":"terrain/obstacle-ruin-cluster.svg","category":"terrain","format":"svg","purpose":"회전·반전하는 각진 유적 잔해 장애물","intrinsicSize":[256,192],"displaySpace":"world","recommendedWorldSize":[220,165],"anchor":"bottom-center"},{"id":"terrain-hazard-current","path":"terrain/hazard-current.svg","category":"terrain","format":"svg","purpose":"해류 방향과 흐름 구간 표식","intrinsicSize":[256,128],"displaySpace":"world","recommendedWorldSize":[240,120],"anchor":"center"},{"id":"terrain-hazard-thermal-vent","path":"terrain/hazard-thermal-vent.svg","category":"terrain","format":"svg","purpose":"적열 동력수로의 열수 분출 위험","source":"Graphic/echo-diver/source/terrain-hazard-thermal-vent.svg","intrinsicSize":[192,256],"displaySpace":"world","recommendedWorldSize":[144,192],"anchor":"bottom-center"},{"id":"terrain-hazard-resonance-sink","path":"terrain/hazard-resonance-sink.svg","category":"terrain","format":"svg","purpose":"공명 충전을 흡수하는 위험 구역","source":"Graphic/echo-diver/source/terrain-hazard-resonance-sink.svg","intrinsicSize":[192,192],"displaySpace":"world","recommendedWorldSize":[168,168],"anchor":"center"},{"id":"terrain-gimmick-variable-passage","path":"terrain/gimmick-variable-passage.svg","category":"terrain","format":"svg","purpose":"상하 이동 쐐기와 점선 통행축으로 가변 폭을 알리는 비충돌 통로 표식","source":"Graphic/echo-diver/source/terrain-gimmick-variable-passage.svg","intrinsicSize":[256,128],"displaySpace":"world","recommendedWorldSize":[240,120],"minimumCssAt320":[76,38],"visualRole":"stateful-passage-overlay","collisionSilhouette":false,"anchor":"center"},{"id":"ui-marker-player-direction","path":"ui/marker-player-direction.svg","category":"ui","format":"svg","purpose":"화면 밖 플레이어 진행 방향 또는 위치 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-core","path":"ui/marker-core.svg","category":"ui","format":"svg","purpose":"소나 공개 뒤 화면 밖 공명 코어 방향 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-guardian-alert","path":"ui/marker-guardian-alert.svg","category":"ui","format":"svg","purpose":"수호자 추적·공격 방향 위험 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-rival-status","path":"ui/marker-rival-status.svg","category":"ui","format":"svg","purpose":"라이벌 상태 방송과 방향 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-relay-exit","path":"ui/marker-relay-exit.svg","category":"ui","format":"svg","purpose":"활성 중계문 귀환 방향 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-campaign-ending-seal","path":"ui/campaign-ending-seal.svg","category":"ui","format":"svg","purpose":"100스테이지 완료 후 간단 엔딩과 완료 카드에 재사용하는 5해역 공명망 복구 인장","source":"Graphic/echo-diver/source/ui-campaign-ending-seal.svg","intrinsicSize":[256,256],"displaySpace":"css","minimumCssSize":[160,160],"recommendedCssSize":[220,220],"maximumCssSize":[280,280],"languageNeutral":true},{"id":"ui-icon-settings","path":"ui/icon-settings.svg","category":"ui","format":"svg","purpose":"설정 진입용 언어 중립 기어 아이콘","source":"Graphic/echo-diver/source/ui-icon-settings.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[24,24]},{"id":"ui-guide-drag","path":"ui/guide-drag.svg","category":"ui","format":"svg","purpose":"드래그 이동 온보딩 아이콘","source":"Graphic/echo-diver/source/ui-guide-drag.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[20,20]},{"id":"ui-guide-sonar","path":"ui/guide-sonar.svg","category":"ui","format":"svg","purpose":"소나 발사 온보딩 아이콘","source":"Graphic/echo-diver/source/ui-guide-sonar.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[20,20]},{"id":"ui-guide-wall","path":"ui/guide-wall.svg","category":"ui","format":"svg","purpose":"장애물 차폐 온보딩 아이콘","source":"Graphic/echo-diver/source/ui-guide-wall.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[20,20]},{"id":"terrain-obstacle-cyan-reef-slab","path":"terrain/obstacle-cyan-reef-slab.svg","category":"terrain","format":"svg","purpose":"320px에서도 충돌 경계가 보이는 불투명 청록 암초 판","intrinsicSize":[256,192],"displaySpace":"world","recommendedWorldSize":[220,165],"anchor":"bottom-center","silhouette":"opaque","edgeColor":"#57e3d6"},{"id":"terrain-obstacle-cyan-reef-spire","path":"terrain/obstacle-cyan-reef-spire.svg","category":"terrain","format":"svg","purpose":"세로 통로에서 충돌 경계가 보이는 불투명 청록 암초 첨탑","intrinsicSize":[192,256],"displaySpace":"world","recommendedWorldSize":[144,192],"anchor":"bottom-center","silhouette":"opaque","edgeColor":"#57e3d6"},{"id":"skin-player-prism","path":"skins/player/prism.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 프리즘 플레이어 외형","collectionSet":"resonance-collection-01","skinTarget":"player","baseEntityId":"entity-player-recovery-drone","abilityNeutral":true,"intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"skin-player-archive","path":"skins/player/archive.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 기록고 플레이어 외형","collectionSet":"resonance-collection-01","skinTarget":"player","baseEntityId":"entity-player-recovery-drone","abilityNeutral":true,"intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"skin-player-ember","path":"skins/player/ember.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 적열 플레이어 외형","collectionSet":"resonance-collection-01","skinTarget":"player","baseEntityId":"entity-player-recovery-drone","abilityNeutral":true,"intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"skin-guardian-porcelain","path":"skins/guardian/porcelain.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 백자 수호자 공통 하이라이트","collectionSet":"resonance-collection-01","skinTarget":"guardian-interior","baseEntityIds":["entity-guardian-gate-pin","entity-guardian-lock-hound","entity-guardian-chorus-watcher"],"composition":"guardian-type-interior-clip-v1","abilityNeutral":true,"intrinsicSize":[176,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"skin-guardian-reef","path":"skins/guardian/reef.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 암초 수호자 공통 하이라이트","collectionSet":"resonance-collection-01","skinTarget":"guardian-interior","baseEntityIds":["entity-guardian-gate-pin","entity-guardian-lock-hound","entity-guardian-chorus-watcher"],"composition":"guardian-type-interior-clip-v1","abilityNeutral":true,"intrinsicSize":[176,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"skin-guardian-obsidian","path":"skins/guardian/obsidian.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 흑요석 수호자 공통 하이라이트","collectionSet":"resonance-collection-01","skinTarget":"guardian-interior","baseEntityIds":["entity-guardian-gate-pin","entity-guardian-lock-hound","entity-guardian-chorus-watcher"],"composition":"guardian-type-interior-clip-v1","abilityNeutral":true,"intrinsicSize":[176,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"skin-rival-cobalt","path":"skins/rival/cobalt.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 코발트 라이벌 탐침 외형","collectionSet":"resonance-collection-01","skinTarget":"rival","baseEntityIds":["entity-rival-probe-drone","entity-rival-carrier-drone"],"abilityNeutral":true,"intrinsicSize":[144,144],"displaySpace":"world","recommendedWorldSize":[132,132],"minimumCssAt320":[42,42],"anchor":"center"},{"id":"skin-rival-scarlet","path":"skins/rival/scarlet.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 진홍 라이벌 무장 운반 외형","collectionSet":"resonance-collection-01","skinTarget":"rival","baseEntityIds":["entity-rival-probe-drone","entity-rival-carrier-drone"],"abilityNeutral":true,"intrinsicSize":[144,144],"displaySpace":"world","recommendedWorldSize":[132,132],"minimumCssAt320":[42,42],"anchor":"center"},{"id":"ui-resonance-credit","path":"ui/resonance-credit.svg","category":"ui","format":"svg","purpose":"캠페인 별 성취로 획득하고 무료 수집 외형 해금에 사용하는 공명 크레딧","economyRole":"free-achievement-currency","source":"Graphic/echo-diver/master/resonance-credit-review.svg","intrinsicSize":[64,64],"displaySpace":"css","minimumCssSize":[18,18],"recommendedCssSize":[20,20],"maximumCssSize":[24,24]}],"audio":[{"id":"bgm-campaign","src":"assets/audio/deep-blue-silence.mp3","volume":0.16,"loop":true},{"id":"bgm-abyss","src":"assets/audio/deep-blue-silence.mp3","volume":0.16,"loop":true},{"id":"ui","src":"assets/audio/ui.wav","volume":0.32},{"id":"sonar","src":"assets/audio/sonar.wav","volume":0.48},{"id":"core","src":"assets/audio/core.wav","volume":0.45},{"id":"guardian-alert","src":"assets/audio/guardian-alert.wav","volume":0.5},{"id":"rival-shot","src":"assets/audio/rival-shot.wav","volume":0.42},{"id":"extract","src":"assets/audio/extract.wav","volume":0.48},{"id":"hit","src":"assets/audio/hit.wav","volume":0.52},{"id":"win","src":"assets/audio/win.wav","volume":0.5},{"id":"fail","src":"assets/audio/fail.wav","volume":0.5}]}) === 'undefined')
-    ? { version: 1, imageBasePath: 'assets/images/', images: [], audio: [] }
-    : ({"version":1,"imageBasePath":"assets/images/","images":[{"id":"title-key-art","path":"title-key-art.png","category":"brand","format":"png","purpose":"타이틀 화면용 수몰 문명·회수 드론 키 아트","intrinsicSize":[1024,1536],"displaySpace":"screen","recommendedFit":"cover","preloadGroup":"title-only","source":"Graphic/echo-diver/source/title-key-art-ai.png"},{"id":"bg-zone-01-sunken-relay","path":"backgrounds/zone-01-sunken-relay.svg","category":"background","format":"svg","purpose":"해역 1 침강 중계기지 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-02-ghost-garden","path":"backgrounds/zone-02-ghost-garden.svg","category":"background","format":"svg","purpose":"해역 2 유령 배양정원 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-03-thermal-conduit","path":"backgrounds/zone-03-thermal-conduit.svg","category":"background","format":"svg","purpose":"해역 3 적열 동력수로 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-04-silent-archive","path":"backgrounds/zone-04-silent-archive.svg","category":"background","format":"svg","purpose":"해역 4 무음 기록해구 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-05-resonance-heart","path":"backgrounds/zone-05-resonance-heart.svg","category":"background","format":"svg","purpose":"해역 5 공명의 심장 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"entity-player-recovery-drone","path":"entities/player-recovery-drone.svg","category":"entity","format":"svg","purpose":"중앙이 빈 링형 무인 회수 드론","intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"entity-resonance-core","path":"entities/resonance-core.svg","category":"entity","format":"svg","purpose":"바닥·플레이어·라이벌 소유 상태에 공통 사용하는 공명 코어","intrinsicSize":[72,72],"displaySpace":"world","recommendedWorldSize":[64,64],"minimumCssAt320":[18,18],"anchor":"center"},{"id":"entity-player-relay-gate","path":"entities/player-relay-gate.svg","category":"entity","format":"svg","purpose":"출발·귀환·코어 업로드 중계문","intrinsicSize":[240,240],"displaySpace":"world","recommendedWorldSize":[220,220],"minimumCssAt320":[68,68],"anchor":"center"},{"id":"entity-rival-probe-drone","path":"entities/rival-probe-drone.svg","category":"entity","format":"svg","purpose":"라이벌 탐색·교전용 탐침형 외형","intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[120,120],"minimumCssAt320":[38,38],"anchor":"center"},{"id":"entity-rival-carrier-drone","path":"entities/rival-carrier-drone.svg","category":"entity","format":"svg","purpose":"외부 코어 소켓을 포함한 라이벌 운반형 외형","intrinsicSize":[144,144],"displaySpace":"world","recommendedWorldSize":[132,132],"minimumCssAt320":[42,42],"anchor":"center"},{"id":"entity-rival-relay-boundary","path":"entities/rival-relay-boundary.svg","category":"entity","format":"svg","purpose":"라이벌 코어 영구 반출용 화면 가장자리 회수 경계","intrinsicSize":[160,256],"displaySpace":"world","recommendedWorldSize":[96,180],"anchor":"right-center"},{"id":"entity-guardian-gate-pin","path":"entities/guardian-gate-pin.svg","category":"entity","format":"svg","purpose":"십자가 외곽 골격의 문지기 핀 수호자","intrinsicSize":[160,160],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"entity-guardian-lock-hound","path":"entities/guardian-lock-hound.svg","category":"entity","format":"svg","purpose":"길쭉한 마름모 외곽 골격의 잠금 사냥개 수호자","intrinsicSize":[160,160],"displaySpace":"world","recommendedWorldSize":[128,128],"minimumCssAt320":[40,40],"anchor":"center"},{"id":"entity-guardian-chorus-watcher","path":"entities/guardian-chorus-watcher.svg","category":"entity","format":"svg","purpose":"원형 외곽 골격의 합창 감시자 수호자","intrinsicSize":[176,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"effect-sonar-wave-player","path":"effects/sonar-wave-player.svg","category":"effect","format":"svg","purpose":"플레이어 중심 청록 문양 조각 소나 파동","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale square to current pulse diameter","anchor":"center"},{"id":"effect-sonar-wave-rival","path":"effects/sonar-wave-rival.svg","category":"effect","format":"svg","purpose":"라이벌 중심 호박 점선 공명 파동","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale square to current pulse diameter","anchor":"center"},{"id":"effect-guardian-chorus-wave","path":"effects/guardian-chorus-wave.svg","category":"effect","format":"svg","purpose":"합창 감시자의 삼각 경고편 원형 공격 파동","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale square to current attack-wave diameter","anchor":"center"},{"id":"effect-rival-projectile","path":"effects/rival-projectile.svg","category":"effect","format":"svg","purpose":"진행 방향이 고정된 라이벌 직선탄","intrinsicSize":[64,32],"displaySpace":"world","recommendedWorldSize":[52,26],"anchor":"center"},{"id":"effect-impact-fracture","path":"effects/impact-fracture.svg","category":"effect","format":"svg","purpose":"전체 화면 섬광을 대체하는 개체 중심 피격 균열","intrinsicSize":[96,96],"displaySpace":"world","recommendedWorldSize":[84,84],"anchor":"center"},{"id":"terrain-wall-pillar","path":"terrain/wall-pillar.svg","category":"terrain","format":"svg","purpose":"회전·반전·길이 조절하는 직선 벽 모듈","intrinsicSize":[96,256],"displaySpace":"world","runtimeSizing":"stretch along long axis only","anchor":"center"},{"id":"terrain-obstacle-foundation-square","path":"terrain/obstacle-foundation-square.svg","category":"terrain","format":"svg","purpose":"OBB 중앙 대형 정사각형과 소형 정사각 기둥에 공용하는 solid 기반","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale to cached OBB width and height","anchor":"center"},{"id":"terrain-obstacle-ruin-segment","path":"terrain/obstacle-ruin-segment.svg","category":"terrain","format":"svg","purpose":"0/45/90/135도 OBB 건물 폐허 solid 세그먼트","intrinsicSize":[256,128],"displaySpace":"world","runtimeSizing":"scale uniformly to 0.85, 1, or 1.15 profile size","anchor":"center"},{"id":"terrain-wall-broken-arch","path":"terrain/wall-broken-arch.svg","category":"terrain","format":"svg","purpose":"통로 랜드마크용 부서진 반원 아치","intrinsicSize":[320,220],"displaySpace":"world","recommendedWorldSize":[280,193],"anchor":"bottom-center"},{"id":"terrain-obstacle-ruin-cluster","path":"terrain/obstacle-ruin-cluster.svg","category":"terrain","format":"svg","purpose":"회전·반전하는 각진 유적 잔해 장애물","intrinsicSize":[256,192],"displaySpace":"world","recommendedWorldSize":[220,165],"anchor":"bottom-center"},{"id":"terrain-hazard-current","path":"terrain/hazard-current.svg","category":"terrain","format":"svg","purpose":"해류 방향과 흐름 구간 표식","intrinsicSize":[256,128],"displaySpace":"world","recommendedWorldSize":[240,120],"anchor":"center"},{"id":"terrain-hazard-thermal-vent","path":"terrain/hazard-thermal-vent.svg","category":"terrain","format":"svg","purpose":"적열 동력수로의 열수 분출 위험","source":"Graphic/echo-diver/source/terrain-hazard-thermal-vent.svg","intrinsicSize":[192,256],"displaySpace":"world","recommendedWorldSize":[144,192],"anchor":"bottom-center"},{"id":"terrain-hazard-resonance-sink","path":"terrain/hazard-resonance-sink.svg","category":"terrain","format":"svg","purpose":"공명 충전을 흡수하는 위험 구역","source":"Graphic/echo-diver/source/terrain-hazard-resonance-sink.svg","intrinsicSize":[192,192],"displaySpace":"world","recommendedWorldSize":[168,168],"anchor":"center"},{"id":"terrain-gimmick-variable-passage","path":"terrain/gimmick-variable-passage.svg","category":"terrain","format":"svg","purpose":"상하 이동 쐐기와 점선 통행축으로 가변 폭을 알리는 비충돌 통로 표식","source":"Graphic/echo-diver/source/terrain-gimmick-variable-passage.svg","intrinsicSize":[256,128],"displaySpace":"world","recommendedWorldSize":[240,120],"minimumCssAt320":[76,38],"visualRole":"stateful-passage-overlay","collisionSilhouette":false,"anchor":"center"},{"id":"ui-marker-player-direction","path":"ui/marker-player-direction.svg","category":"ui","format":"svg","purpose":"화면 밖 플레이어 진행 방향 또는 위치 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-core","path":"ui/marker-core.svg","category":"ui","format":"svg","purpose":"소나 공개 뒤 화면 밖 공명 코어 방향 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-guardian-alert","path":"ui/marker-guardian-alert.svg","category":"ui","format":"svg","purpose":"수호자 추적·공격 방향 위험 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-rival-status","path":"ui/marker-rival-status.svg","category":"ui","format":"svg","purpose":"라이벌 상태 방송과 방향 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-relay-exit","path":"ui/marker-relay-exit.svg","category":"ui","format":"svg","purpose":"활성 중계문 귀환 방향 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-campaign-ending-seal","path":"ui/campaign-ending-seal.svg","category":"ui","format":"svg","purpose":"100스테이지 완료 후 간단 엔딩과 완료 카드에 재사용하는 5해역 공명망 복구 인장","source":"Graphic/echo-diver/source/ui-campaign-ending-seal.svg","intrinsicSize":[256,256],"displaySpace":"css","minimumCssSize":[160,160],"recommendedCssSize":[220,220],"maximumCssSize":[280,280],"languageNeutral":true},{"id":"ui-icon-settings","path":"ui/icon-settings.svg","category":"ui","format":"svg","purpose":"설정 진입용 언어 중립 기어 아이콘","source":"Graphic/echo-diver/source/ui-icon-settings.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[24,24]},{"id":"ui-guide-drag","path":"ui/guide-drag.svg","category":"ui","format":"svg","purpose":"드래그 이동 온보딩 아이콘","source":"Graphic/echo-diver/source/ui-guide-drag.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[20,20]},{"id":"ui-guide-sonar","path":"ui/guide-sonar.svg","category":"ui","format":"svg","purpose":"소나 발사 온보딩 아이콘","source":"Graphic/echo-diver/source/ui-guide-sonar.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[20,20]},{"id":"ui-guide-wall","path":"ui/guide-wall.svg","category":"ui","format":"svg","purpose":"장애물 차폐 온보딩 아이콘","source":"Graphic/echo-diver/source/ui-guide-wall.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[20,20]},{"id":"terrain-obstacle-cyan-reef-slab","path":"terrain/obstacle-cyan-reef-slab.svg","category":"terrain","format":"svg","purpose":"320px에서도 충돌 경계가 보이는 불투명 청록 암초 판","intrinsicSize":[256,192],"displaySpace":"world","recommendedWorldSize":[220,165],"anchor":"bottom-center","silhouette":"opaque","edgeColor":"#57e3d6"},{"id":"terrain-obstacle-cyan-reef-spire","path":"terrain/obstacle-cyan-reef-spire.svg","category":"terrain","format":"svg","purpose":"세로 통로에서 충돌 경계가 보이는 불투명 청록 암초 첨탑","intrinsicSize":[192,256],"displaySpace":"world","recommendedWorldSize":[144,192],"anchor":"bottom-center","silhouette":"opaque","edgeColor":"#57e3d6"},{"id":"skin-player-prism","path":"skins/player/prism.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 프리즘 플레이어 외형","collectionSet":"resonance-collection-01","skinTarget":"player","baseEntityId":"entity-player-recovery-drone","abilityNeutral":true,"intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"skin-player-archive","path":"skins/player/archive.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 기록고 플레이어 외형","collectionSet":"resonance-collection-01","skinTarget":"player","baseEntityId":"entity-player-recovery-drone","abilityNeutral":true,"intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"skin-player-ember","path":"skins/player/ember.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 적열 플레이어 외형","collectionSet":"resonance-collection-01","skinTarget":"player","baseEntityId":"entity-player-recovery-drone","abilityNeutral":true,"intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"skin-guardian-porcelain","path":"skins/guardian/porcelain.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 백자 수호자 공통 하이라이트","collectionSet":"resonance-collection-01","skinTarget":"guardian-interior","baseEntityIds":["entity-guardian-gate-pin","entity-guardian-lock-hound","entity-guardian-chorus-watcher"],"composition":"guardian-type-interior-clip-v1","abilityNeutral":true,"intrinsicSize":[176,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"skin-guardian-reef","path":"skins/guardian/reef.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 암초 수호자 공통 하이라이트","collectionSet":"resonance-collection-01","skinTarget":"guardian-interior","baseEntityIds":["entity-guardian-gate-pin","entity-guardian-lock-hound","entity-guardian-chorus-watcher"],"composition":"guardian-type-interior-clip-v1","abilityNeutral":true,"intrinsicSize":[176,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"skin-guardian-obsidian","path":"skins/guardian/obsidian.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 흑요석 수호자 공통 하이라이트","collectionSet":"resonance-collection-01","skinTarget":"guardian-interior","baseEntityIds":["entity-guardian-gate-pin","entity-guardian-lock-hound","entity-guardian-chorus-watcher"],"composition":"guardian-type-interior-clip-v1","abilityNeutral":true,"intrinsicSize":[176,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"skin-rival-cobalt","path":"skins/rival/cobalt.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 코발트 라이벌 탐침 외형","collectionSet":"resonance-collection-01","skinTarget":"rival","baseEntityIds":["entity-rival-probe-drone","entity-rival-carrier-drone"],"abilityNeutral":true,"intrinsicSize":[144,144],"displaySpace":"world","recommendedWorldSize":[132,132],"minimumCssAt320":[42,42],"anchor":"center"},{"id":"skin-rival-scarlet","path":"skins/rival/scarlet.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 진홍 라이벌 무장 운반 외형","collectionSet":"resonance-collection-01","skinTarget":"rival","baseEntityIds":["entity-rival-probe-drone","entity-rival-carrier-drone"],"abilityNeutral":true,"intrinsicSize":[144,144],"displaySpace":"world","recommendedWorldSize":[132,132],"minimumCssAt320":[42,42],"anchor":"center"},{"id":"ui-resonance-credit","path":"ui/resonance-credit.svg","category":"ui","format":"svg","purpose":"캠페인 별 성취로 획득하고 무료 수집 외형 해금에 사용하는 공명 크레딧","economyRole":"free-achievement-currency","source":"Graphic/echo-diver/master/resonance-credit-review.svg","intrinsicSize":[64,64],"displaySpace":"css","minimumCssSize":[18,18],"recommendedCssSize":[20,20],"maximumCssSize":[24,24]}],"audio":[{"id":"bgm-campaign","src":"assets/audio/deep-blue-silence.mp3","volume":0.16,"loop":true},{"id":"bgm-abyss","src":"assets/audio/deep-blue-silence.mp3","volume":0.16,"loop":true},{"id":"ui","src":"assets/audio/ui.wav","volume":0.32},{"id":"sonar","src":"assets/audio/sonar.wav","volume":0.48},{"id":"core","src":"assets/audio/core.wav","volume":0.45},{"id":"guardian-alert","src":"assets/audio/guardian-alert.wav","volume":0.5},{"id":"rival-shot","src":"assets/audio/rival-shot.wav","volume":0.42},{"id":"extract","src":"assets/audio/extract.wav","volume":0.48},{"id":"hit","src":"assets/audio/hit.wav","volume":0.52},{"id":"win","src":"assets/audio/win.wav","volume":0.5},{"id":"fail","src":"assets/audio/fail.wav","volume":0.5}]});
-
-  function assetPath(entry) {
-    return entry && (entry.src || entry.path || entry.file || entry.url) || '';
-  }
-
-  function AssetLibrary(manifest) {
-    this.manifest = manifest || embedded;
-    this.images = {};
-    this.imageErrors = {};
-    this.imagePromises = {};
-    this.imageEntries = {};
-    this.audioEntries = {};
-    (this.manifest.images || []).forEach(function (entry) {
-      var id = entry && (entry.id || entry.key || entry.name);
-      if (id) this.imageEntries[id] = entry;
-    }, this);
-    (this.manifest.audio || []).forEach(function (entry) {
-      if (entry && entry.id && assetPath(entry)) this.audioEntries[entry.id] = entry;
-    }, this);
-  }
-  AssetLibrary.prototype.url = function (id) {
-    var path = assetPath(this.imageEntries[id]);
-    if (!path) return '';
-    if (/^(?:[a-z]+:|\/)/i.test(path) || path.indexOf('assets/') === 0) return path;
-    return (this.manifest.imageBasePath || 'assets/images/') + path;
-  };
-  AssetLibrary.prototype.preloadImages = function (ids) {
-    var self = this;
-    if (typeof window.Image !== 'function') return Promise.resolve([]);
-    var requested = Array.isArray(ids) ? ids : Object.keys(this.imageEntries);
-    return Promise.all(requested.map(function (id) {
-      var path = self.url(id);
-      if (!id || !path || self.images[id]) return Promise.resolve(self.images[id] || null);
-      if (self.imagePromises[id]) return self.imagePromises[id];
-      var request = new Promise(function (resolve) {
-        var image = new window.Image();
-        image.onload = function () {
-          var decoded = null;
-          try {
-            decoded = typeof image.decode === 'function' ? image.decode() : null;
-          } catch (error) {
-            decoded = null;
-          }
-          Promise.resolve(decoded).catch(function () {
-            /* 일부 WebView는 표시 가능한 SVG도 decode()를 reject하므로 onload 이미지를 사용합니다. */
-          }).then(function () {
-            self.images[id] = image;
-            delete self.imageErrors[id];
-            resolve(image);
-          });
-        };
-        image.onerror = function () { self.imageErrors[id] = true; resolve(null); };
-        image.src = path;
-      });
-      self.imagePromises[id] = request;
-      request.then(function () {
-        if (self.imagePromises[id] === request) delete self.imagePromises[id];
-      });
-      return request;
-    }));
-  };
-  AssetLibrary.prototype.image = function (id) { return this.images[id] || null; };
-  AssetLibrary.prototype.audio = function (id) { return this.audioEntries[id] || null; };
-  AssetLibrary.prototype.hasImageFallback = function (id) { return !this.images[id]; };
-
-  PP.core.AssetLibrary = AssetLibrary;
-  PP.core.runtimeManifest = embedded;
-})(window.PingPanic);
-
-// ---- src/core/audio.js ----
-(function (PP) {
-  'use strict';
-
-  function AudioPlayer(assets, enabled) {
-    this.assets = assets;
-    this.enabled = enabled !== false;
-    this.active = [];
-  }
-  AudioPlayer.prototype.setEnabled = function (enabled) {
-    this.enabled = enabled !== false;
-    if (!this.enabled) this.stopAll();
-  };
-  AudioPlayer.prototype.play = function (id) {
-    var entry = this.assets.audio(id);
-    if (!this.enabled || !entry || typeof window.Audio !== 'function') return false;
-    if (entry.loop && this.active.some(function (item) { return item._assetId === id; })) return true;
-    try {
-      var audio = new window.Audio(entry.src || entry.path || entry.file);
-      audio._assetId = id;
-      audio.preload = 'auto';
-      audio.volume = PP.core.utils.clamp(Number(entry.volume) || 0.45, 0, 1);
-      audio.loop = entry.loop === true;
-      this.active.push(audio);
-      var self = this;
-      var remove = function () {
-        var index = self.active.indexOf(audio);
-        if (index >= 0) self.active.splice(index, 1);
-      };
-      audio.addEventListener('ended', remove, { once: true });
-      audio.addEventListener('error', remove, { once: true });
-      var promise = audio.play();
-      if (promise && promise.catch) promise.catch(remove);
-      return true;
-    } catch (_) { return false; }
-  };
-  AudioPlayer.prototype.stopAll = function () {
-    this.active.splice(0).forEach(function (audio) {
-      try { audio.pause(); audio.currentTime = 0; } catch (_) {}
-    });
-  };
-
-  PP.core.AudioPlayer = AudioPlayer;
-})(window.PingPanic);
-
-// ---- src/core/storage.js ----
-(function (PP) {
-  'use strict';
-
-  var KEY = PP.data.config.product.saveKey;
-  var STAGE_COUNT = PP.data.config.campaign.stageCount;
-
-  function defaults() {
-    return {
-      version: 6,
-      contentVersion: '100-stage-v1',
-      highestUnlockedStage: 1,
-      records: {},
-      abyssBest: { segment: 0, score: 0 },
-      onboardingSeen: {},
-      boostedSonar: 0,
-      resonanceCredits: 0,
-      creditAwardedStars: {},
-      ownedCosmetics: [],
-      creditDoubleClaims: {},
-      hard: {
-        unlocked: false,
-        endingSeen: false,
-        highestUnlockedStage: 1,
-        records: {},
-        creditAwardedStars: {}
-      },
-      extreme: {
-        unlocked: false,
-        endingSeen: false,
-        highestUnlockedStage: 1,
-        records: {},
-        creditAwardedStars: {}
-      },
-      settings: {
-        sound: true,
-        language: PP.core.i18n.systemLocale(),
-        campaignDifficulty: 'normal',
-        sonarHand: 'right',
-        sonarHandSelected: false,
-        equippedCosmetics: { player: 'base', guardian: 'base', rival: 'base' }
-      }
-    };
-  }
-  function boundedNumber(value, fallback, min, max) {
-    var number = Number(value);
-    if (!Number.isFinite(number)) return fallback;
-    return PP.core.utils.clamp(number, min, max);
-  }
-  function sanitizeRecord(raw) {
-    if (!raw || typeof raw !== 'object' || raw.cleared !== true) return null;
-    return {
-      cleared: true,
-      bestStars: Math.floor(boundedNumber(raw.bestStars, 0, 0, 3)),
-      bestScore: Math.floor(boundedNumber(raw.bestScore, 0, 0, Number.MAX_SAFE_INTEGER)),
-      bestPower: Math.floor(boundedNumber(raw.bestPower, 0, 0, 100)),
-      bestTime: boundedNumber(raw.bestTime, 0, 0, Number.MAX_SAFE_INTEGER),
-      bestSonars: Math.floor(boundedNumber(raw.bestSonars, 0, 0, Number.MAX_SAFE_INTEGER)),
-      fewestHits: Math.floor(boundedNumber(raw.fewestHits, 0, 0, Number.MAX_SAFE_INTEGER))
-    };
-  }
-  function sanitize(raw) {
-    var save = defaults();
-    if (!raw || typeof raw !== 'object') return save;
-    save.highestUnlockedStage = PP.core.utils.clamp(Math.floor(Number(raw.highestUnlockedStage) || 1), 1, STAGE_COUNT);
-    if (raw.records && typeof raw.records === 'object') {
-      Object.keys(raw.records).forEach(function (key) {
-        var stageId = Number(key);
-        var record = sanitizeRecord(raw.records[key]);
-        if (Number.isInteger(stageId) && stageId >= 1 && stageId <= STAGE_COUNT && record) save.records[stageId] = record;
-      });
-    }
-    if (raw.creditAwardedStars && typeof raw.creditAwardedStars === 'object') {
-      Object.keys(raw.creditAwardedStars).forEach(function (key) {
-        var stageId = Number(key);
-        if (Number.isInteger(stageId) && stageId >= 1 && stageId <= STAGE_COUNT) {
-          save.creditAwardedStars[stageId] = Math.floor(boundedNumber(raw.creditAwardedStars[key], 0, 0, 3));
-        }
-      });
-    }
-    Object.keys(save.records).forEach(function (key) {
-      var recordStars = save.records[key].bestStars;
-      save.creditAwardedStars[key] = Math.max(save.creditAwardedStars[key] || 0, recordStars);
-    });
-    if (raw.settings && typeof raw.settings === 'object') {
-      save.settings.sound = raw.settings.sound !== false;
-      save.settings.language = PP.core.i18n.normalizeLocale(raw.settings.language);
-      save.settings.sonarHand = raw.settings.sonarHand === 'left' ? 'left' : 'right';
-      save.settings.sonarHandSelected = raw.settings.sonarHandSelected === true;
-      if (raw.settings.equippedCosmetics && typeof raw.settings.equippedCosmetics === 'object') {
-        ['player', 'guardian', 'rival'].forEach(function (category) {
-          var selected = raw.settings.equippedCosmetics[category];
-          save.settings.equippedCosmetics[category] = selected === 'base' ? 'base' : selected;
-        });
-      }
-    }
-    if (raw.onboardingSeen && typeof raw.onboardingSeen === 'object') {
-      PP.data.config.campaign.onboardingStageIds.forEach(function (id) { if (raw.onboardingSeen[id] === true) save.onboardingSeen[id] = true; });
-    }
-    function sanitizeDifficultyProgress(source, target) {
-      if (!source || typeof source !== 'object') return;
-      target.unlocked = source.unlocked === true;
-      target.endingSeen = source.endingSeen === true;
-      target.highestUnlockedStage = PP.core.utils.clamp(
-        Math.floor(Number(source.highestUnlockedStage) || 1), 1, STAGE_COUNT
-      );
-      if (source.records && typeof source.records === 'object') {
-        Object.keys(source.records).forEach(function (key) {
-          var stageId = Number(key);
-          var record = sanitizeRecord(source.records[key]);
-          if (Number.isInteger(stageId) && stageId >= 1 && stageId <= STAGE_COUNT && record) target.records[stageId] = record;
-        });
-      }
-      if (source.creditAwardedStars && typeof source.creditAwardedStars === 'object') {
-        Object.keys(source.creditAwardedStars).forEach(function (key) {
-          var stageId = Number(key);
-          if (Number.isInteger(stageId) && stageId >= 1 && stageId <= STAGE_COUNT) {
-            target.creditAwardedStars[stageId] = Math.floor(boundedNumber(source.creditAwardedStars[key], 0, 0, 3));
-          }
-        });
-      }
-      Object.keys(target.records).forEach(function (key) {
-        target.creditAwardedStars[key] = Math.max(target.creditAwardedStars[key] || 0, target.records[key].bestStars);
-      });
-    }
-    /* v5의 enhanced 진행도는 의미상 새 hard 진행도로 승계합니다. */
-    sanitizeDifficultyProgress(raw.hard || raw.enhanced, save.hard);
-    sanitizeDifficultyProgress(raw.extreme, save.extreme);
-    var normalCampaignComplete = true;
-    for (var completeStageId = 1; completeStageId <= STAGE_COUNT; completeStageId += 1) {
-      if (!save.records[completeStageId]) { normalCampaignComplete = false; break; }
-    }
-    if (normalCampaignComplete) save.hard.unlocked = true;
-    var hardCampaignComplete = true;
-    for (var hardStageId = 1; hardStageId <= STAGE_COUNT; hardStageId += 1) {
-      if (!save.hard.records[hardStageId]) { hardCampaignComplete = false; break; }
-    }
-    if (hardCampaignComplete) save.extreme.unlocked = true;
-    var requestedDifficulty = raw.settings && raw.settings.campaignDifficulty;
-    if (requestedDifficulty === 'enhanced') requestedDifficulty = 'hard';
-    save.settings.campaignDifficulty = requestedDifficulty === 'extreme' && save.extreme.unlocked
-      ? 'extreme' : (requestedDifficulty === 'hard' && save.hard.unlocked ? 'hard' : 'normal');
-    /* v3 이하의 단발 재고 필드는 직렬화 호환용 0으로만 남기고 신규 런에는 사용하지 않습니다. */
-    save.boostedSonar = 0;
-    save.resonanceCredits = Math.floor(boundedNumber(raw.resonanceCredits, 0, 0, Number.MAX_SAFE_INTEGER));
-    if (Array.isArray(raw.ownedCosmetics)) {
-      var validCosmeticIds = PP.data.config.cosmetics.map(function (item) { return item.id; });
-      raw.ownedCosmetics.forEach(function (id) {
-        if (validCosmeticIds.indexOf(id) >= 0 && save.ownedCosmetics.indexOf(id) < 0) save.ownedCosmetics.push(id);
-      });
-    }
-    ['player', 'guardian', 'rival'].forEach(function (category) {
-      var selected = save.settings.equippedCosmetics[category];
-      var item = PP.data.config.cosmetics.filter(function (entry) { return entry.id === selected && entry.category === category; })[0];
-      if (!item || save.ownedCosmetics.indexOf(selected) < 0) save.settings.equippedCosmetics[category] = 'base';
-    });
-    if (raw.creditDoubleClaims && typeof raw.creditDoubleClaims === 'object') {
-      Object.keys(raw.creditDoubleClaims).slice(-500).forEach(function (key) {
-        if (/^[a-z0-9-]{1,80}$/i.test(key) && raw.creditDoubleClaims[key] === true) save.creditDoubleClaims[key] = true;
-      });
-    }
-    if (raw.abyssBest && typeof raw.abyssBest === 'object') {
-      save.abyssBest.segment = Math.floor(boundedNumber(raw.abyssBest.segment, 0, 0, Number.MAX_SAFE_INTEGER));
-      save.abyssBest.score = Math.floor(boundedNumber(raw.abyssBest.score, 0, 0, Number.MAX_SAFE_INTEGER));
-    }
-    return save;
-  }
-  function readKey(key) {
-    var result = PP.platform.current.storage.get(key);
-    if (result.status !== 'available' || !result.value) return null;
-    return JSON.parse(result.value);
-  }
-  function load() {
-    try {
-      var current = readKey(KEY);
-      if (current) return sanitize(current);
-      var legacyKeys = PP.data.config.product.legacySaveKeys || [];
-      for (var i = 0; i < legacyKeys.length; i += 1) {
-        var legacy = readKey(legacyKeys[i]);
-        if (legacy) {
-          var migrated = sanitize(legacy);
-          write(migrated);
-          return migrated;
-        }
-      }
-      return defaults();
-    } catch (_) { return defaults(); }
-  }
-  function write(save) {
-    try { return PP.platform.current.storage.set(KEY, JSON.stringify(sanitize(save))).status === 'available'; }
-    catch (_) { return false; }
-  }
-  function snapshotSave(save) { return JSON.parse(JSON.stringify(save)); }
-  function restoreSave(save, snapshot) {
-    Object.keys(save).forEach(function (key) { delete save[key]; });
-    Object.keys(snapshot).forEach(function (key) { save[key] = snapshot[key]; });
-  }
-  function atomicUpdate(save, mutation) {
-    var snapshot = snapshotSave(save);
-    var value;
-    try { value = mutation(save); }
-    catch (error) { restoreSave(save, snapshot); throw error; }
-    if (write(save)) return { status: 'saved', persisted: true, value: value };
-    restoreSave(save, snapshot);
-    return { status: 'storage-error', persisted: false, value: null };
-  }
-  function progressForDifficulty(save, difficultyId) {
-    return difficultyId === 'hard' ? save.hard : (difficultyId === 'extreme' ? save.extreme : null);
-  }
-  function normalizeDifficulty(save, difficultyId) {
-    if (difficultyId === 'enhanced') difficultyId = 'hard';
-    if (difficultyId === 'hard' && save.hard.unlocked) return 'hard';
-    if (difficultyId === 'extreme' && save.extreme.unlocked) return 'extreme';
-    return 'normal';
-  }
-  function recordsForDifficulty(save, difficultyId) {
-    var progress = progressForDifficulty(save, normalizeDifficulty(save, difficultyId));
-    return progress ? progress.records : save.records;
-  }
-  function recordClear(save, stageId, result, difficultyId) {
-    var snapshot = snapshotSave(save);
-    var selectedDifficulty = normalizeDifficulty(save, difficultyId);
-    var progress = progressForDifficulty(save, selectedDifficulty);
-    var records = recordsForDifficulty(save, selectedDifficulty);
-    var awardedStars = progress ? progress.creditAwardedStars : save.creditAwardedStars;
-    var current = records[stageId] || {};
-    var previousBestStars = Number(current.bestStars) || 0;
-    var achievedStars = Math.floor(boundedNumber(result.stars, 0, 0, 3));
-    var previousAwardedStars = Math.floor(boundedNumber(awardedStars[stageId], 0, 0, 3));
-    var newAwardedStars = Math.max(previousAwardedStars, achievedStars);
-    var newStars = newAwardedStars - previousAwardedStars;
-    var profileId = PP.data.config.difficulty.profiles[selectedDifficulty].rewardProfile;
-    var rewardProfile = PP.data.config.difficulty.rewards[profileId];
-    var creditsEarned = newStars * rewardProfile.creditPerNewStar;
-    records[stageId] = {
-      cleared: true,
-      bestStars: Math.max(Number(current.bestStars) || 0, achievedStars),
-      bestScore: Math.max(Number(current.bestScore) || 0, result.score),
-      bestPower: Math.max(Number(current.bestPower) || 0, Math.round(result.power)),
-      bestTime: current.bestTime ? Math.min(current.bestTime, result.time) : result.time,
-      bestSonars: current.bestSonars === undefined ? result.sonars : Math.min(current.bestSonars, result.sonars),
-      fewestHits: current.fewestHits === undefined ? result.hits : Math.min(current.fewestHits, result.hits)
-    };
-    if (progress) {
-      progress.highestUnlockedStage = Math.max(progress.highestUnlockedStage, Math.min(STAGE_COUNT, stageId + 1));
-      progress.creditAwardedStars[stageId] = newAwardedStars;
-    } else {
-      save.highestUnlockedStage = Math.max(save.highestUnlockedStage, Math.min(STAGE_COUNT, stageId + 1));
-      save.creditAwardedStars[stageId] = newAwardedStars;
-    }
-    save.resonanceCredits += creditsEarned;
-    var unlockedDifficultyId = null;
-    if (stageId === STAGE_COUNT) {
-      var nextDifficultyId = selectedDifficulty === 'normal' ? 'hard' : (selectedDifficulty === 'hard' ? 'extreme' : null);
-      if (nextDifficultyId) {
-        var nextProgress = progressForDifficulty(save, nextDifficultyId);
-        if (!nextProgress.unlocked) unlockedDifficultyId = nextDifficultyId;
-        nextProgress.unlocked = true;
-        nextProgress.endingSeen = true;
-        nextProgress.highestUnlockedStage = Math.max(1, nextProgress.highestUnlockedStage);
-      }
-    }
-    var report = {
-      status: 'saved', persisted: true,
-      previousBestStars: previousBestStars,
-      newBestStars: Math.max(previousBestStars, achievedStars),
-      previousAwardedStars: previousAwardedStars,
-      newAwardedStars: newAwardedStars,
-      newStars: newStars,
-      creditsEarned: creditsEarned,
-      difficultyId: selectedDifficulty,
-      rewardProfile: profileId,
-      cosmeticCollection: rewardProfile.cosmeticCollection,
-      unlockedDifficultyId: unlockedDifficultyId,
-      balance: save.resonanceCredits
-    };
-    if (write(save)) return report;
-    restoreSave(save, snapshot);
-    report.status = 'storage-error';
-    report.persisted = false;
-    report.newAwardedStars = previousAwardedStars;
-    report.newStars = 0;
-    report.creditsEarned = 0;
-    report.unlockedDifficultyId = null;
-    report.balance = save.resonanceCredits;
-    return report;
-  }
-  function grantCreditDouble(save, rewardKey, baseAmount) {
-    var amount = Math.max(0, Math.floor(Number(baseAmount) || 0));
-    if (!rewardKey || !amount || save.creditDoubleClaims[rewardKey]) return { granted: false, amount: 0, balance: save.resonanceCredits };
-    var snapshot = snapshotSave(save);
-    save.creditDoubleClaims[rewardKey] = true;
-    save.resonanceCredits += amount;
-    if (write(save)) return { status: 'saved', persisted: true, granted: true, amount: amount, balance: save.resonanceCredits };
-    restoreSave(save, snapshot);
-    return { status: 'storage-error', persisted: false, granted: false, amount: 0, balance: save.resonanceCredits };
-  }
-  function purchaseCosmetic(save, cosmeticId) {
-    var item = PP.data.config.cosmetics.filter(function (entry) { return entry.id === cosmeticId; })[0];
-    if (!item) return { status: 'invalid', balance: save.resonanceCredits };
-    if (save.ownedCosmetics.indexOf(item.id) >= 0) return { status: 'owned', balance: save.resonanceCredits };
-    if (save.resonanceCredits < item.price) return { status: 'insufficient', balance: save.resonanceCredits, price: item.price };
-    var snapshot = snapshotSave(save);
-    save.resonanceCredits -= item.price;
-    save.ownedCosmetics.push(item.id);
-    if (write(save)) return { status: 'purchased', persisted: true, balance: save.resonanceCredits, item: item };
-    restoreSave(save, snapshot);
-    return { status: 'storage-error', persisted: false, balance: save.resonanceCredits, item: item };
-  }
-  function equipCosmetic(save, category, cosmeticId) {
-    if (['player', 'guardian', 'rival'].indexOf(category) < 0) return false;
-    if (cosmeticId !== 'base') {
-      var item = PP.data.config.cosmetics.filter(function (entry) { return entry.id === cosmeticId && entry.category === category; })[0];
-      if (!item || save.ownedCosmetics.indexOf(cosmeticId) < 0) return false;
-    }
-    var transaction = atomicUpdate(save, function () {
-      save.settings.equippedCosmetics[category] = cosmeticId;
-      return cosmeticId;
-    });
-    return transaction.persisted ? true : 'storage-error';
-  }
-  function unlockStage(save, stageId) {
-    if (!Number.isInteger(stageId) || stageId < 1 || stageId > STAGE_COUNT) return false;
-    return atomicUpdate(save, function () {
-      save.highestUnlockedStage = Math.max(save.highestUnlockedStage, stageId);
-    }).persisted;
-  }
-  function resetAllStageRecords(save) {
-    var snapshot = snapshotSave(save);
-    var hardAwardedStars = save.hard && save.hard.creditAwardedStars ? save.hard.creditAwardedStars : {};
-    var extremeAwardedStars = save.extreme && save.extreme.creditAwardedStars ? save.extreme.creditAwardedStars : {};
-    save.records = {};
-    save.highestUnlockedStage = 1;
-    save.abyssBest = { segment: 0, score: 0 };
-    save.onboardingSeen = {};
-    save.hard = {
-      unlocked: false,
-      endingSeen: false,
-      highestUnlockedStage: 1,
-      records: {},
-      creditAwardedStars: hardAwardedStars
-    };
-    save.extreme = {
-      unlocked: false,
-      endingSeen: false,
-      highestUnlockedStage: 1,
-      records: {},
-      creditAwardedStars: extremeAwardedStars
-    };
-    save.settings.campaignDifficulty = 'normal';
-    if (write(save)) return true;
-    restoreSave(save, snapshot);
-    return false;
-  }
-  function unlockNextDifficulty(save, completedDifficultyId) {
-    var nextId = completedDifficultyId === 'normal' ? 'hard' : (completedDifficultyId === 'hard' ? 'extreme' : null);
-    if (!nextId) return null;
-    var snapshot = snapshotSave(save);
-    var progress = progressForDifficulty(save, nextId);
-    var newlyUnlocked = !progress.unlocked;
-    progress.unlocked = true;
-    if (progress.highestUnlockedStage < 1) progress.highestUnlockedStage = 1;
-    progress.endingSeen = true;
-    if (write(save)) return newlyUnlocked ? nextId : null;
-    restoreSave(save, snapshot);
-    return 'storage-error';
-  }
-  function setCampaignDifficulty(save, difficultyId) {
-    var selected = normalizeDifficulty(save, difficultyId);
-    var transaction = atomicUpdate(save, function () {
-      save.settings.campaignDifficulty = selected;
-      return selected;
-    });
-    return transaction.persisted ? selected : null;
-  }
-  function recordAbyssBest(save, segment, score) {
-    return atomicUpdate(save, function () {
-      save.abyssBest.segment = Math.max(save.abyssBest.segment, Math.floor(segment));
-      save.abyssBest.score = Math.max(save.abyssBest.score, Math.floor(score));
-    }).persisted;
-  }
-
-  PP.core.storage = {
-    defaults: defaults,
-    sanitize: sanitize,
-    load: load,
-    write: write,
-    atomicUpdate: atomicUpdate,
-    normalizeDifficulty: normalizeDifficulty,
-    progressForDifficulty: progressForDifficulty,
-    recordClear: recordClear,
-    recordsForDifficulty: recordsForDifficulty,
-    grantCreditDouble: grantCreditDouble,
-    purchaseCosmetic: purchaseCosmetic,
-    equipCosmetic: equipCosmetic,
-    unlockStage: unlockStage,
-    resetAllStageRecords: resetAllStageRecords,
-    unlockNextDifficulty: unlockNextDifficulty,
-    setCampaignDifficulty: setCampaignDifficulty,
-    recordAbyssBest: recordAbyssBest
-  };
-})(window.PingPanic);
-
-// ---- src/core/input.js ----
-(function (PP) {
-  'use strict';
-
-  function Input(canvas, onPause) {
-    this.canvas = canvas;
-    this.keys = {};
-    this.pointer = { active: false, id: null, startX: 0, startY: 0, x: 0, y: 0 };
-    this.pointerRect = null;
-    this.sonarRequested = false;
-    this.onPause = onPause;
-    this.bind();
-  }
-
-  Input.prototype.bind = function () {
-    var self = this;
-    this.keyDown = function (event) {
-      self.keys[event.key.toLowerCase()] = true;
-      if (event.code === 'Space') { event.preventDefault(); self.sonarRequested = true; }
-      if (event.key === 'Escape' || event.key.toLowerCase() === 'p') self.onPause();
-    };
-    this.keyUp = function (event) { self.keys[event.key.toLowerCase()] = false; };
-    this.pointerDown = function (event) {
-      if (self.pointer.active) return;
-      self.pointer.active = true;
-      self.pointer.id = event.pointerId;
-      self.pointer.startX = self.pointer.x = event.clientX;
-      self.pointer.startY = self.pointer.y = event.clientY;
-      self.pointerRect = self.measureCanvasRect();
-      if (self.canvas.setPointerCapture) self.canvas.setPointerCapture(event.pointerId);
-    };
-    this.pointerMove = function (event) {
-      if (!self.pointer.active || self.pointer.id !== event.pointerId) return;
-      self.pointer.x = event.clientX;
-      self.pointer.y = event.clientY;
-    };
-    this.pointerEnd = function (event) {
-      if (self.pointer.id !== event.pointerId) return;
-      self.releasePointerCapture();
-      self.pointer = { active: false, id: null, startX: 0, startY: 0, x: 0, y: 0 };
-      self.pointerRect = null;
-    };
-    this.invalidatePointerRect = function () { self.pointerRect = null; };
-    window.addEventListener('keydown', this.keyDown);
-    window.addEventListener('keyup', this.keyUp);
-    window.addEventListener('resize', this.invalidatePointerRect);
-    window.addEventListener('orientationchange', this.invalidatePointerRect);
-    if (window.visualViewport && window.visualViewport.addEventListener) {
-      window.visualViewport.addEventListener('resize', this.invalidatePointerRect);
-    }
-    this.canvas.addEventListener('pointerdown', this.pointerDown);
-    this.canvas.addEventListener('pointermove', this.pointerMove);
-    this.canvas.addEventListener('pointerup', this.pointerEnd);
-    this.canvas.addEventListener('pointercancel', this.pointerEnd);
-  };
-
-  Input.prototype.vector = function () {
-    var x = 0;
-    var y = 0;
-    if (this.keys.arrowleft || this.keys.a) x -= 1;
-    if (this.keys.arrowright || this.keys.d) x += 1;
-    if (this.keys.arrowup || this.keys.w) y -= 1;
-    if (this.keys.arrowdown || this.keys.s) y += 1;
-    if (this.pointer.active) {
-      x += PP.core.utils.clamp((this.pointer.x - this.pointer.startX) / 55, -1, 1);
-      y += PP.core.utils.clamp((this.pointer.y - this.pointer.startY) / 55, -1, 1);
-    }
-    var direction = PP.core.utils.normalize(x, y);
-    return { x: direction.x, y: direction.y };
-  };
-  Input.prototype.consumeSonar = function () {
-    var requested = this.sonarRequested;
-    this.sonarRequested = false;
-    return requested;
-  };
-  Input.prototype.requestSonar = function () { this.sonarRequested = true; };
-  Input.prototype.releasePointerCapture = function () {
-    var pointerId = this.pointer && this.pointer.id;
-    if (pointerId === null || pointerId === undefined || !this.canvas.releasePointerCapture) return;
-    try {
-      if (!this.canvas.hasPointerCapture || this.canvas.hasPointerCapture(pointerId)) this.canvas.releasePointerCapture(pointerId);
-    } catch (_) {
-      /* 이미 브라우저가 capture를 해제한 경우도 중립 상태로 계속 복구합니다. */
-    }
-  };
-  Input.prototype.measureCanvasRect = function () { return this.canvas.getBoundingClientRect(); };
-  Input.prototype.canvasPoint = function (clientX, clientY, world) {
-    var rect = this.pointer.active
-      ? (this.pointerRect || (this.pointerRect = this.measureCanvasRect()))
-      : this.measureCanvasRect();
-    return {
-      x: PP.core.utils.clamp((clientX - rect.left) / Math.max(1, rect.width) * world.width, 0, world.width),
-      y: PP.core.utils.clamp((clientY - rect.top) / Math.max(1, rect.height) * world.height, 0, world.height)
-    };
-  };
-  Input.prototype.reset = function () {
-    this.releasePointerCapture();
-    this.keys = {};
-    this.pointer = { active: false, id: null, startX: 0, startY: 0, x: 0, y: 0 };
-    this.pointerRect = null;
-    this.sonarRequested = false;
-  };
-
-  PP.core.Input = Input;
-})(window.PingPanic);
-
-// ---- src/entities/player.js ----
-(function (PP) {
-  'use strict';
-
-  function Player(x, y) {
-    var config = PP.data.config.player;
-    this.x = x;
-    this.y = y;
-    this.radius = config.radius;
-    this.entityKind = 'player';
-    this.speed = config.speed;
-    this.angle = -Math.PI / 2;
-    this.power = config.maxPower;
-    this.sonarCharge = PP.data.config.sonar.maxCharge;
-    this.collected = 0;
-    this.invulnerable = 0;
-    this.damageEvents = [];
-  }
-
-  Player.prototype.update = function (dt, input, stage) {
-    var direction = input.vector();
-    var environmentSpeed = PP.systems.environment ? PP.systems.environment.speedMultiplier(stage, this) : 1;
-    var environmentCurrent = PP.systems.environment ? PP.systems.environment.currentVector(stage, this) : { x: 0, y: 0 };
-    var dx = (direction.x * this.speed * environmentSpeed + environmentCurrent.x) * dt;
-    var dy = (direction.y * this.speed * environmentSpeed + environmentCurrent.y) * dt;
-    if (Math.abs(direction.x) + Math.abs(direction.y) > 0.01) this.angle = Math.atan2(direction.y, direction.x);
-    var movementObstacles = stage.walls.filter(function (wall) { return wall.blockMovement !== false; });
-    PP.core.utils.moveWithObstacles(this, dx, dy, this.radius, PP.data.config.world, movementObstacles);
-    var rechargeMultiplier = stage.sonarMode === 'boosted-run' ? PP.data.config.sonar.boosted.rechargeMultiplier : 1;
-    if (PP.systems.environment) rechargeMultiplier *= PP.systems.environment.rechargeMultiplier(stage, this);
-    this.sonarCharge = Math.min(
-      PP.data.config.sonar.maxCharge,
-      this.sonarCharge + stage.definition.sonarRechargePerSecond * rechargeMultiplier * dt
-    );
-    this.invulnerable = Math.max(0, this.invulnerable - dt);
-  };
-  Player.prototype.damage = function (amount, source, force) {
-    if (!force && this.invulnerable > 0) return false;
-    this.power = Math.max(0, this.power - amount);
-    this.invulnerable = PP.data.config.player.invulnerableSeconds;
-    this.damageEvents.push({ amount: amount, source: source || 'unknown' });
-    return true;
-  };
-  Player.prototype.forceDamage = function (amount, source) { return this.damage(amount, source, true); };
-  Player.prototype.consumeDamageEvents = function () {
-    var events = this.damageEvents.slice();
-    this.damageEvents.length = 0;
-    return events;
-  };
-  Player.prototype.knockBackFrom = function (source, distance, stage) {
-    var direction = PP.core.utils.normalize(this.x - source.x, this.y - source.y);
-    if (direction.length < 0.001) direction = { x: 0, y: 1 };
-    var movementObstacles = stage.walls.filter(function (wall) { return wall.blockMovement !== false; });
-    PP.core.utils.moveWithObstacles(this, direction.x * distance, direction.y * distance, this.radius, PP.data.config.world, movementObstacles);
-  };
-
-  PP.entities.Player = Player;
-})(window.PingPanic);
-
-// ---- src/entities/guardian.js ----
-(function (PP) {
-  'use strict';
-
-  function Guardian(id, x, y, type, phase) {
-    var spec = PP.data.config.guardian.types[type];
-    this.id = id;
-    this.x = x;
-    this.y = y;
-    this.radius = spec.radius;
-    this.speed = spec.speed;
-    this.damage = spec.damage;
-    this.maxHealth = spec.health;
-    this.health = spec.health;
-    this.destroyed = false;
-    this.hitBlinkUntil = 0;
-    this.type = type;
-    this.entityKind = 'guardian';
-    this.state = 'patrol';
-    this.targetType = null;
-    this.targetPoint = null;
-    this.phase = phase || 0;
-    this.revealedUntil = 0;
-    this.signalLockUntil = 0;
-    this.playerSignalLockUntil = 0;
-    this.rivalSignalLockUntil = 0;
-    this.hitCooldown = 0;
-    this.searchTimer = 0;
-    this.lastX = x;
-    this.lastY = y;
-    this.jamTimer = 0;
-    this.chorusCooldown = PP.data.config.guardian.chorusWave.intervalSeconds;
-    this.chorusWarning = 0;
-    this.chorusWave = null;
-    this.navPath = [];
-    this.repathTimer = 0;
-  }
-
-  Guardian.prototype.actor = function (type, actors) {
-    if (type === 'player') return actors.player;
-    if (type === 'rival' && actors.rival && actors.rival.carriedCore
-      && !actors.rival.escaped && !actors.rival.destroyed) return actors.rival;
-    return null;
-  };
-  Guardian.prototype.isVisible = function (actor) {
-    return !!actor && PP.core.utils.distance(this, actor) <= PP.data.config.visibility.radius;
-  };
-  Guardian.prototype.isTracked = function (type, actor, now) {
-    if (!actor) return false;
-    var signalLock = type === 'player' ? this.playerSignalLockUntil : this.rivalSignalLockUntil;
-    return this.isVisible(actor) || now < signalLock || (this.targetType === type && now < this.signalLockUntil);
-  };
-  Guardian.prototype.closestVisible = function (actors, now) {
-    if (this.isTracked('player', actors.player, now)) return { type: 'player', actor: actors.player };
-    var rival = this.actor('rival', actors);
-    if (this.isTracked('rival', rival, now)) return { type: 'rival', actor: rival };
-    return null;
-  };
-  Guardian.prototype.beginChase = function (type, actor, now, fromSonar) {
-    if (!actor || (type === 'rival' && !actor.carriedCore)) return false;
-    var started = this.state !== 'chase' || this.targetType !== type;
-    this.state = 'chase';
-    this.targetType = type;
-    this.targetPoint = { x: actor.x, y: actor.y };
-    if (started) { this.navPath = []; this.repathTimer = 0; }
-    if (fromSonar) {
-      this.signalLockUntil = Math.max(this.signalLockUntil, now + PP.data.config.visibility.sonarRecognitionSeconds);
-      if (type === 'player') this.playerSignalLockUntil = Math.max(this.playerSignalLockUntil, this.signalLockUntil);
-      if (type === 'rival') this.rivalSignalLockUntil = Math.max(this.rivalSignalLockUntil, this.signalLockUntil);
-    }
-    if (started && type === 'rival' && typeof actor.announceGuardianDetected === 'function') actor.announceGuardianDetected(now);
-    return started;
-  };
-  Guardian.prototype.takeDamage = function (amount, source, now) {
-    if (this.destroyed || amount <= 0) return false;
-    this.health = Math.max(0, this.health - Number(amount));
-    this.revealedUntil = Math.max(this.revealedUntil, Number(now || 0) + 0.24);
-    this.hitBlinkUntil = Math.max(this.hitBlinkUntil, Number(now || 0) + 0.18);
-    if (this.health > 0) return false;
-    this.destroyed = true;
-    this.destroyedBy = source || 'unknown';
-    this.state = 'destroyed';
-    this.targetType = null;
-    this.targetPoint = null;
-    this.chorusWarning = 0;
-    this.chorusWave = null;
-    this.navPath = [];
-    return true;
-  };
-  Guardian.prototype.contactSignal = function (signal, actors) {
-    if (this.destroyed) return false;
-    var actor = this.actor(signal.source, actors);
-    this.revealedUntil = Math.max(this.revealedUntil, signal.now + PP.data.config.sonar.revealSeconds);
-    if (signal.source === 'player' && actor) return this.beginChase('player', actor, signal.now, true);
-    var preferred = this.closestVisible(actors, signal.now);
-    if (preferred && preferred.type === 'player') return this.beginChase('player', preferred.actor, signal.now, false);
-    var current = this.actor(this.targetType, actors);
-    var currentHeld = this.state === 'chase' && current && this.isTracked(this.targetType, current, signal.now);
-    if (currentHeld && this.targetType !== signal.source) return false;
-    if (!actor) {
-      if (!currentHeld) {
-        this.state = 'search';
-        this.targetType = null;
-        this.targetPoint = { x: signal.x, y: signal.y };
-        this.searchTimer = PP.data.config.guardian.searchSeconds;
-        this.navPath = [];
-        this.repathTimer = 0;
-      }
-      return false;
-    }
-    return this.beginChase(signal.source, actor, signal.now, true);
-  };
-
-  Guardian.prototype.updateChorus = function (dt, stage, actors, events) {
-    if (this.type !== 'chorus') return;
-    var rules = PP.data.config.guardian.chorusWave;
-    var playerTracked = this.state === 'chase' && this.targetType === 'player';
-    if (this.chorusWave) {
-      this.chorusWave.previousRadius = this.chorusWave.radius;
-      this.chorusWave.elapsed += dt;
-      this.chorusWave.radius = Math.min(rules.maxRadius, rules.maxRadius * this.chorusWave.elapsed / rules.expansionSeconds);
-      var distance = PP.core.utils.distance(this.chorusWave, actors.player);
-      var reachedPlayer = distance >= this.chorusWave.previousRadius && distance <= this.chorusWave.radius + actors.player.radius;
-      var chorusObstacles = stage.walls.filter(function (wall) { return wall.blockChorusWave !== false; });
-      var visiblePath = PP.core.utils.waveTargetVisible(this.chorusWave, actors.player, chorusObstacles);
-      if (!this.chorusWave.hit && reachedPlayer && visiblePath) {
-        this.chorusWave.hit = true;
-        var difficultyDamage = stage.difficultyModifiers ? stage.difficultyModifiers.enemyDamageMultiplier : 1;
-        if (actors.player.damage(rules.damage * difficultyDamage, 'chorus-wave')) events.waveHit = true;
-      }
-      if (this.chorusWave.elapsed >= rules.expansionSeconds) this.chorusWave = null;
-      return;
-    }
-    if (this.chorusWarning > 0) {
-      this.chorusWarning -= dt;
-      if (this.chorusWarning <= 0) {
-        this.chorusWave = { source: 'chorus', x: this.x, y: this.y, radius: 0, previousRadius: 0, elapsed: 0, hit: false };
-        this.chorusCooldown = rules.intervalSeconds;
-        events.waveFired = true;
-      }
-      return;
-    }
-    if (!playerTracked) { this.chorusCooldown = rules.intervalSeconds; return; }
-    this.chorusCooldown -= dt;
-    if (this.chorusCooldown <= 0) {
-      this.chorusWarning = rules.warningSeconds;
-      events.waveWarning = true;
-    }
-  };
-
-  Guardian.prototype.directionTo = function (point, stage) {
-    var movementObstacles = stage.walls.filter(function (wall) { return wall.blockMovement !== false; });
-    if (PP.core.utils.hasClearanceLineOfSight(this, point, movementObstacles, this.radius)) {
-      this.navPath = [];
-      return PP.core.utils.normalize(point.x - this.x, point.y - this.y);
-    }
-    if (this.repathTimer <= 0 || !this.navPath.length) {
-      this.navPath = PP.core.utils.findGridPath(this, point, this.radius + 2, PP.data.config.world, movementObstacles, PP.data.config.guardian.navigation.gridSize);
-      this.repathTimer = 0.4 + (this.id % 3) * 0.05;
-    }
-    while (this.navPath.length && PP.core.utils.distance(this, this.navPath[0]) < 28) this.navPath.shift();
-    var target = this.navPath[0] || point;
-    return PP.core.utils.normalize(target.x - this.x, target.y - this.y);
-  };
-
-  Guardian.prototype.update = function (dt, stage, actors) {
-    var events = { targetStarted: false, targetSwitched: false, waveWarning: false, waveFired: false, waveCancelled: false, waveHit: false };
-    if (this.destroyed) return events;
-    var now = stage.elapsed;
-    this.phase += dt;
-    this.repathTimer = Math.max(0, this.repathTimer - dt);
-    this.hitCooldown = Math.max(0, this.hitCooldown - dt);
-    var target = this.actor(this.targetType, actors);
-
-    if (this.state === 'chase') {
-      var preferred = this.closestVisible(actors, now);
-      if (preferred) {
-        if (preferred.type !== this.targetType) events.targetSwitched = this.beginChase(preferred.type, preferred.actor, now, false);
-        target = preferred.actor;
-        this.targetPoint = { x: target.x, y: target.y };
-      } else {
-        this.state = 'search';
-        this.targetType = null;
-        this.searchTimer = PP.data.config.guardian.searchSeconds;
-        target = null;
-      }
-    } else {
-      var visible = this.closestVisible(actors, now);
-      if (visible) {
-        events.targetStarted = this.beginChase(visible.type, visible.actor, now, false);
-        target = visible.actor;
-      }
-    }
-
-    var point = this.state === 'chase' ? target : this.targetPoint;
-    var speed = this.speed * (PP.systems.environment ? PP.systems.environment.speedMultiplier(stage, this) : 1);
-    if (!point && this.state === 'patrol') {
-      point = { x: this.x + Math.cos(this.phase * 0.7 + this.id) * 100, y: this.y + Math.sin(this.phase * 0.55 + this.id) * 80 };
-      speed *= 0.45;
-    }
-    var environmentCurrent = PP.systems.environment
-      ? PP.systems.environment.currentVector(stage, this) : { x: 0, y: 0 };
-    if (point || environmentCurrent.x || environmentCurrent.y) {
-      var direction = this.state === 'patrol'
-        ? PP.core.utils.normalize(point.x - this.x, point.y - this.y)
-        : (point ? this.directionTo(point, stage) : { x: 0, y: 0 });
-      var movementObstacles = stage.walls.filter(function (wall) { return wall.blockMovement !== false; });
-      PP.core.utils.moveWithObstacles(
-        this,
-        (direction.x * speed + environmentCurrent.x) * dt,
-        (direction.y * speed + environmentCurrent.y) * dt,
-        this.radius,
-        PP.data.config.world,
-        movementObstacles
-      );
-    }
-    if (this.state === 'search') {
-      this.searchTimer -= dt;
-      if (this.searchTimer <= 0) {
-        this.state = 'patrol';
-        this.targetPoint = null;
-        this.targetType = null;
-      }
-    }
-
-    var moved = PP.core.utils.distance(this, { x: this.lastX, y: this.lastY });
-    var movementPerSecond = moved / Math.max(dt, 0.001);
-    this.jamTimer = point && this.state !== 'patrol' && movementPerSecond < 8 ? this.jamTimer + dt : 0;
-    this.lastX = this.x;
-    this.lastY = this.y;
-    if (this.jamTimer >= 2.5 && this.state !== 'patrol') {
-      this.state = 'search';
-      this.targetType = null;
-      this.targetPoint = { x: this.x + Math.cos(this.phase + this.id) * 150, y: this.y + Math.sin(this.phase + this.id) * 150 };
-      this.searchTimer = 1.8;
-      this.jamTimer = 0;
-    }
-    this.updateChorus(dt, stage, actors, events);
-    return events;
-  };
-
-  PP.entities.Guardian = Guardian;
-})(window.PingPanic);
-
-// ---- src/entities/rival.js ----
-(function (PP) {
-  'use strict';
-
-  var BROADCAST_PRIORITY = {
-    sonar: 60,
-    corePickup: 70,
-    combat: 80,
-    guardianDetected: 90,
-    guardianHit: 100
-  };
-
-  function Rival(x, y, preset) {
-    this.x = x;
-    this.y = y;
-    this.radius = preset === 'carrier' ? 64 : 60;
-    this.preset = preset;
-    this.state = 'scan';
-    this.targetCore = null;
-    this.carriedCore = null;
-    this.extractedCount = 0;
-    this.scanTimer = 1.2;
-    this.stunTimer = 0;
-    this.revealedUntil = 0;
-    this.recognitionUntil = 0;
-    this.escaped = false;
-    this.destroyed = false;
-    this.lastX = x;
-    this.lastY = y;
-    this.jamTimer = 0;
-    this.windupTimer = 0;
-    this.fireCooldown = 0.25;
-    this.recoveryCount = 0;
-    this.broadcastLabel = '';
-    this.broadcastUntil = 0;
-    this.broadcastPriority = 0;
-    this.navPath = [];
-    this.repathTimer = 0;
-    this.knownCoreIds = [];
-    this.searchWaypointIndex = preset === 'carrier' ? 2 : 0;
-    this.forcedGuardianTarget = null;
-    this.guardianAggroUntil = 0;
-    this.avoidanceSuppressedUntil = 0;
-    this.ignoredCoreId = null;
-    this.ignoredCoreUntil = 0;
-  }
-
-  Rival.prototype.recognize = function (now) {
-    this.recognitionUntil = Math.max(this.recognitionUntil, now + PP.data.config.visibility.sonarRecognitionSeconds);
-  };
-  Rival.prototype.isRecognizing = function (stage) {
-    return PP.core.utils.distance(this, stage.player) <= PP.data.config.visibility.radius || stage.elapsed < this.recognitionUntil;
-  };
-  Rival.prototype.contactSignal = function (signal, stage) {
-    if ((signal.source === 'player' || signal.source === 'rival') && !this.destroyed && !this.escaped) this.recognize(stage.elapsed);
-  };
-  Rival.prototype.announce = function (label, duration, priority, now) {
-    now = Number.isFinite(now) ? now : 0;
-    var active = now < this.broadcastUntil;
-    if (active && priority < this.broadcastPriority) return false;
-    if (active && priority === this.broadcastPriority && label !== this.broadcastLabel) return false;
-    this.broadcastLabel = label;
-    this.broadcastUntil = now + duration;
-    this.broadcastPriority = priority;
-    return true;
-  };
-  Rival.prototype.announceGuardianDetected = function (now) {
-    return this.announce('rival.guardianDetected', PP.data.config.rival.broadcastSeconds.guardianDetected, BROADCAST_PRIORITY.guardianDetected, now);
-  };
-  Rival.prototype.dropCore = function () {
-    if (!this.carriedCore) return null;
-    var core = this.carriedCore;
-    core.owner = 'free';
-    core.x = this.x;
-    core.y = this.y;
-    core.pickupCooldown = 1;
-    this.carriedCore = null;
-    this.targetCore = null;
-    return core;
-  };
-  Rival.prototype.discoverCore = function (core, now) {
-    if (!core || core.owner !== 'free' || !core.id) return false;
-    if (this.knownCoreIds.indexOf(core.id) < 0) this.knownCoreIds.push(core.id);
-    var ignored = core.id === this.ignoredCoreId
-      && (!Number.isFinite(now) || now < this.ignoredCoreUntil);
-    if (!ignored && !this.carriedCore && (!this.targetCore || this.targetCore.owner !== 'free')) this.targetCore = core;
-    return true;
-  };
-  Rival.prototype.recognizeGuardian = function (guardian, now) {
-    if (!guardian || guardian.destroyed) return false;
-    guardian.rivalRecognitionUntil = Math.max(
-      Number(guardian.rivalRecognitionUntil || 0),
-      now + PP.data.config.visibility.sonarRecognitionSeconds
-    );
-    return true;
-  };
-  Rival.prototype.hitByGuardian = function (now, guardian) {
-    if (!this.carriedCore || this.stunTimer > 0 || this.destroyed || this.escaped) return false;
-    var droppedCore = this.dropCore();
-    this.ignoredCoreId = droppedCore.id;
-    this.ignoredCoreUntil = now + PP.data.config.rival.droppedCoreRetargetDelaySeconds;
-    this.state = 'scan';
-    this.stunTimer = 0;
-    this.scanTimer = 0;
-    this.navPath = [];
-    this.repathTimer = 0;
-    if (guardian && !guardian.destroyed) {
-      this.forcedGuardianTarget = guardian;
-      this.guardianAggroUntil = now + PP.data.config.rival.guardianAggroSeconds;
-    }
-    this.announce('rival.guardianHit', PP.data.config.rival.broadcastSeconds.guardianHit, BROADCAST_PRIORITY.guardianHit, now);
-    return true;
-  };
-  Rival.prototype.destroyByPlayer = function () {
-    if (this.destroyed || this.escaped) return null;
-    var transferred = this.carriedCore;
-    if (transferred) {
-      transferred.owner = 'player';
-      this.carriedCore = null;
-    }
-    this.targetCore = null;
-    this.destroyed = true;
-    this.state = 'destroyed';
-    return transferred;
-  };
-  Rival.prototype.broadcast = function (stage) {
-    if (this.destroyed) return PP.core.i18n.t('rival.destroyed');
-    if (this.escaped) return PP.core.i18n.t('rival.extracted');
-    if (stage.elapsed < this.broadcastUntil) return PP.core.i18n.t(this.broadcastLabel);
-    if (this.isRecognizing(stage)) return PP.core.i18n.t('rival.retreat');
-    if (this.state === 'pickupWindup') return PP.core.i18n.t('rival.corePickup');
-    if (this.carriedCore || this.state === 'escape' || this.state === 'extractWindup') return PP.core.i18n.t('rival.relayMove');
-    if (this.targetCore || this.state === 'seek') return PP.core.i18n.t('rival.coreMove');
-    return PP.core.i18n.t('rival.search');
-  };
-  Rival.prototype.fire = function (stage, target) {
-    target = target || stage.player;
-    var direction = PP.core.utils.normalize(target.x - this.x, target.y - this.y);
-    if (direction.length < 0.001) return false;
-    stage.projectiles.push({
-      id: 'rival-shot-' + stage.nextProjectileId++,
-      x: this.x + direction.x * (this.radius + 16),
-      y: this.y + direction.y * (this.radius + 16),
-      vx: direction.x * stage.definition.rivalBulletSpeed,
-      vy: direction.y * stage.definition.rivalBulletSpeed,
-      radius: PP.data.config.rival.projectileRadius,
-      spent: false
-    });
-    return true;
-  };
-  Rival.prototype.directionTo = function (target, stage) {
-    var movementObstacles = stage.walls.filter(function (wall) { return wall.blockMovement !== false; });
-    if (PP.core.utils.hasClearanceLineOfSight(this, target, movementObstacles, this.radius)) {
-      this.navPath = [];
-      return PP.core.utils.normalize(target.x - this.x, target.y - this.y);
-    }
-    if (this.repathTimer <= 0 || !this.navPath.length) {
-      this.navPath = PP.core.utils.findGridPath(this, target, this.radius + 2, PP.data.config.world, movementObstacles, PP.data.config.guardian.navigation.gridSize);
-      this.repathTimer = PP.data.config.guardian.navigation.repathSeconds;
-    }
-    while (this.navPath.length && PP.core.utils.distance(this, this.navPath[0]) < 28) this.navPath.shift();
-    var point = this.navPath[0] || target;
-    return PP.core.utils.normalize(point.x - this.x, point.y - this.y);
-  };
-
-  Rival.prototype.knownFreeCores = function (stage) {
-    var known = this.knownCoreIds;
-    var ignoredCoreId = this.ignoredCoreId;
-    var ignoredCoreUntil = this.ignoredCoreUntil;
-    return stage.cores.filter(function (core) {
-      return core.owner === 'free' && core.pickupCooldown <= 0 && known.indexOf(core.id) >= 0
-        && !(core.id === ignoredCoreId && stage.elapsed < ignoredCoreUntil);
-    });
-  };
-  Rival.prototype.searchWaypoint = function (stage) {
-    var margin = this.radius + 24;
-    var waypoints = [
-      { x: margin, y: 260 },
-      { x: PP.data.config.world.width - margin, y: 360 },
-      { x: PP.data.config.world.width - margin, y: 820 },
-      { x: margin, y: 920 },
-      { x: PP.data.config.world.width / 2, y: 1260 }
-    ];
-    var point = waypoints[this.searchWaypointIndex % waypoints.length];
-    if (PP.core.utils.distance(this, point) <= PP.data.config.rival.searchWaypointReachRadius) {
-      this.searchWaypointIndex = (this.searchWaypointIndex + 1) % waypoints.length;
-      this.navPath = [];
-      this.repathTimer = 0;
-      point = waypoints[this.searchWaypointIndex];
-    }
-    return point;
-  };
-  Rival.prototype.blendMovement = function (progress, threats, carrying) {
-    var x = progress.x;
-    var y = progress.y;
-    threats.forEach(function (threat) {
-      if (!threat.actor) return;
-      var away = PP.core.utils.normalize(this.x - threat.actor.x, this.y - threat.actor.y);
-      x += away.x * threat.weight;
-      y += away.y * threat.weight;
-    }, this);
-    var blended = PP.core.utils.normalize(x, y);
-    if (blended.length < 0.001) return progress;
-    if (carrying) {
-      var dot = blended.x * progress.x + blended.y * progress.y;
-      if (dot < PP.data.config.rival.minimumEscapeProgressDot) return progress;
-    }
-    return blended;
-  };
-
-  Rival.prototype.update = function (dt, stage) {
-    var event = { signal: null, fired: false, extracted: false };
-    if (this.escaped || this.destroyed) return event;
-    this.scanTimer -= dt;
-    this.fireCooldown = Math.max(0, this.fireCooldown - dt);
-    this.repathTimer = Math.max(0, this.repathTimer - dt);
-    var currentVector = PP.systems.environment
-      ? PP.systems.environment.currentVector(stage, this) : { x: 0, y: 0 };
-    if (currentVector.x || currentVector.y) {
-      var currentObstacles = stage.walls.filter(function (wall) { return wall.blockMovement !== false; });
-      PP.core.utils.moveWithObstacles(
-        this, currentVector.x * dt, currentVector.y * dt,
-        this.radius, PP.data.config.world, currentObstacles
-      );
-      if (this.carriedCore) { this.carriedCore.x = this.x; this.carriedCore.y = this.y; }
-    }
-    var self = this;
-    if (this.forcedGuardianTarget && (this.forcedGuardianTarget.destroyed || stage.elapsed >= this.guardianAggroUntil)) {
-      this.forcedGuardianTarget = null;
-    }
-    var guardianThreat = stage.guardians.filter(function (guardian) {
-      return !guardian.destroyed && (guardian === self.forcedGuardianTarget
-        || (guardian.state === 'chase' && guardian.targetType === 'rival')
-        || PP.core.utils.distance(self, guardian) <= PP.data.config.visibility.radius
-        || stage.elapsed < Number(guardian.rivalRecognitionUntil || 0));
-    }).sort(function (a, b) {
-      return PP.core.utils.distance(self, a) - PP.core.utils.distance(self, b);
-    })[0];
-    var recognizingPlayer = this.isRecognizing(stage);
-    var attackTarget = recognizingPlayer ? stage.player : guardianThreat;
-    if (attackTarget && this.fireCooldown <= 0) {
-      event.fired = this.fire(stage, attackTarget);
-      if (event.fired) {
-        this.announce('rival.combat', PP.data.config.rival.broadcastSeconds.combat, BROADCAST_PRIORITY.combat, stage.elapsed);
-      }
-      this.fireCooldown = PP.data.config.rival.fireIntervalSeconds;
-    }
-
-    if (this.state === 'pickupWindup') {
-      if (!this.targetCore || this.targetCore.owner !== 'free') { this.targetCore = null; this.state = 'scan'; return event; }
-      this.windupTimer -= dt;
-      if (this.windupTimer <= 0) {
-        this.targetCore.owner = 'rival';
-        this.carriedCore = this.targetCore;
-        this.targetCore = null;
-        this.state = 'escape';
-        this.announce('rival.corePickup', PP.data.config.rival.broadcastSeconds.corePickup, BROADCAST_PRIORITY.corePickup, stage.elapsed);
-      }
-      return event;
-    }
-    if (this.state === 'extractWindup') {
-      this.windupTimer -= dt;
-      if (this.windupTimer <= 0 && this.carriedCore) {
-        this.carriedCore.owner = 'extracted';
-        this.carriedCore = null;
-        this.extractedCount = 1;
-        this.escaped = true;
-        this.state = 'escaped';
-        event.extracted = true;
-      }
-      return event;
-    }
-
-    if (this.scanTimer <= 0) {
-      this.scanTimer = PP.data.config.rival.sonarIntervalSeconds[this.preset] || PP.data.config.rival.sonarIntervalSeconds.probe;
-      event.signal = { source: 'rival', x: this.x, y: this.y, intensity: 0.85 };
-      this.announce('rival.sonar', PP.data.config.rival.broadcastSeconds.sonar, BROADCAST_PRIORITY.sonar, stage.elapsed);
-    }
-
-    var target = null;
-    if (this.carriedCore) {
-      this.state = 'escape';
-      target = stage.rivalExit;
-    } else {
-      var available = this.knownFreeCores(stage);
-      available.sort(function (a, b) { return PP.core.utils.distance(a, self) - PP.core.utils.distance(b, self); });
-      if (!this.targetCore || this.targetCore.owner !== 'free' || this.targetCore.pickupCooldown > 0
-        || this.knownCoreIds.indexOf(this.targetCore.id) < 0) this.targetCore = available[0] || null;
-    }
-    if (!this.carriedCore && this.targetCore && this.targetCore.owner === 'free') {
-      this.state = 'seek';
-      target = this.targetCore;
-    } else if (!this.carriedCore) {
-      this.state = 'scan';
-      target = this.searchWaypoint(stage);
-    }
-    if (target) {
-      var direction = this.directionTo(target, stage);
-      var threats = [];
-      if (stage.elapsed >= this.avoidanceSuppressedUntil) {
-        if (recognizingPlayer) threats.push({ actor: stage.player, weight: PP.data.config.rival.playerAvoidanceWeight });
-        if (guardianThreat) threats.push({ actor: guardianThreat, weight: PP.data.config.rival.guardianAvoidanceWeight });
-      }
-      direction = this.blendMovement(direction, threats, !!this.carriedCore);
-      var movementObstacles = stage.walls.filter(function (wall) { return wall.blockMovement !== false; });
-      var travelSpeed = PP.data.config.rival.speed * stage.difficultyModifiers.enemySpeedMultiplier
-        * (PP.systems.environment ? PP.systems.environment.speedMultiplier(stage, this) : 1);
-      PP.core.utils.moveWithObstacles(this, direction.x * travelSpeed * dt, direction.y * travelSpeed * dt, this.radius, PP.data.config.world, movementObstacles);
-      var targetDistance = PP.core.utils.distance(this, target);
-      if (!this.carriedCore && this.targetCore && target === this.targetCore
-        && targetDistance < this.radius * 0.8 && this.targetCore.pickupCooldown <= 0) {
-        this.state = 'pickupWindup';
-        this.windupTimer = 0.65;
-        this.announce('rival.corePickup', PP.data.config.rival.broadcastSeconds.corePickup, BROADCAST_PRIORITY.corePickup, stage.elapsed);
-      } else if (this.carriedCore && targetDistance < 90) {
-        this.state = 'extractWindup';
-        this.windupTimer = 0.75;
-      }
-    }
-    if (this.carriedCore) { this.carriedCore.x = this.x; this.carriedCore.y = this.y; }
-    var moved = PP.core.utils.distance(this, { x: this.lastX, y: this.lastY });
-    this.jamTimer = moved / Math.max(dt, 0.001) < 12 && target ? this.jamTimer + dt : 0;
-    this.lastX = this.x;
-    this.lastY = this.y;
-    if (this.jamTimer >= 3) {
-      this.navPath = [];
-      this.repathTimer = 0;
-      if (!this.carriedCore && !this.targetCore) this.searchWaypointIndex = (this.searchWaypointIndex + 1) % 5;
-      if (this.carriedCore) this.avoidanceSuppressedUntil = stage.elapsed + 1.25;
-      this.recoveryCount += 1;
-      this.jamTimer = 0;
-    }
-    return event;
-  };
-
-  Rival.updateProjectiles = function (dt, stage) {
-    var hits = 0;
-    stage.projectiles.forEach(function (shot) {
-      if (shot.spent) return;
-      var previous = { x: shot.x, y: shot.y };
-      shot.x += shot.vx * dt;
-      shot.y += shot.vy * dt;
-      var outside = shot.x < 0 || shot.y < 100 || shot.x > PP.data.config.world.width || shot.y > PP.data.config.world.height;
-      var projectileObstacles = stage.walls.filter(function (wall) { return wall.blockProjectiles !== false; });
-      var wallHit = projectileObstacles.some(function (wall) { return PP.core.utils.sweepCircleIntersectsObb(previous, shot, shot.radius, wall); });
-      if (outside || wallHit) { shot.spent = true; return; }
-      var actorHits = stage.guardians.filter(function (guardian) { return !guardian.destroyed; }).map(function (guardian) {
-        return { type: 'guardian', actor: guardian };
-      });
-      actorHits.push({ type: 'player', actor: stage.player });
-      actorHits = actorHits.map(function (candidate) {
-        var actor = candidate.actor;
-        var dx = shot.x - previous.x;
-        var dy = shot.y - previous.y;
-        var lengthSquared = dx * dx + dy * dy;
-        var t = lengthSquared ? ((actor.x - previous.x) * dx + (actor.y - previous.y) * dy) / lengthSquared : 0;
-        t = Math.max(0, Math.min(1, t));
-        var closest = { x: previous.x + dx * t, y: previous.y + dy * t };
-        if (PP.core.utils.distance(closest, actor) > shot.radius + actor.radius) return null;
-        candidate.t = t;
-        return candidate;
-      }).filter(Boolean).sort(function (a, b) { return a.t - b.t; });
-      if (actorHits.length) {
-        var firstHit = actorHits[0];
-        shot.spent = true;
-        if (firstHit.type === 'guardian') {
-          firstHit.actor.takeDamage(PP.data.config.rival.projectileDamage, 'rival-projectile', stage.elapsed);
-        } else {
-          var projectileDamage = PP.data.config.rival.projectileDamage * stage.difficultyModifiers.enemyDamageMultiplier;
-          if (stage.player.damage(projectileDamage, 'rival-projectile')) hits += 1;
-        }
-        return;
-      }
-    });
-    stage.projectiles = stage.projectiles.filter(function (shot) { return !shot.spent; });
-    return hits;
-  };
-
-  Rival.separateFromGuardian = function (guardian, rival, stage) {
-    var rules = PP.data.config.guardian.rivalSeparation;
-    var movementObstacles = stage.walls.filter(function (wall) { return wall.blockMovement !== false; });
-    for (var stepIndex = 0; stepIndex < rules.maximumSteps; stepIndex += 1) {
-      var distance = PP.core.utils.distance(guardian, rival);
-      var overlap = guardian.radius + rival.radius + 4 - distance;
-      if (overlap <= 0) break;
-      var direction = PP.core.utils.normalize(rival.x - guardian.x, rival.y - guardian.y);
-      if (direction.length < 0.001) direction = { x: guardian.id % 2 ? 1 : -1, y: 0, length: 1 };
-      var amount = Math.min(rules.stepWorldUnits, overlap / 2);
-      PP.core.utils.moveWithObstacles(guardian, -direction.x * amount, -direction.y * amount,
-        guardian.radius, PP.data.config.world, movementObstacles);
-      PP.core.utils.moveWithObstacles(rival, direction.x * amount, direction.y * amount,
-        rival.radius, PP.data.config.world, movementObstacles);
-    }
-    guardian.navPath = [];
-    guardian.repathTimer = rules.repathCooldownSeconds;
-    rival.navPath = [];
-    rival.repathTimer = rules.repathCooldownSeconds;
-    rival.lastX = rival.x; rival.lastY = rival.y;
-    guardian.lastX = guardian.x; guardian.lastY = guardian.y;
-    return PP.core.utils.distance(guardian, rival);
-  };
-
-  PP.entities.Rival = Rival;
-})(window.PingPanic);
-
-// ---- src/systems/sonar.js ----
-(function (PP) {
-  'use strict';
-
-  function SonarSystem() {
-    this.pulses = [];
-    this.nextPulseId = 1;
-  }
-  SonarSystem.prototype.emit = function (source, x, y, intensity, now, revealSeconds) {
-    var config = PP.data.config.sonar;
-    var signal = { source: source, x: x, y: y, intensity: intensity || 1, now: now };
-    this.pulses.push({
-      id: this.nextPulseId,
-      source: source,
-      signal: signal,
-      x: x,
-      y: y,
-      radius: 0,
-      previousRadius: 0,
-      maxRadius: config.radius * signal.intensity,
-      speed: config.radius * signal.intensity / config.waveSeconds,
-      life: config.waveSeconds,
-      revealSeconds: revealSeconds || config.revealSeconds,
-      boosted: (intensity || 1) > 1,
-      contactedEntities: []
-    });
-    this.nextPulseId += 1;
-    return signal;
-  };
-  SonarSystem.prototype.update = function (dt, now, revealables, onReach, walls, stage) {
-    walls = walls || [];
-    this.pulses.forEach(function (pulse) {
-      if (stage && PP.systems.environment) PP.systems.environment.modifyPulse(pulse, stage);
-      pulse.previousRadius = pulse.radius;
-      pulse.radius = Math.min(pulse.maxRadius, pulse.radius + pulse.speed * dt);
-      pulse.life -= dt;
-      revealables.forEach(function (entity) {
-        if (entity.owner === 'extracted') return;
-        if (pulse.contactedEntities.indexOf(entity) >= 0) return;
-        var obstacle = entity.entityKind === 'obstacle';
-        var distance = obstacle ? PP.core.utils.pointToObbDistance(pulse, entity) : PP.core.utils.distance(pulse, entity);
-        var edgeDistance = obstacle ? distance : Math.max(0, distance - (entity.radius || 0));
-        var reached = edgeDistance >= pulse.previousRadius && edgeDistance <= pulse.radius;
-        if (!reached) return;
-        var obstacleCenter = obstacle ? PP.core.utils.obbCenter(entity) : entity;
-        var visiblePath = obstacle
-          ? PP.core.utils.hasLineOfSight(pulse, obstacleCenter, walls.filter(function (wall) { return wall !== entity; }))
-          : PP.core.utils.hasLineOfSight(pulse, entity, walls);
-        if (!visiblePath) return;
-        pulse.contactedEntities.push(entity);
-        entity.revealedUntil = Math.max(entity.revealedUntil || 0, now + pulse.revealSeconds);
-        if (onReach) onReach(pulse, entity);
-      });
-    });
-    this.pulses = this.pulses.filter(function (pulse) { return pulse.life > 0 && pulse.radius <= pulse.maxRadius; });
-  };
-  SonarSystem.prototype.clear = function () { this.pulses.length = 0; };
-
-  PP.systems.SonarSystem = SonarSystem;
-})(window.PingPanic);
-
-// ---- src/systems/environment.js ----
-(function (PP) {
-  'use strict';
-
-  var U = PP.core.utils;
-  function copy(source) {
-    var result = {};
-    Object.keys(source || {}).forEach(function (key) { result[key] = source[key]; });
-    return result;
-  }
-  function circleEntity(definition, index) {
-    var entity = copy(definition);
-    entity.id = definition.type + '-' + (index + 1);
-    entity.entityKind = 'environment';
-    entity.environmentKind = definition.type;
-    entity.revealedUntil = definition.type === 'decoyWave' ? 0 : Infinity;
-    entity.radius = Number(definition.radius) || 80;
-    entity.hitCooldowns = {};
-    entity.hitCycleByActor = {};
-    entity.resolved = false;
-    entity.activated = false;
-    return entity;
-  }
-  function passageEntity(definition, index) {
-    var gate = U.createObb({
-      id: definition.type + '-' + (index + 1),
-      groupId: 'environment-' + definition.type + '-' + (index + 1),
-      entityKind: 'obstacle',
-      environmentKind: definition.type,
-      collision: 'dynamic',
-      cx: definition.x,
-      cy: definition.y,
-      width: definition.width,
-      height: definition.height,
-      rotationDegrees: definition.rotationDegrees || 0,
-      collisionFrameWidth: 5,
-      visualAssetId: 'terrain-gimmick-variable-passage',
-      revealedUntil: Infinity
-    });
-    gate.period = Number(definition.period) || 4;
-    gate.openSeconds = Number(definition.openSeconds) || gate.period / 2;
-    gate.phase = Number(definition.phase) || 0;
-    gate.isClosed = false;
-    gate.closeDeferred = false;
-    gate.secondsUntilChange = 0;
-    gate.nextState = 'closed';
-    setGateClosed(gate, false);
-    return gate;
-  }
-  function currentBandEntity(definition, index) {
-    var band = U.createObb({
-      id: definition.type + '-' + (index + 1),
-      groupId: 'environment-' + definition.type + '-' + (index + 1),
-      entityKind: 'environment',
-      environmentKind: definition.type,
-      collision: 'none',
-      cx: definition.x,
-      cy: definition.y,
-      width: definition.width,
-      height: definition.height,
-      rotationDegrees: definition.rotationDegrees || 0,
-      revealedUntil: Infinity
-    });
-    var rules = PP.data.config.environment.currentBand;
-    band.mode = definition.mode === 'boost' ? 'boost' : 'override';
-    band.feather = U.clamp(
-      Number(definition.feather) || rules.defaultFeather,
-      1,
-      Math.min(rules.maximumFeather, band.halfExtents.x, band.halfExtents.y)
-    );
-    band.currentStrength = Number(definition.currentStrength) || 0;
-    band.currentPhase = Number(definition.currentPhase) || 0;
-    band.boostMultiplier = U.clamp(Number(definition.boostMultiplier) || 1, 1, rules.maximumBoostMultiplier);
-    band.hitCooldowns = {};
-    return band;
-  }
-  function setGateClosed(gate, closed) {
-    gate.isClosed = !!closed;
-    gate.blockMovement = gate.isClosed;
-    gate.blockProjectiles = gate.isClosed;
-    gate.blockSignals = gate.isClosed;
-    gate.blockChorusWave = gate.isClosed;
-  }
-  function create(definition) {
-    var result = { zones: [], passages: [], revealables: [] };
-    (definition.environment || []).forEach(function (entry, index) {
-      if (entry.type === 'variablePassage') {
-        var passage = passageEntity(entry, index);
-        result.passages.push(passage);
-        result.revealables.push(passage);
-      } else if (entry.type === 'currentBand') {
-        var band = currentBandEntity(entry, index);
-        result.zones.push(band);
-        result.revealables.push(band);
-      } else {
-        var zone = circleEntity(entry, index);
-        result.zones.push(zone);
-        result.revealables.push(zone);
-      }
-    });
-    return result;
-  }
-  function contains(zone, actor, padding) {
-    return !!actor && U.distance(zone, actor) <= zone.radius + (padding || 0);
-  }
-  function gateOccupied(gate, run) {
-    var padding = PP.data.config.environment.variablePassage.safetyPadding;
-    var actors = [run.player].concat((run.guardians || []).filter(function (guardian) { return !guardian.destroyed; }));
-    if (run.rival && !run.rival.destroyed && !run.rival.escaped) actors.push(run.rival);
-    return actors.some(function (actor) {
-      return U.circleIntersectsObb(actor, (actor.radius || 0) + padding, gate);
-    });
-  }
-  function speedMultiplier(run, actor) {
-    var multiplier = 1;
-    (run.environment ? run.environment.zones : []).forEach(function (zone) {
-      if (zone.environmentKind === 'absorptionZone' && contains(zone, actor)) {
-        multiplier *= PP.data.config.environment.absorption.movementMultiplier;
-      }
-      if (zone.environmentKind === 'thermalVent' && zone.active && actor.entityKind !== 'player' && contains(zone, actor)) {
-        multiplier *= PP.data.config.environment.thermal.enemySpeedMultiplier;
-      }
-    });
-    return multiplier;
-  }
-  function rechargeMultiplier(run, actor) {
-    var multiplier = 1;
-    (run.environment ? run.environment.zones : []).forEach(function (zone) {
-      if (zone.environmentKind === 'absorptionZone' && contains(zone, actor)) {
-        multiplier *= PP.data.config.environment.absorption.rechargeMultiplier;
-      }
-    });
-    return multiplier;
-  }
-  function currentVector(run, actor) {
-    var strength = Number(run && run.definition && run.definition.currentStrength) || 0;
-    var phase = Number(run && run.definition && run.definition.currentPhase) || 0;
-    var vector = { x: strength * Math.cos(phase), y: strength * Math.sin(phase) };
-    if (!actor || !run || !run.environment) return vector;
-    run.environment.zones.filter(function (zone) {
-      return zone.environmentKind === 'currentBand';
-    }).forEach(function (band) {
-      var weight = currentBandWeight(band, actor);
-      if (weight <= 0) return;
-      if (band.mode === 'boost') {
-        var multiplier = 1 + (band.boostMultiplier - 1) * weight;
-        vector.x *= multiplier;
-        vector.y *= multiplier;
-        return;
-      }
-      var target = {
-        x: band.currentStrength * Math.cos(band.currentPhase),
-        y: band.currentStrength * Math.sin(band.currentPhase)
-      };
-      vector.x += (target.x - vector.x) * weight;
-      vector.y += (target.y - vector.y) * weight;
-    });
-    return vector;
-  }
-  function currentBandWeight(band, actor) {
-    if (!band || !actor || band.environmentKind !== 'currentBand') return 0;
-    var local = U.toObbLocal(actor, band);
-    var edgeDistance = Math.min(
-      band.halfExtents.x - Math.abs(local.x),
-      band.halfExtents.y - Math.abs(local.y)
-    );
-    if (edgeDistance <= 0) return 0;
-    return U.clamp(edgeDistance / Math.max(1, band.feather), 0, 1);
-  }
-  function update(run, dt) {
-    var events = { thermalHit: false, guardianDestroyed: 0, passageChanged: false };
-    if (!run.environment) return events;
-    run.environment.zones.forEach(function (zone) {
-      Object.keys(zone.hitCooldowns || {}).forEach(function (actorId) {
-        zone.hitCooldowns[actorId] = Math.max(0, zone.hitCooldowns[actorId] - dt);
-      });
-      if (zone.environmentKind === 'decoyWave' && zone.activated && !zone.resolved
-        && contains(zone, run.player, PP.data.config.visibility.radius)) {
-        zone.resolved = true;
-        zone.revealedUntil = 0;
-      }
-      if (zone.environmentKind !== 'thermalVent') return;
-      var cycle = (run.elapsed + Number(zone.phase || 0)) % Number(zone.period || 3);
-      var cycleId = Math.floor((run.elapsed + Number(zone.phase || 0)) / Number(zone.period || 3));
-      zone.active = cycle < Number(zone.activeSeconds || 1.5);
-      zone.secondsUntilActive = zone.active ? null : Number(zone.period || 3) - cycle;
-      zone.warning = !zone.active && cycle >= Number(zone.period || 3) - 0.65;
-      if (!zone.active) return;
-      var targets = [{ key: 'player', actor: run.player }].concat(run.guardians.filter(function (guardian) {
-        return !guardian.destroyed;
-      }).map(function (guardian) {
-        return { key: 'guardian-' + guardian.id, actor: guardian };
-      }));
-      targets.forEach(function (target) {
-        if (!contains(zone, target.actor) || zone.hitCooldowns[target.key] > 0
-          || zone.hitCycleByActor[target.key] === cycleId) return;
-        zone.hitCooldowns[target.key] = PP.data.config.environment.thermal.hitCooldownSeconds;
-        zone.hitCycleByActor[target.key] = cycleId;
-        var damage = PP.data.config.environment.thermal.damage;
-        if (target.key === 'player') {
-          if (run.player.damage(damage, 'thermal-vent')) events.thermalHit = true;
-        } else if (target.actor.takeDamage(damage, 'thermal-vent', run.elapsed)) {
-          events.guardianDestroyed += 1;
-        }
-      });
-    });
-    run.environment.passages.forEach(function (gate) {
-      var cycle = (run.elapsed + gate.phase) % gate.period;
-      var shouldClose = cycle >= gate.openSeconds;
-      gate.secondsUntilChange = shouldClose ? gate.period - cycle : gate.openSeconds - cycle;
-      gate.nextState = shouldClose ? 'open' : 'closed';
-      if (shouldClose && !gate.isClosed && gateOccupied(gate, run)) {
-        shouldClose = false;
-        gate.closeDeferred = true;
-      } else {
-        gate.closeDeferred = false;
-      }
-      if (gate.isClosed !== shouldClose) {
-        setGateClosed(gate, shouldClose);
-        events.passageChanged = true;
-      }
-    });
-    return events;
-  }
-  function onSonarContact(pulse, entity, run) {
-    if (!entity || !entity.environmentKind) return null;
-    if (entity.environmentKind === 'decoyWave') {
-      entity.activated = true;
-      entity.revealedUntil = Infinity;
-      return { type: 'decoy-activated' };
-    }
-    return null;
-  }
-  function modifyPulse(pulse, run) {
-    if (!run.environment || pulse.environmentAdjusted) return;
-    run.environment.zones.forEach(function (zone) {
-      if (zone.environmentKind === 'currentBand') return;
-      var edgeDistance = Math.max(0, U.distance(pulse, zone) - zone.radius);
-      if (pulse.radius < edgeDistance || pulse.adjustedZones && pulse.adjustedZones[zone.id]) return;
-      pulse.adjustedZones = pulse.adjustedZones || {};
-      pulse.adjustedZones[zone.id] = true;
-      if (zone.environmentKind === 'absorptionZone') {
-        var strength = Math.max(0, Math.min(0.8, Number(zone.strength) || 0.45));
-        pulse.maxRadius = Math.max(pulse.radius, pulse.maxRadius * (1 - strength));
-        pulse.life = Math.min(pulse.life, Math.max(0, (pulse.maxRadius - pulse.radius) / Math.max(1, pulse.speed)));
-        pulse.absorbed = true;
-      } else if (zone.environmentKind === 'signalEcho') {
-        pulse.maxRadius *= Number(zone.radiusMultiplier) || 1.2;
-        pulse.revealSeconds *= Number(zone.revealMultiplier) || 1.35;
-        pulse.echoAmplified = true;
-      }
-    });
-  }
-
-  PP.systems.environment = {
-    create: create,
-    update: update,
-    speedMultiplier: speedMultiplier,
-    rechargeMultiplier: rechargeMultiplier,
-    currentVector: currentVector,
-    currentBandWeight: currentBandWeight,
-    onSonarContact: onSonarContact,
-    modifyPulse: modifyPulse,
-    setGateClosed: setGateClosed
-  };
-})(window.PingPanic);
-
-// ---- src/systems/stage.js ----
-(function (PP) {
-  'use strict';
-
-  var U = PP.core.utils;
-  var runSequence = 1;
-  var CORE_SPOTS = [
-    { x: 150, y: 280 }, { x: 500, y: 315 }, { x: 840, y: 355 }, { x: 190, y: 620 },
-    { x: 800, y: 680 }, { x: 340, y: 930 }, { x: 690, y: 1010 }, { x: 500, y: 1190 },
-    { x: 145, y: 1110 }, { x: 855, y: 1190 }, { x: 390, y: 560 }, { x: 610, y: 820 }
-  ];
-  function allowedRotation(value) {
-    var normalized = U.normalizeObbDegrees(value);
-    return PP.data.obstacles.allowedRotationDegrees.indexOf(normalized) >= 0;
-  }
-  function groupMembers(group) {
-    if (Array.isArray(group.members) && group.members.length) return group.members;
-    return [{ profileId: group.profileId, offsetX: 0, offsetY: 0, rotationDegrees: 0, scale: group.scale || 1 }];
-  }
-  function transformPoint(point, transform) {
-    return {
-      x: transform === 'MX' || transform === 'MXY' ? PP.data.config.world.width - point.x : point.x,
-      y: transform === 'MY' || transform === 'MXY' ? PP.data.config.world.height - point.y : point.y
-    };
-  }
-  function transformRotation(rotationDegrees, transform) {
-    var reflected = transform === 'MX' || transform === 'MY' ? -rotationDegrees : rotationDegrees;
-    return U.normalizeObbDegrees(reflected);
-  }
-  function variantRotation(variant) {
-    return { V0: 0, V1: 45, V2: 90, V3: 135 }[variant] || 0;
-  }
-  function expandObstacleLayout(layout) {
-    var data = PP.data.obstacles;
-    var pattern = data.patterns[layout.patternId];
-    var rsIndex = 0;
-    var groups = pattern.groups.map(function (source) {
-      var profile = data.profiles[source.profileId];
-      var point = transformPoint(data.slots[source.slotId], layout.transform);
-      var scale = source.scale;
-      if (profile.code === 'RS') {
-        if (layout.variant === 'V1') scale = 0.85;
-        else if (layout.variant === 'V2') scale = 1.15;
-        else if (layout.variant === 'V3') scale = rsIndex++ % 2 === 0 ? 0.85 : 1.15;
-      }
-      return {
-        id: 'stage-' + layout.stageId + '-' + source.id,
-        profileId: source.profileId,
-        x: point.x,
-        y: point.y,
-        rotationDegrees: U.normalizeObbDegrees(transformRotation(source.rotationDegrees, layout.transform) + variantRotation(layout.variant)),
-        scale: scale
-      };
-    });
-    return { groups: groups, decorations: [] };
-  }
-  function createObstacleGroup(group, index) {
-    var groupId = group.id || 'obstacle-group-' + (index + 1);
-    var groupRotation = U.normalizeObbDegrees(group.rotationDegrees || 0);
-    var groupRadians = groupRotation * Math.PI / 180;
-    var groupCos = Math.cos(groupRadians);
-    var groupSin = Math.sin(groupRadians);
-    var colliders = groupMembers(group).map(function (member, memberIndex) {
-      var profile = PP.data.obstacles.profiles[member.profileId];
-      if (!profile) throw new Error('Unknown solid obstacle profile: ' + member.profileId);
-      var scale = Number(member.scale || group.scale || 1);
-      var offsetX = Number(member.offsetX || 0);
-      var offsetY = Number(member.offsetY || 0);
-      var cx = Number(group.x) + offsetX * groupCos - offsetY * groupSin;
-      var cy = Number(group.y) + offsetX * groupSin + offsetY * groupCos;
-      return U.createObb({
-        id: groupId + '-collider-' + (memberIndex + 1),
-        groupId: groupId,
-        profileId: profile.id,
-        entityKind: 'obstacle',
-        collision: 'solid',
-        blockMovement: profile.blocks.movement,
-        blockProjectiles: profile.blocks.projectiles,
-        blockSignals: profile.blocks.sonar,
-        blockChorusWave: profile.blocks.chorusWave,
-        cx: cx,
-        cy: cy,
-        width: profile.baseSize.width * scale,
-        height: profile.baseSize.height * scale,
-        rotationDegrees: groupRotation + Number(member.rotationDegrees || 0),
-        collisionFrameWidth: profile.collisionFrameWidth,
-        visualAssetId: member.visualAssetId || profile.assetId,
-        revealedUntil: 0
-      });
-    });
-    return { id: groupId, colliders: colliders };
-  }
-  function stageObstacles(definition, random) {
-    var data = PP.data.obstacles;
-    var layout = data.stageLayouts[String(definition.id)] || {
-      stageId: definition.id,
-      patternId: definition.obstaclePatternId,
-      density: definition.obstacleDensity,
-      transform: definition.obstacleTransform || 'I',
-      variant: definition.obstacleVariant || 'V0',
-      designIntent: definition.obstacleDesignIntent || 'runtime-generated'
-    };
-    var expanded = expandObstacleLayout(layout);
-    var groups = expanded.groups.map(createObstacleGroup);
-    var colliders = [];
-    groups.forEach(function (group) { colliders = colliders.concat(group.colliders); });
-    return { patternId: layout.patternId, groups: groups, colliders: colliders, decorations: expanded.decorations };
-  }
-
-  function createStageRun(definition, difficultyId) {
-    var random = U.seededRandom(definition.seed);
-    var obstacleBuild = stageObstacles(definition, random);
-    var environment = PP.systems.environment.create(definition);
-    var walls = obstacleBuild.colliders.concat(environment.passages);
-    var selectedDifficulty = PP.data.config.difficulty.profiles[difficultyId] ? difficultyId : 'normal';
-    var difficultyProfile = PP.data.config.difficulty.profiles[selectedDifficulty];
-    var patternOffset = definition.corePattern % CORE_SPOTS.length;
-    var patternedSpots = CORE_SPOTS.slice(patternOffset).concat(CORE_SPOTS.slice(0, patternOffset));
-    var candidateSpots = definition.fixedCoreSpots && definition.fixedCoreSpots.length
-      ? definition.fixedCoreSpots.slice() : U.shuffle(patternedSpots, random);
-    var spots = candidateSpots.filter(function (spot) {
-      return !walls.some(function (wall) { return U.circleIntersectsObb(spot, 54, wall); });
-    });
-    var cores = spots.slice(0, definition.coreTotal).map(function (spot, index) {
-      return {
-        id: 'core-' + (index + 1), x: spot.x, y: spot.y, radius: 30,
-        owner: 'free', revealedUntil: definition.startRevealedCores ? Infinity : 0, pickupCooldown: 0
-      };
-    });
-    var guardianCandidates = definition.fixedGuardianSpots && definition.fixedGuardianSpots.length
-      ? definition.fixedGuardianSpots.slice() : U.shuffle([
-      { x: 140, y: 320 }, { x: 860, y: 300 }, { x: 120, y: 650 }, { x: 880, y: 760 },
-      { x: 130, y: 1000 }, { x: 870, y: 1030 }, { x: 470, y: 690 }, { x: 540, y: 1120 }
-    ], random);
-    var guardianSpots = guardianCandidates.filter(function (spot) {
-      return !walls.some(function (wall) { return U.circleIntersectsObb(spot, 93, wall); });
-    });
-    var guardians = [];
-    for (var i = 0; i < definition.guardianCount; i += 1) {
-      if (!guardianSpots[i]) break;
-      var guardian = new PP.entities.Guardian(i + 1, guardianSpots[i].x, guardianSpots[i].y, definition.guardianTypes[i], random() * 6);
-      guardian.baseSpeed = guardian.speed;
-      guardian.baseDamage = guardian.damage;
-      guardian.speed *= difficultyProfile.enemySpeedMultiplier;
-      guardian.damage *= difficultyProfile.enemyDamageMultiplier;
-      guardians.push(guardian);
-    }
-    var rival = definition.rivalPreset ? new PP.entities.Rival(110, 230, definition.rivalPreset) : null;
-    return {
-      runToken: 'run-' + definition.id + '-' + runSequence++,
-      definition: definition,
-      difficultyId: selectedDifficulty,
-      difficultyModifiers: difficultyProfile,
-      rewardProfile: difficultyProfile.rewardProfile,
-      player: new PP.entities.Player(500, 1350),
-      relay: { x: 500, y: 128, radius: 106 },
-      rivalExit: { x: 900, y: 1350, radius: 72 },
-      rivalAnchor: { x: 110, y: 230 },
-      walls: walls,
-      movementObstacles: walls.filter(function (wall) { return wall.blockMovement; }),
-      projectileObstacles: walls.filter(function (wall) { return wall.blockProjectiles; }),
-      sonarObstacles: walls.filter(function (wall) { return wall.blockSignals; }),
-      chorusObstacles: walls.filter(function (wall) { return wall.blockChorusWave; }),
-      obstaclePatternId: obstacleBuild.patternId,
-      obstacleGroups: obstacleBuild.groups,
-      decorations: obstacleBuild.decorations,
-      environment: environment,
-      cores: cores,
-      guardians: guardians,
-      rival: rival,
-      projectiles: [],
-      nextProjectileId: 1,
-      sonar: new PP.systems.SonarSystem(),
-      elapsed: 0,
-      sonarsUsed: 0,
-      hits: 0,
-      score: 0,
-      rewardOfferUsed: false,
-      status: 'playing'
-    };
-  }
-
-  function countCoreOwnership(run) {
-    var counts = { free: 0, player: 0, rival: 0, extracted: 0 };
-    run.cores.forEach(function (core) {
-      if (Object.prototype.hasOwnProperty.call(counts, core.owner)) counts[core.owner] += 1;
-    });
-    return counts;
-  }
-  function calculateStars(run) {
-    if (!run) return 0;
-    var counts = countCoreOwnership(run);
-    var stars = 3;
-    if (run.player.power <= PP.data.config.starRating.powerThresholdPercent) stars -= 1;
-    if (counts.extracted > 0) stars -= 1;
-    return PP.core.utils.clamp(stars, 1, 3);
-  }
-  function coreInvariantErrors(run) {
-    var errors = [];
-    var counts = countCoreOwnership(run);
-    var sum = counts.free + counts.player + counts.rival + counts.extracted;
-    if (sum !== run.definition.coreTotal || run.cores.length !== run.definition.coreTotal) errors.push('코어 합계 불변식 위반');
-    if (counts.player !== run.player.collected) errors.push('플레이어 소유 수 불일치');
-    if (counts.extracted > PP.data.config.coreRules.rivalMaxExtracted) errors.push('라이벌 반출 상한 위반');
-    if (counts.rival > 1) errors.push('라이벌 운반 상한 위반');
-    if (run.rival && Number(!!run.rival.carriedCore) !== counts.rival) errors.push('라이벌 운반 참조 불일치');
-    return errors;
-  }
-  function relayProgress(run) {
-    var counts = countCoreOwnership(run);
-    return counts.player + counts.extracted;
-  }
-  function relayActive(run) { return relayProgress(run) >= run.definition.requiredCores; }
-
-  function obstacleGroupErrors(group, label) {
-    var errors = [];
-    var data = PP.data.obstacles;
-    if (!group || !Number.isFinite(Number(group.x)) || !Number.isFinite(Number(group.y))) errors.push(label + ' 중심 좌표 오류');
-    if (!allowedRotation(group && group.rotationDegrees || 0)) errors.push(label + ' 그룹 회전 오류');
-    var members = groupMembers(group || {});
-    members.forEach(function (member, index) {
-      var memberLabel = label + '/member-' + (index + 1);
-      var profile = data.profiles[member.profileId];
-      if (!profile) { errors.push(memberLabel + ' solid profile 오류'); return; }
-      var scale = Number(member.scale || group.scale || 1);
-      if (profile.allowedScales.indexOf(scale) < 0) errors.push(memberLabel + ' scale 오류');
-      var combinedRotation = Number(group.rotationDegrees || 0) + Number(member.rotationDegrees || 0);
-      if (!allowedRotation(combinedRotation)) errors.push(memberLabel + ' 회전 오류');
-    });
-    return errors;
-  }
-  function obstacleDataErrors() {
-    var errors = [];
-    var data = PP.data.obstacles;
-    var expectedProfiles = {
-      'foundation-square-large': [288, 288],
-      'column-square': [96, 96],
-      'ruin-segment': [240, 120],
-      'wall-pillar': [72, 192]
-    };
-    if (!data || data.schemaVersion !== 1) return ['장애물 schemaVersion 오류'];
-    if (data.maxCollidersPerStage !== 8) errors.push('스테이지 collider 상한은 8이어야 합니다.');
-    if (data.maxDecorationsPerStage !== 0) errors.push('스테이지 decorationOnly 배치는 0이어야 합니다.');
-    if (data.allowedRotationDegrees.join(',') !== '0,45,90,135') errors.push('OBB 허용 회전은 0/45/90/135여야 합니다.');
-    Object.keys(expectedProfiles).forEach(function (id) {
-      var profile = data.profiles[id];
-      var expected = expectedProfiles[id];
-      if (!profile || profile.collision !== 'solid' || profile.decorationOnly
-        || !profile.blocks.movement || !profile.blocks.projectiles || !profile.blocks.sonar || !profile.blocks.chorusWave
-        || profile.collisionFrameWidth !== 5) {
-        errors.push('solid profile 계약 오류: ' + id);
-      } else if (profile.baseSize.width !== expected[0] || profile.baseSize.height !== expected[1]) {
-        errors.push('solid profile 크기 오류: ' + id);
-      }
-    });
-    if (Object.keys(data.profiles).length !== 4) errors.push('solid profile은 4종이어야 합니다.');
-    var profileAssetIds = [];
-    Object.keys(data.profiles).forEach(function (id) {
-      var assetId = data.profiles[id].assetId;
-      if (profileAssetIds.indexOf(assetId) < 0) profileAssetIds.push(assetId);
-    });
-    if (profileAssetIds.sort().join(',') !== data.solidAssetIds.slice().sort().join(',')) errors.push('solid profile preload assetId 목록 불일치');
-    if (data.profiles['ruin-segment'].allowedScales.join(',') !== '0.85,1,1.15') errors.push('ruin-segment scale 계약 오류');
-    Object.keys(data.decorationProfiles).forEach(function (id) {
-      var decoration = data.decorationProfiles[id];
-      if (decoration.collision !== 'decorationOnly' || !decoration.decorationOnly
-        || decoration.blocks.movement || decoration.blocks.projectiles || decoration.blocks.sonar || decoration.blocks.chorusWave) {
-        errors.push('장식 profile collision 오류: ' + id);
-      }
-    });
-    var expectedPatternIds = ['S00', 'S01', 'S02', 'S03', 'S04', 'S05', 'S06', 'N01', 'N02', 'N03', 'N04', 'N05', 'N06', 'N07', 'N08', 'D01', 'D02', 'D03', 'D04', 'D05', 'D06'];
-    if (Object.keys(data.patterns).sort().join(',') !== expectedPatternIds.sort().join(',')) errors.push('장애물 패턴은 기본 20종+S00이어야 합니다.');
-    Object.keys(data.patterns).forEach(function (id) {
-      var pattern = data.patterns[id];
-      var groups = pattern.groups || [];
-      var expectedSolidCount = id === 'S00' ? 0 : (pattern.density === 'dense' ? 6 : (pattern.density === 'standard' ? 4 : null));
-      if (expectedSolidCount !== null && groups.length !== expectedSolidCount) errors.push(id + ' density solid 수 오류');
-      if (pattern.density === 'sparse' && id !== 'S00' && (groups.length < 1 || groups.length > 3)) errors.push(id + ' sparse solid 수 오류');
-      if (id !== 'S04' && groups.some(function (group) { return group.profileId === 'foundation-square-large'; })) errors.push(id + ' FQ는 S04 외 사용 금지');
-      if (groups.length > data.maxLogicalGroupsPerStage) errors.push(id + ' 논리 그룹 상한 초과');
-      groups.forEach(function (group, index) {
-        var profile = data.profiles[group.profileId];
-        if (!profile) errors.push(id + '/group-' + (index + 1) + ' profile 오류');
-        if (!data.slots[group.slotId]) errors.push(id + '/group-' + (index + 1) + ' slot 오류');
-        if (!allowedRotation(group.rotationDegrees)) errors.push(id + '/group-' + (index + 1) + ' 회전 오류');
-        if (profile && profile.allowedScales.indexOf(group.scale) < 0) errors.push(id + '/group-' + (index + 1) + ' scale 오류');
-      });
-      if (groups.length > data.maxCollidersPerStage) errors.push(id + ' collider 상한 초과');
-      if (pattern.decorations.length !== 0) errors.push(id + ' decorationOnly 배치 금지');
-      pattern.decorations.forEach(function (decoration, index) {
-        if (!data.decorationProfiles[decoration.profileId] || !data.slots[decoration.slotId]) errors.push(id + '/decoration-' + (index + 1) + ' 참조 오류');
-      });
-    });
-    if (Object.keys(data.stageLayouts).length !== 100) errors.push('100 stage obstacle matrix 행 수 오류');
-    var previousPattern = null;
-    var rhythmOrder = [
-      ['standard', 'sparse', 'dense', 'sparse', 'standard'],
-      ['sparse', 'dense', 'standard', 'dense', 'sparse'],
-      ['standard', 'dense', 'sparse', 'standard', 'dense'],
-      ['sparse', 'standard', 'dense', 'standard', 'sparse']
-    ];
-    for (var stageId = 1; stageId <= 100; stageId += 1) {
-      var layout = data.stageLayouts[String(stageId)];
-      if (!layout || layout.stageId !== stageId) { errors.push('stage layout ID 오류: ' + stageId); continue; }
-      var stagePattern = data.patterns[layout.patternId];
-      if (!stagePattern || stagePattern.density !== layout.density) errors.push('stage layout pattern/density 오류: ' + stageId);
-      if (data.transforms.indexOf(layout.transform) < 0 || data.variants.indexOf(layout.variant) < 0 || !layout.designIntent) errors.push('stage transform/variant/intent 오류: ' + stageId);
-      if (previousPattern === layout.patternId && !(stageId === 2 && layout.patternId === 'S00')) {
-        errors.push('연속 base pattern 중복: ' + stageId);
-      }
-      previousPattern = layout.patternId;
-      if (stagePattern) {
-        var expanded = expandObstacleLayout(layout);
-        expanded.groups.forEach(function (group, index) {
-          errors = errors.concat(obstacleGroupErrors(group, 'stage-' + stageId + '/group-' + (index + 1)));
-        });
-      }
-    }
-    var firstRhythm = [];
-    for (var firstId = 1; firstId <= 5; firstId += 1) firstRhythm.push(data.stageLayouts[String(firstId)].density);
-    if (firstRhythm.join(',') !== 'sparse,sparse,sparse,standard,sparse') errors.push('1~5 온보딩 density 리듬 오류');
-    for (var blockStart = 6, blockIndex = 0; blockStart <= 96; blockStart += 5, blockIndex += 1) {
-      var densities = [];
-      for (var offset = 0; offset < 5; offset += 1) {
-        var row = data.stageLayouts[String(blockStart + offset)];
-        densities.push(row.density);
-      }
-      if (densities.join(',') !== rhythmOrder[blockIndex % rhythmOrder.length].join(',')) errors.push('5-stage density 리듬 오류: ' + blockStart);
-    }
-    return errors;
-  }
-  function obstacleRunErrors(run) {
-    var errors = [];
-    var data = PP.data.obstacles;
-    if (run.obstacleGroups.length > data.maxLogicalGroupsPerStage) errors.push('논리 장애물 그룹 상한 초과');
-    if (run.walls.length > data.maxCollidersPerStage) errors.push('solid collider 상한 초과');
-    if (run.decorations.length !== 0) errors.push('런타임 decorationOnly 배치 금지');
-    if (run.obstacleGroups.length !== run.definition.obstacleCount) errors.push('논리 장애물 그룹 수 불일치');
-    run.walls.filter(function (wall) { return !wall.environmentKind; }).forEach(function (wall) {
-      if (!wall.obbPrepared || !allowedRotation(wall.rotationDegrees)) errors.push('OBB 캐시/회전 오류: ' + wall.id);
-      if (wall.collision !== 'solid' || !wall.blockMovement || !wall.blockProjectiles || !wall.blockSignals || !wall.blockChorusWave) errors.push('solid collider flag 오류: ' + wall.id);
-      if (wall.collisionFrameWidth !== 5) errors.push('collision frame 폭 오류: ' + wall.id);
-      if (!wall.groupId) errors.push('논리 그룹 참조 누락: ' + wall.id);
-    });
-    run.decorations.forEach(function (decoration) {
-      if (!decoration.decorationOnly || run.walls.indexOf(decoration) >= 0) errors.push('decorationOnly collider 혼입: ' + decoration.id);
-    });
-    var area = run.walls.filter(function (wall) { return !wall.environmentKind; }).reduce(function (sum, wall) { return sum + wall.width * wall.height; }, 0);
-    var budget = {
-      sparse: [9000, 90000],
-      standard: [40000, 120000],
-      dense: [60000, 180000]
-    }[run.definition.obstacleDensity];
-    if (run.definition.id > 2 && budget && (area < budget[0] || area > budget[1])) errors.push('density OBB 면적 예산 오류: ' + area);
-    if (run.definition.id <= 2 && area !== 0) errors.push('S00 온보딩 collider는 0개여야 합니다.');
-    var protectedCircles = [
-      { id: 'player-start', point: run.player, radius: run.player.radius + 24 },
-      { id: 'player-relay', point: run.relay, radius: run.relay.radius + 24 }
-    ];
-    if (run.rival) {
-      protectedCircles.push({ id: 'rival-anchor', point: run.rivalAnchor, radius: 64 + 24 });
-      protectedCircles.push({ id: 'rival-exit', point: run.rivalExit, radius: run.rivalExit.radius + 24 });
-    }
-    protectedCircles.forEach(function (entry) {
-      if (run.walls.some(function (wall) { return U.circleIntersectsObb(entry.point, entry.radius, wall); })) errors.push('보호 원 OBB 충돌: ' + entry.id);
-    });
-    run.cores.forEach(function (core) {
-      if (run.walls.some(function (wall) { return U.circleIntersectsObb(core, core.radius, wall); })) errors.push('코어 OBB 배치 충돌: ' + core.id);
-    });
-    run.guardians.forEach(function (guardian) {
-      if (run.walls.some(function (wall) { return U.circleIntersectsObb(guardian, guardian.radius, wall); })) errors.push('수호자 OBB 배치 충돌: ' + guardian.id);
-    });
-    environmentObstacleOverlaps(run).forEach(function (entry) {
-      if (entry.passage && entry.ratio > 0) errors.push('환경 통로/solid 개구부 차폐: ' + entry.id);
-      else if (entry.ratio >= 0.5) errors.push('환경/solid 50% 이상 겹침: ' + entry.id + '/' + entry.ratio.toFixed(3));
-    });
-    return errors;
-  }
-  function pointInsideObb(point, obb) {
-    var local = U.toObbLocal(point, obb);
-    return Math.abs(local.x) <= obb.halfExtents.x && Math.abs(local.y) <= obb.halfExtents.y;
-  }
-  function sampledOverlapRatio(shape, solids) {
-    var sampleCount = 41;
-    var inside = 0;
-    var overlapped = 0;
-    for (var row = 0; row < sampleCount; row += 1) {
-      for (var column = 0; column < sampleCount; column += 1) {
-        var u = (column + 0.5) / sampleCount * 2 - 1;
-        var v = (row + 0.5) / sampleCount * 2 - 1;
-        var point;
-        if (shape.radius) {
-          if (u * u + v * v > 1) continue;
-          point = { x: shape.x + u * shape.radius, y: shape.y + v * shape.radius };
-        } else {
-          point = {
-            x: shape.cx + u * shape.halfExtents.x * shape.cos - v * shape.halfExtents.y * shape.sin,
-            y: shape.cy + u * shape.halfExtents.x * shape.sin + v * shape.halfExtents.y * shape.cos
-          };
-        }
-        inside += 1;
-        if (solids.some(function (solid) { return pointInsideObb(point, solid); })) overlapped += 1;
-      }
-    }
-    return inside ? overlapped / inside : 0;
-  }
-  function environmentObstacleOverlaps(run) {
-    var solids = run.walls.filter(function (wall) { return !wall.environmentKind; });
-    return (run.environment.zones || []).concat(run.environment.passages || []).map(function (shape) {
-      var shapeArea = shape.radius ? Math.PI * shape.radius * shape.radius : shape.width * shape.height;
-      var shapeRatio = sampledOverlapRatio(shape, solids);
-      var intersectingSolidArea = solids.reduce(function (sum, solid) {
-        return sum + (sampledOverlapRatio(shape, [solid]) > 0 ? solid.width * solid.height : 0);
-      }, 0);
-      var intersectionArea = shapeRatio * shapeArea;
-      var denominator = Math.min(shapeArea, intersectingSolidArea || shapeArea);
-      return {
-        id: shape.id,
-        passage: !!shape.environmentKind && /Passage$/.test(shape.environmentKind),
-        ratio: denominator ? intersectionArea / denominator : 0
-      };
-    });
-  }
-  function stageThreeShieldErrors(run) {
-    if (run.definition.id !== 3) return [];
-    if (run.guardians.length || run.rival || run.environment.zones.length
-      || run.environment.passages.length || run.definition.currentStrength !== 0 || run.cores.length !== 3) {
-      return ['STAGE 3 무전투/3코어 계약 오류'];
-    }
-    var shielded = run.cores.filter(function (core) {
-      return !U.waveTargetVisible(run.player, core, run.sonarObstacles);
-    });
-    if (!shielded.length) return ['STAGE 3 시작 소나 차폐 코어 없음'];
-    var sidePoints = [
-      { x: 240, y: run.player.y }, { x: 760, y: run.player.y },
-      { x: 240, y: run.player.y - 180 }, { x: 760, y: run.player.y - 180 }
-    ];
-    var bypass = shielded.some(function (core) {
-      return sidePoints.some(function (point) {
-        return canReach(run, point, run.player.radius, run.player)
-          && U.waveTargetVisible(point, core, run.sonarObstacles);
-      });
-    });
-    return bypass ? [] : ['STAGE 3 우회 소나 LOS 없음'];
-  }
-  function earlyLearningErrors(run) {
-    var stageId = run.definition.id;
-    if (stageId !== 1 && stageId !== 2) return [];
-    var errors = [];
-    var solidWalls = run.walls.filter(function (wall) { return !wall.environmentKind; });
-    if (solidWalls.length) errors.push('STAGE ' + stageId + ' 무장애 계약 오류');
-    if (run.guardians.length || run.rival || run.environment.zones.length || run.environment.passages.length
-      || run.definition.currentStrength !== 0) errors.push('STAGE ' + stageId + ' 단독 학습 계약 오류');
-    if (stageId === 1 && (run.cores.length !== 1 || run.definition.requiredCores !== 1)) {
-      errors.push('STAGE 1 단일 코어 계약 오류');
-    }
-    if (stageId === 2 && (run.cores.length !== 3 || run.definition.requiredCores !== 3)) {
-      errors.push('STAGE 2 3코어 계약 오류');
-    }
-    return errors;
-  }
-  function canReach(run, target, radius, startPoint) {
-    var step = 25;
-    var cols = Math.floor(PP.data.config.world.width / step);
-    var rows = Math.floor(PP.data.config.world.height / step);
-    if (radius === undefined || radius === null) radius = run.player.radius;
-    startPoint = startPoint || run.player;
-    var start = { x: Math.floor(startPoint.x / step), y: Math.floor(startPoint.y / step) };
-    var targetRadius = Number(target.radius || 0);
-    var queue = [start];
-    var seen = {};
-    seen[start.x + ',' + start.y] = true;
-    while (queue.length) {
-      var cell = queue.shift();
-      var currentPoint = { x: (cell.x + 0.5) * step, y: (cell.y + 0.5) * step };
-      if (U.distance(currentPoint, target) <= radius + targetRadius + step * 0.5) return true;
-      [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (offset) {
-        var next = { x: cell.x + offset[0], y: cell.y + offset[1] };
-        var key = next.x + ',' + next.y;
-        if (next.x < 0 || next.y < 0 || next.x >= cols || next.y >= rows || seen[key]) return;
-        var point = { x: (next.x + 0.5) * step, y: (next.y + 0.5) * step };
-        if (point.x < radius || point.x > PP.data.config.world.width - radius
-          || point.y < 100 + radius || point.y > PP.data.config.world.height - radius) return;
-        var movementObstacles = run.walls.filter(function (wall) { return wall.blockMovement !== false; });
-        if (movementObstacles.some(function (wall) { return U.circleIntersectsObb(point, radius, wall); })) return;
-        seen[key] = true;
-        queue.push(next);
-      });
-    }
-    return false;
-  }
-  function physicalPassageRadius(actorType) {
-    return actorType === 'player' ? 60 : 75;
-  }
-  function reachableShadowCount(run) {
-    var chorus = run.guardians.filter(function (guardian) { return guardian.type === 'chorus'; })[0];
-    if (!chorus) return 0;
-    var world = PP.data.config.world;
-    var chorusWalls = run.walls.filter(function (wall) { return wall.blockChorusWave !== false; });
-    var safeGroups = {};
-    chorusWalls.forEach(function (wall) {
-      var normals = [
-        { x: wall.cos, y: wall.sin, extent: wall.halfExtents.x },
-        { x: -wall.cos, y: -wall.sin, extent: wall.halfExtents.x },
-        { x: -wall.sin, y: wall.cos, extent: wall.halfExtents.y },
-        { x: wall.sin, y: -wall.cos, extent: wall.halfExtents.y }
-      ];
-      var safe = normals.some(function (normal) {
-        return [100, 150, 200].some(function (sourceGap) {
-          return [8, 24, 48].some(function (safeGap) {
-            var source = {
-              x: wall.cx - normal.x * (normal.extent + sourceGap),
-              y: wall.cy - normal.y * (normal.extent + sourceGap),
-              radius: physicalPassageRadius('guardian')
-            };
-            var target = {
-              x: wall.cx + normal.x * (normal.extent + run.player.radius + safeGap),
-              y: wall.cy + normal.y * (normal.extent + run.player.radius + safeGap),
-              radius: run.player.radius
-            };
-            if (source.x < source.radius || source.x > world.width - source.radius
-              || source.y < 100 + source.radius || source.y > world.height - source.radius
-              || target.x < target.radius || target.x > world.width - target.radius
-              || target.y < 100 + target.radius || target.y > world.height - target.radius) return false;
-            if (run.walls.some(function (obstacle) {
-              return U.circleIntersectsObb(source, source.radius, obstacle)
-                || U.circleIntersectsObb(target, target.radius, obstacle);
-            })) return false;
-            if (!canReach(run, source, source.radius, chorus)
-              || !canReach(run, target, target.radius, run.player)) return false;
-            if (U.distance(source, target) > PP.data.config.guardian.chorusWave.maxRadius + target.radius) return false;
-            return !U.waveTargetVisible(source, target, chorusWalls);
-          });
-        });
-      });
-      if (safe) safeGroups[wall.groupId] = true;
-    });
-    return Object.keys(safeGroups).length;
-  }
-  function obstacleQualityReport(stages) {
-    var report = [];
-    (stages || PP.data.stages).forEach(function (stage) {
-      var run = createStageRun(stage, 'normal');
-      var radius = PP.data.obstacles.minimumPassageWidth / 2;
-      var failedTargets = [];
-      run.cores.forEach(function (core) {
-        if (!canReach(run, core, radius, run.player)) failedTargets.push(core.id);
-      });
-      if (!canReach(run, run.relay, radius, run.player)) failedTargets.push('relay');
-      if (failedTargets.length) {
-        report.push({
-          stageId: stage.id,
-          patternId: stage.obstaclePatternId,
-          transform: stage.obstacleTransform,
-          variant: stage.obstacleVariant,
-          failedTargets: failedTargets
-        });
-      }
-    });
-    return report;
-  }
-
-  function validateCampaign(stages) {
-    var errors = obstacleDataErrors();
-    var rivals = [];
-    var zoneCounts = {};
-    var intents = {};
-    var layouts = {};
-    var currentBandStages = [];
-    var validGuardians = ['pin', 'hound', 'chorus'];
-    var validRivals = ['probe', 'carrier'];
-    var validEnvironment = ['thermalVent', 'absorptionZone', 'variablePassage', 'decoyWave', 'signalEcho', 'currentBand'];
-    var campaign = PP.data.config.campaign;
-    if (stages.length !== campaign.stageCount) errors.push('스테이지 수는 ' + campaign.stageCount + '이어야 합니다.');
-    stages.forEach(function (stage, index) {
-      if (stage.id !== index + 1) errors.push('스테이지 ID가 연속되지 않습니다: ' + stage.id);
-      zoneCounts[stage.zoneId] = (zoneCounts[stage.zoneId] || 0) + 1;
-      intents[stage.designIntent] = true;
-      layouts[stage.mapPreset] = true;
-      if (stage.unlockAfterStageId !== Math.max(0, stage.id - 1)) errors.push('해금 조건 오류: ' + stage.id);
-      if (!stage.mapPreset || stage.seedPolicy !== 'fixed' || !Number.isInteger(stage.seed)) errors.push('맵/시드 정책 오류: ' + stage.id);
-      if (!Array.isArray(stage.guardianTypes) || stage.guardianTypes.length !== stage.guardianCount) errors.push('수호자 구성 수 오류: ' + stage.id);
-      stage.guardianTypes.forEach(function (type) { if (validGuardians.indexOf(type) < 0) errors.push('수호자 키 오류: ' + stage.id); });
-      if (stage.rivalPreset && validRivals.indexOf(stage.rivalPreset) < 0) errors.push('라이벌 키 오류: ' + stage.id);
-      (stage.environment || []).forEach(function (entry) {
-        if (validEnvironment.indexOf(entry.type) < 0) errors.push('환경 키 오류: ' + stage.id + '/' + entry.type);
-        if (entry.type !== 'currentBand') return;
-        currentBandStages.push(stage.id);
-        if (entry.mode !== 'override' && entry.mode !== 'boost') errors.push('구역 해류 mode 오류: ' + stage.id);
-        if (!(entry.width > entry.height && entry.height > 0 && entry.feather > 0
-          && entry.feather <= Math.min(entry.width, entry.height) / 2)) errors.push('구역 해류 OBB/feather 오류: ' + stage.id);
-        if (entry.mode === 'override' && (!(Math.abs(entry.currentStrength) > 0) || !Number.isFinite(entry.currentPhase))) {
-          errors.push('구역 해류 override 벡터 오류: ' + stage.id);
-        }
-        if (entry.mode === 'boost' && (!(entry.boostMultiplier > 1)
-          || entry.boostMultiplier > PP.data.config.environment.currentBand.maximumBoostMultiplier)) {
-          errors.push('구역 해류 boost 배율 오류: ' + stage.id);
-        }
-      });
-      if (stage.designIntent.indexOf('라이벌') >= 0 && !stage.rivalPreset) errors.push('라이벌 없는 스테이지의 설계 의도 오류: ' + stage.id);
-      var expectedRequired = stage.id === 1 ? 1 : 3;
-      if (stage.requiredCores !== expectedRequired || stage.requiredCores > stage.coreTotal) errors.push('요구 코어 수 오류: ' + stage.id);
-      if (stage.sonarCost <= 0 || stage.sonarRechargePerSecond <= 0) errors.push('소나 데이터 오류: ' + stage.id);
-      if (stage.rivalPreset) {
-        rivals.push(stage.id);
-        if (stage.coreTotal !== 3 || stage.requiredCores !== 3) errors.push('라이벌 스테이지 코어 3/목표 3 오류: ' + stage.id);
-      }
-      var run = createStageRun(stage);
-      if (run.cores.length !== stage.coreTotal) errors.push('코어 스폰 수 부족: ' + stage.id);
-      if (run.guardians.length !== stage.guardianCount) errors.push('수호자 스폰 수 부족: ' + stage.id);
-      if (!canReach(run, run.relay, run.player.radius, run.player)) errors.push('중계문 도달 불가: ' + stage.id);
-      run.cores.forEach(function (core) {
-        if (!canReach(run, core, run.player.radius, run.player)) errors.push('코어 도달 불가: ' + stage.id + '/' + core.id);
-        if (!canReach(run, core, physicalPassageRadius('player'), run.player)) errors.push('player 물리 통로폭 120 미달: ' + stage.id + '/' + core.id);
-      });
-      if (!canReach(run, run.relay, physicalPassageRadius('player'), run.player)) errors.push('player 물리 통로폭 120 미달: ' + stage.id + '/relay');
-      if (run.rival) {
-        run.cores.forEach(function (core) {
-          if (!canReach(run, core, run.rival.radius, run.rivalAnchor)) errors.push('라이벌 코어 도달 불가: ' + stage.id + '/' + core.id);
-          if (!canReach(run, core, physicalPassageRadius('rival'), run.rivalAnchor)) errors.push('rival 물리 통로폭 150 미달: ' + stage.id + '/' + core.id);
-        });
-        if (!canReach(run, run.rivalExit, run.rival.radius, run.rivalAnchor)) errors.push('라이벌 중계문 도달 불가: ' + stage.id);
-        if (!canReach(run, run.rivalExit, physicalPassageRadius('rival'), run.rivalAnchor)) errors.push('rival 물리 통로폭 150 미달: ' + stage.id + '/exit');
-      }
-      run.guardians.forEach(function (guardian) {
-        var activityTargets = [run.player].concat(run.cores);
-        if (run.rival) activityTargets.push(run.rival);
-        if (!activityTargets.some(function (target) { return canReach(run, target, guardian.radius, guardian); })) errors.push('수호자 폐쇄 spawn: ' + stage.id + '/' + guardian.id);
-        if (!activityTargets.some(function (target) { return canReach(run, target, physicalPassageRadius('guardian'), guardian); })) errors.push('guardian 물리 통로폭 150 미달: ' + stage.id + '/' + guardian.id);
-      });
-      if (stage.guardianTypes.indexOf('chorus') >= 0) {
-        var expectedShadows = { sparse: 1, standard: 2, dense: 3 }[stage.obstacleDensity];
-        var actualShadows = reachableShadowCount(run);
-        if (actualShadows < expectedShadows) errors.push('합창 도달 가능 안전음영 부족: ' + stage.id + '/' + actualShadows + '<' + expectedShadows);
-      }
-      errors = errors.concat(obstacleRunErrors(run).map(function (message) { return stage.id + ': ' + message; }));
-      errors = errors.concat(stageThreeShieldErrors(run).map(function (message) { return stage.id + ': ' + message; }));
-      errors = errors.concat(earlyLearningErrors(run).map(function (message) { return stage.id + ': ' + message; }));
-      errors = errors.concat(coreInvariantErrors(run).map(function (message) { return stage.id + ': ' + message; }));
-      var expectedEarlyEnvironmentCount = 1;
-      if (stage.id >= 5 && stage.id <= 9 && (!stage.environment || stage.environment.length !== expectedEarlyEnvironmentCount)) {
-        errors.push('초반 환경 기믹 배치 오류: ' + stage.id);
-      }
-    });
-    PP.data.zones.forEach(function (zone) {
-      if (zoneCounts[zone.id] !== campaign.stagesPerZone) errors.push('해역 스테이지 수 오류: ' + zone.id);
-    });
-    if (Object.keys(intents).length !== campaign.stageCount) errors.push('100개 스테이지 설계 의도는 서로 달라야 합니다.');
-    if (Object.keys(layouts).length < 30) errors.push('맵 프리셋 다양성이 부족합니다.');
-    if (rivals.join(',') !== campaign.rivalStageIds.join(',')) errors.push('라이벌 조우 목록이 기획과 다릅니다.');
-    if (currentBandStages.join(',') !== '8,10,41,48,53,76') errors.push('구역 해류 배치 목록이 기획과 다릅니다.');
-    var onboarding = stages.slice(0, 4).map(function (stage) { return stage.designIntent; }).join('|');
-    if (onboarding.indexOf('이동') < 0 || onboarding.indexOf('소나') < 0 || onboarding.indexOf('코어') < 0 || onboarding.indexOf('문지기') < 0) errors.push('1~4 온보딩 순서가 기획과 다릅니다.');
-    return errors;
-  }
-
-  function createAbyssDefinition(seed, segmentIndex) {
-    var abyss = PP.data.config.abyss;
-    var tier = Math.min(abyss.maxDifficultyTier, Math.floor(segmentIndex / abyss.difficultyStepSegments));
-    var roster = ['pin'];
-    if (tier >= 2) roster.push('hound');
-    if (tier >= 5) roster.push('chorus');
-    var guardianCount = Math.min(3, 1 + Math.floor(tier / 3));
-    var guardianTypes = [];
-    for (var i = 0; i < guardianCount; i += 1) guardianTypes.push(roster[(segmentIndex + i) % roster.length]);
-    var rivalPreset = segmentIndex >= 4 && segmentIndex % 5 === 4 ? (segmentIndex % 10 === 4 ? 'probe' : 'carrier') : null;
-    var patternPool = tier < 3
-      ? ['S01', 'S02', 'S03', 'S04', 'S05', 'S06']
-      : (tier < 6
-        ? ['N01', 'N02', 'N03', 'N04', 'N05', 'N06', 'N07', 'N08']
-        : ['D01', 'D02', 'D03', 'D04', 'D05', 'D06']);
-    var obstaclePatternId = patternPool[segmentIndex % patternPool.length];
-    var obstaclePattern = PP.data.obstacles.patterns[obstaclePatternId];
-    var obstacleTransforms = ['I', 'MX', 'MY', 'MXY'];
-    var obstacleVariants = ['V0', 'V1', 'V2', 'V3'];
-    return Object.freeze({
-      schemaVersion: 2,
-      contentVersion: 'abyss-v1',
-      id: 'A' + (segmentIndex + 1),
-      zoneId: 'abyss',
-      zoneName: '무저갱',
-      orderInZone: segmentIndex + 1,
-      title: '무저갱 구획 ' + (segmentIndex + 1),
-      designIntent: '시드형 연속 구획',
-      unlockAfterStageId: 100,
-      mapPreset: 'abyss-layout-' + ((segmentIndex * 3 + tier) % 7 + 1),
-      layoutVariant: (segmentIndex * 3 + tier) % 7,
-      obstaclePatternId: obstaclePatternId,
-      obstacleDensity: obstaclePattern.density,
-      obstacleTransform: obstacleTransforms[segmentIndex % obstacleTransforms.length],
-      obstacleVariant: obstacleVariants[(segmentIndex + tier) % obstacleVariants.length],
-      obstacleDesignIntent: 'abyss-tier-' + tier,
-      corePattern: (segmentIndex * 5 + tier) % 8,
-      seed: (Number(seed) + Math.imul(segmentIndex + 1, 2654435761)) >>> 0,
-      seedPolicy: 'fixed',
-      difficultyTier: tier,
-      timeLimit: Math.max(92, 128 - tier * 3),
-      coreTotal: 3,
-      requiredCores: 3,
-      startRevealedCores: false,
-      guardianCount: guardianCount,
-      guardianTypes: guardianTypes,
-      obstacleCount: obstaclePattern.groups.length,
-      currentStrength: Math.min(52, 10 + tier * 4),
-      currentPhase: (segmentIndex * 71 % 360) * Math.PI / 180,
-      sonarCost: Math.min(36, 28 + Math.floor(tier / 2)),
-      sonarRechargePerSecond: Math.max(8, 13 - Math.floor(tier / 2)),
-      rivalPreset: rivalPreset,
-      rivalBulletSpeed: PP.data.config.rival.projectileSpeed,
-      environment: []
-    });
-  }
-  function createAbyssRun(seed, segmentIndex, totalScore, previousPlayer) {
-    var run = createStageRun(createAbyssDefinition(seed, segmentIndex), 'normal');
-    run.mode = 'abyss';
-    run.abyss = { seed: Number(seed) >>> 0, segmentIndex: segmentIndex, totalScore: totalScore || 0 };
-    if (previousPlayer) {
-      run.player.power = previousPlayer.power;
-      run.player.sonarCharge = previousPlayer.sonarCharge;
-    }
-    return run;
-  }
-  function validateAbyss() {
-    var errors = [];
-    var seed = PP.data.config.abyss.baseSeed;
-    var first = createAbyssDefinition(seed, 7);
-    var repeated = createAbyssDefinition(seed, 7);
-    if (JSON.stringify(first) !== JSON.stringify(repeated)) errors.push('무저갱 동일 시드 재현 실패');
-    var capped = createAbyssDefinition(seed, 999);
-    if (capped.difficultyTier !== PP.data.config.abyss.maxDifficultyTier) errors.push('무저갱 난이도 상한 실패');
-    var run = createAbyssRun(seed, 0, 0, null);
-    if (coreInvariantErrors(run).length) errors.push('무저갱 코어 불변식 실패');
-    errors = errors.concat(obstacleRunErrors(run));
-    if (!canReach(run, run.relay) || run.cores.some(function (core) { return !canReach(run, core); })) errors.push('무저갱 첫 구획 도달성 실패');
-    return errors;
-  }
-
-  PP.systems.createStageRun = createStageRun;
-  PP.systems.createObstacleGroup = createObstacleGroup;
-  PP.systems.obstacleDataErrors = obstacleDataErrors;
-  PP.systems.obstacleRunErrors = obstacleRunErrors;
-  PP.systems.environmentObstacleOverlaps = environmentObstacleOverlaps;
-  PP.systems.stageThreeShieldErrors = stageThreeShieldErrors;
-  PP.systems.earlyLearningErrors = earlyLearningErrors;
-  PP.systems.obstacleQualityReport = obstacleQualityReport;
-  PP.systems.canReachObb = canReach;
-  PP.systems.reachableShadowCount = reachableShadowCount;
-  PP.systems.countCoreOwnership = countCoreOwnership;
-  PP.systems.calculateStars = calculateStars;
-  PP.systems.coreInvariantErrors = coreInvariantErrors;
-  PP.systems.relayProgress = relayProgress;
-  PP.systems.relayActive = relayActive;
-  PP.systems.validateCampaign = validateCampaign;
-  PP.systems.createAbyssDefinition = createAbyssDefinition;
-  PP.systems.createAbyssRun = createAbyssRun;
-  PP.systems.validateAbyss = validateAbyss;
-})(window.PingPanic);
-
-// ---- src/systems/ads.js ----
-(function (PP) {
-  'use strict';
-
-  function errorResult(error, transactionId) {
-    return {
-      status: 'error',
-      reason: error && error.message ? error.message : String(error || 'unknown error'),
-      transactionId: transactionId
-    };
-  }
-  function normalizedResult(result, transactionId) {
-    var normalized = result && typeof result === 'object' ? Object.assign({}, result) : { status: 'error' };
-    if (typeof normalized.status !== 'string') normalized.status = 'error';
-    normalized.transactionId = transactionId;
-    return normalized;
-  }
-
-  function AdCoordinator(adapter) {
-    this.adapter = adapter;
-    this.removeAdsEntitlementId = PP.data.config.entitlements.removeAds;
-    this.activeSeconds = 0;
-    this.lastInterstitialActive = 0;
-    this.successesSinceInterstitial = 0;
-    this.interstitialShows = [];
-    this.interstitialShowCount = 0;
-    this.rewardDeferralSuccesses = 0;
-    this.sequence = 1;
-    this.inFlight = false;
-    this.activeTransaction = null;
-    this.rewardAttempts = {};
-    this.rewardEligibility = {};
-    this.grantedRewards = {};
-  }
-  AdCoordinator.prototype.isAdRemoved = function () {
-    var result = this.adapter.entitlements && this.adapter.entitlements.get(this.removeAdsEntitlementId);
-    return !!(result && result.status === 'available' && result.value === true);
-  };
-  AdCoordinator.prototype.updateActive = function (dt) {
-    if (!this.inFlight) this.activeSeconds += Math.max(0, dt);
-  };
-  AdCoordinator.prototype.interstitialEligible = function (stageId, onboardingComplete) {
-    var config = PP.data.config.ads;
-    var windowStart = this.activeSeconds - config.rollingWindowSeconds;
-    this.interstitialShows = this.interstitialShows.filter(function (time) { return time >= windowStart; });
-    if (this.interstitialShows.length >= config.rollingMaxShows || this.isAdRemoved()) return false;
-    if (this.interstitialShowCount === 0) return onboardingComplete && stageId >= 5 && this.activeSeconds >= config.firstActiveSeconds;
-    return this.successesSinceInterstitial >= config.subsequentSuccesses
-      && this.activeSeconds - this.lastInterstitialActive >= config.subsequentActiveSeconds;
-  };
-  AdCoordinator.prototype.runTransaction = function (kind, transactionId, invoke, transform) {
-    var self = this;
-    if (this.inFlight) return Promise.resolve({ status: 'duplicate-blocked', transactionId: transactionId });
-    var cancelResolve = null;
-    var transaction = {
-      id: transactionId,
-      kind: kind,
-      state: 'presenting',
-      cancel: function (reason) {
-        if (!cancelResolve || transaction.state === 'settled') return false;
-        var resolve = cancelResolve;
-        cancelResolve = null;
-        resolve({ status: 'cancelled', reason: reason || 'cancelled', transactionId: transactionId });
-        return true;
-      }
-    };
-    this.inFlight = true;
-    this.activeTransaction = transaction;
-    var cancellation = new Promise(function (resolve) { cancelResolve = resolve; });
-    var adapterAttempt;
-    try { adapterAttempt = Promise.resolve(invoke()); }
-    catch (error) { adapterAttempt = Promise.reject(error); }
-    return Promise.race([adapterAttempt, cancellation]).then(function (result) {
-      transaction.state = 'processing';
-      var normalized = normalizedResult(result, transactionId);
-      return typeof transform === 'function' ? transform(normalized) : normalized;
-    }).catch(function (error) {
-      return errorResult(error, transactionId);
-    }).finally(function () {
-      cancelResolve = null;
-      transaction.state = 'settled';
-      if (self.activeTransaction === transaction) self.activeTransaction = null;
-      self.inFlight = false;
-    });
-  };
-  AdCoordinator.prototype.cancelActive = function (reason) {
-    return !!(this.activeTransaction && this.activeTransaction.cancel(reason));
-  };
-  AdCoordinator.prototype.showInterstitial = function (context, force) {
-    var self = this;
-    if (this.inFlight || this.isAdRemoved()) return Promise.resolve({ status: 'suppressed' });
-    if (!force && !this.interstitialEligible(context.stageId, context.onboardingComplete)) return Promise.resolve({ status: 'not-eligible' });
-    var transactionId = 'interstitial-' + this.sequence++;
-    return this.runTransaction('interstitial', transactionId, function () {
-      return self.adapter.ads.interstitial({ transactionId: transactionId, placement: 'automatic-interstitial', context: context });
-    }, function (result) {
-      if (result.status === 'completed' || result.status === 'closed') {
-        self.interstitialShows.push(self.activeSeconds);
-        self.interstitialShowCount += 1;
-        self.lastInterstitialActive = self.activeSeconds;
-        self.successesSinceInterstitial = 0;
-      }
-      return result;
-    });
-  };
-  AdCoordinator.prototype.afterSuccess = function (context) {
-    this.successesSinceInterstitial += 1;
-    if (this.rewardDeferralSuccesses > 0) {
-      this.rewardDeferralSuccesses -= 1;
-      return Promise.resolve({ status: 'reward-deferral' });
-    }
-    return this.showInterstitial(context, false);
-  };
-  AdCoordinator.prototype.showRewarded = function (runToken, placement) {
-    var self = this;
-    if (this.inFlight || this.rewardAttempts[runToken]) return Promise.resolve({ status: 'duplicate-blocked', rewardAvailable: false });
-    this.rewardAttempts[runToken] = true;
-    var transactionId = 'rewarded-' + runToken + '-' + this.sequence++;
-    return this.runTransaction('rewarded', transactionId, function () {
-      return self.adapter.ads.rewarded({ transactionId: transactionId, runToken: runToken, placement: placement });
-    }, function (result) {
-      result.rewardAvailable = result.status === 'rewarded';
-      if (result.rewardAvailable) self.rewardEligibility[transactionId] = true;
-      return result;
-    });
-  };
-  AdCoordinator.prototype.claimReward = function (transactionId, applyReward) {
-    if (!transactionId || !this.rewardEligibility[transactionId] || this.grantedRewards[transactionId]) {
-      return { status: 'not-eligible', granted: false };
-    }
-    delete this.rewardEligibility[transactionId];
-    this.grantedRewards[transactionId] = true;
-    try {
-      var applied = typeof applyReward !== 'function' || applyReward() !== false;
-      if (!applied) return { status: 'not-applied', granted: false };
-      this.rewardDeferralSuccesses = Math.max(this.rewardDeferralSuccesses, 1);
-      return { status: 'granted', granted: true };
-    } catch (error) {
-      return { status: 'apply-error', granted: false, reason: error && error.message ? error.message : String(error) };
-    }
-  };
-
-  PP.systems.AdCoordinator = AdCoordinator;
-})(window.PingPanic);
-
-// ---- src/ui/hub-state.js ----
-(function (PP) {
-  'use strict';
-
-  function isCleared(record) {
-    return !!(record && record.cleared === true);
-  }
-
-  function deriveHubState(save, entitlementResult, developmentEnabled) {
-    var stageCount = PP.data.config.campaign.stageCount;
-    var hardUnlocked = !!(save && save.hard && save.hard.unlocked);
-    var extremeUnlocked = !!(save && save.extreme && save.extreme.unlocked);
-    var difficultyId = PP.core.storage.normalizeDifficulty(save, save.settings && save.settings.campaignDifficulty);
-    var difficultyProgress = PP.core.storage.progressForDifficulty(save, difficultyId);
-    var records = difficultyProgress
-      ? (difficultyProgress.records || {})
-      : (save && save.records && typeof save.records === 'object' ? save.records : {});
-    var contiguousClears = 0;
-    var recordCount = 0;
-    var totalStars = 0;
-    var allRecordedStars = 0;
-    var stageId;
-
-    for (stageId = 1; stageId <= stageCount; stageId += 1) {
-      if (isCleared(records[stageId])) {
-        recordCount += 1;
-        allRecordedStars += PP.core.utils.clamp(Math.floor(Number(records[stageId].bestStars) || 0), 0, 3);
-      }
-      if (stageId === contiguousClears + 1 && isCleared(records[stageId])) {
-        contiguousClears += 1;
-        totalStars += PP.core.utils.clamp(Math.floor(Number(records[stageId].bestStars) || 0), 0, 3);
-      }
-    }
-
-    var complete = contiguousClears === stageCount;
-    var state = complete ? 'complete' : (contiguousClears > 0 ? 'progress' : 'new');
-    var nextStage = complete ? null : contiguousClears + 1;
-    var expectedHighest = complete ? stageCount : Math.min(stageCount, contiguousClears + 1);
-    var highestSource = difficultyProgress ? difficultyProgress.highestUnlockedStage : save && save.highestUnlockedStage;
-    var highestUnlockedStage = PP.core.utils.clamp(
-      Math.floor(Number(highestSource) || 1),
-      1,
-      stageCount
-    );
-    var gmDivergence = recordCount !== contiguousClears || highestUnlockedStage > expectedHighest;
-    var nextDefinition = nextStage ? PP.data.stages[nextStage - 1] : null;
-    var entitlementRemoved = !!(
-      entitlementResult
-      && entitlementResult.status === 'available'
-      && entitlementResult.value === true
-    );
-    var abyssBest = save && save.abyssBest && typeof save.abyssBest === 'object' ? save.abyssBest : {};
-
-    var normalClears = 0;
-    for (stageId = 1; stageId <= stageCount && isCleared(save.records && save.records[stageId]); stageId += 1) normalClears += 1;
-    var primaryAction = complete && difficultyId === 'normal' ? 'abyss' : 'stage';
-    var primaryStageId = complete && difficultyId !== 'normal' ? stageCount : nextStage;
-    var primaryLabel = complete
-      ? (difficultyId === 'normal' ? PP.core.i18n.t('hub.abyss') : PP.core.i18n.t('hub.difficultyReplay', {
-        difficulty: PP.core.i18n.t('difficulty.' + difficultyId)
-      }))
-      : (state === 'new' ? PP.core.i18n.t('hub.first') : PP.core.i18n.t('hub.next', { stage: nextStage }));
-    return {
-      state: state,
-      contiguousClears: contiguousClears,
-      recordCount: recordCount,
-      nextStage: nextStage,
-      totalStars: totalStars,
-      allRecordedStars: allRecordedStars,
-      complete: complete,
-      gmDivergence: gmDivergence,
-      developmentTestAccess: !!developmentEnabled && gmDivergence,
-      highestUnlockedStage: highestUnlockedStage,
-      productMaxStage: complete ? stageCount : contiguousClears + 1,
-      progressRatio: contiguousClears / stageCount,
-      zoneName: PP.core.i18n.t('zone.' + (nextDefinition ? nextDefinition.zoneId : PP.data.zones[PP.data.zones.length - 1].id)),
-      primaryAction: primaryAction,
-      primaryStageId: primaryStageId,
-      primaryLabel: primaryLabel,
-      difficultyId: difficultyId,
-      hardUnlocked: hardUnlocked,
-      extremeUnlocked: extremeUnlocked,
-      normalClears: normalClears,
-      showProgressCard: state !== 'new' || hardUnlocked,
-      showStageSelect: state !== 'new' || hardUnlocked,
-      showCosmetics: normalClears > 0,
-      showRemoveAds: normalClears > 0,
-      showAbyssBest: normalClears === stageCount,
-      abyssBestSegment: Math.max(0, Math.floor(Number(abyssBest.segment) || 0)),
-      abyssBestScore: Math.max(0, Math.floor(Number(abyssBest.score) || 0)),
-      entitlementRemoved: entitlementRemoved,
-      entitlementLabel: PP.core.i18n.t(entitlementRemoved ? 'hub.removeAdsOwned' : 'hub.removeAds')
-    };
-  }
-
-  PP.ui.deriveHubState = deriveHubState;
-})(window.PingPanic);
-
-// ---- src/ui/screens.js ----
-(function (PP) {
-  'use strict';
-
-  function createScreens(app, callbacks) {
-    var soundIcon = '<svg class="sound-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="sound-speaker" d="M4 9h4l5-4v14l-5-4H4z"></path><path class="sound-wave" d="M16 8c1.2 1 1.8 2.3 1.8 4S17.2 15 16 16m2.5-10.5A8.3 8.3 0 0 1 21 12a8.3 8.3 0 0 1-2.5 6.5"></path><path class="sound-muted" d="m16 9 5 6m0-6-5 6"></path></svg>';
-    var contestMode = !!(PP.data.config.runtime && PP.data.config.runtime.contest);
-    var advertisingEnabled = !PP.data.config.runtime || PP.data.config.runtime.advertisingEnabled !== false;
-    app.innerHTML = [
-      '<main class="shell">',
-      '  <section class="screen hub-screen title-screen is-active" data-screen="title" data-role="title-screen" data-hub-state="new">',
-      '    <div class="hub-layout">',
-      '      <header class="hub-tools hub-topbar"><div class="hub-left-tools"><button class="hub-tool sound-toggle hub-sound-toggle" data-role="hub-sound" data-action="sound" aria-label="소리 끄기" aria-pressed="true" title="소리 끄기">' + soundIcon + '<span class="visually-hidden" data-role="hub-sound-label">소리 끄기</span></button><button class="hub-tool hub-settings-trigger" data-action="settings-open" aria-label="설정 열기" title="설정 열기"><span class="settings-icon" aria-hidden="true"></span></button><button class="hub-tool gm-entry hub-gm-trigger" data-role="hub-gm-entry" data-action="gm-open" aria-label="GM 도구 열기" title="GM 도구 열기" hidden>GM</button></div><span class="hub-close-reserve" aria-hidden="true"></span></header>',
-      '      <div class="hub-brand title-copy"><p class="eyebrow">PINGPING PANICPANIC</p><h1><span>소나 쏠래말래</span><span class="hub-title-tail">쏠래말래</span></h1><p data-i18n="hub.tagline">보려면 쏘고, 쏘면 들킵니다.</p></div>',
-      '      <div class="hub-art-spacer" aria-hidden="true"><div class="title-orbit"><i></i><i></i><i></i></div></div>',
-      '      <div class="hub-actions" data-role="hub-actions">',
-      '        <section class="hub-progress hub-progress-card" data-role="hub-progress" aria-label="캠페인 진행" hidden><div><p class="hub-progress-label" data-role="hub-progress-kicker">NEXT DIVE</p><strong class="hub-progress-value" data-role="hub-progress-value">0 / 100</strong></div><p class="hub-progress-meta" data-role="hub-progress-meta">침강 중계기지 · STAGE 1</p><p class="hub-progress-stars" data-role="hub-progress-stars">★ 0</p><div class="hub-progress-track" aria-hidden="true"><i data-role="hub-progress-fill"></i></div><p class="hub-abyss-best hub-abyss-state" data-role="hub-abyss-best" hidden>최고 구획 0 · 0점</p></section>',
-      '        <div class="hub-difficulty" data-role="hub-difficulty" hidden><button data-action="difficulty-normal" aria-pressed="true">노말</button><button data-action="difficulty-hard" aria-pressed="false">하드</button><button data-action="difficulty-extreme" aria-pressed="false">익스트림</button></div>',
-      '        <button class="primary hub-primary hub-primary-cta" data-action="hub-primary">첫 잠수 시작</button>',
-      '        <div class="hub-secondary hub-secondary-grid" data-role="hub-secondary" hidden><button class="hub-stage-select" data-action="stage-select" hidden>해역 선택</button><button class="hub-cosmetics" data-action="cosmetics" hidden>외형</button></div>',
-      '        <button class="hub-product hub-remove-ads" data-action="remove-ads-product" data-entitled="false" hidden>광고 제거권 · 연동 예정</button>',
-      '      </div>',
-      '    </div>',
-      '  </section>',
-      '  <section class="screen select-screen" data-screen="select">',
-      '    <header class="screen-header"><button class="screen-back" data-action="title" data-i18n-aria="common.back" aria-label="메인으로"><span class="screen-back-icon" aria-hidden="true"></span></button><div><p class="eyebrow">CAMPAIGN</p><h2 data-i18n="select.title">해역 선택</h2></div><span></span></header>',
-      '    <div class="zone-tabs" data-role="zone-tabs" aria-label="해역 전환"></div><div class="zone-list" data-role="stage-list"></div>',
-      '  </section>',
-      '  <section class="screen game-screen" data-screen="game" data-role="game-screen">',
-      '    <canvas data-role="canvas" width="1000" height="1500" aria-label="심해 회수 구역"></canvas>',
-      '    <div class="hud"><div class="hud-line"><button class="pause-control" data-action="pause" aria-label="일시정지"><span class="pause-icon" aria-hidden="true"></span></button><strong data-role="stage-label">1</strong><span><i data-i18n="hud.core">코어</i> <b data-role="core-label">0 / 3</b></span></div><div class="hud-badges"><div class="rival-broadcast" data-role="rival-broadcast" hidden>라이벌 · 탐색</div><div class="boosted-sonar-badge" data-role="boosted-sonar-hud" data-i18n="hud.boosted" hidden>이번 도전 · 모든 소나 증폭</div></div><div class="power-track" data-role="power-track" aria-label="잔여 동력"><i data-role="power-bar"></i><span class="power-threshold" aria-hidden="true"></span></div></div>',
-      '    <div class="game-controls" data-role="game-controls" data-sonar-hand="right"><div class="movement-guide" data-role="movement-guide"><b>DRAG</b><span data-i18n="hud.drag">끌어서 이동</span></div><div class="sonar-track"><i data-role="sonar-bar"></i></div><button class="sonar-button" data-role="sonar-button" data-action="sonar">SONAR<span>SPACE</span></button><small data-i18n="hud.move">화면을 끌거나 WASD로 이동</small></div>',
-      '    <div class="pause-panel" data-role="pause-panel" hidden><div><h2 data-role="pause-title">일시정지</h2><p data-role="pause-copy">신호와 시간도 멈췄습니다.</p><button class="primary" data-action="resume">계속하기</button><button data-action="pause-restart">다시하기</button><button class="sound-toggle pause-sound-toggle" data-role="pause-sound" data-action="pause-sound" aria-label="소리 끄기" aria-pressed="true" title="소리 끄기">' + soundIcon + '<span class="visually-hidden" data-role="pause-sound-label">소리 끄기</span></button><fieldset class="hand-settings"><legend data-role="pause-hand-legend">조작 손</legend><div><button data-action="pause-hand-left" aria-pressed="false">왼손</button><button data-action="pause-hand-right" aria-pressed="true">오른손</button></div></fieldset><button data-action="abyss-end" hidden>무저갱 종료</button><button data-action="quit">해역으로</button></div></div>',
-      '  </section>',
-      '  <section class="screen ending-screen" data-screen="ending"><div class="ending-card"><img data-role="ending-seal" alt=""><p class="eyebrow">CAMPAIGN COMPLETE</p><h2 data-role="ending-title">중계망 완전 복구</h2><p data-role="ending-copy">100개의 신호가 다시 이어졌습니다.</p><div class="menu-stack"><button class="primary" data-role="ending-next" data-action="ending-next">다음 난이도 시작</button><button data-action="ending-result">결과 확인</button><button data-action="ending-main">메인으로</button></div></div></section>',
-      '  <section class="screen result-screen" data-screen="result">',
-      '    <div class="result-scroll"><div class="result-mark" data-role="result-mark">◇</div><p class="eyebrow" data-role="result-zone"></p><h2 data-role="result-title">회수 완료</h2><p data-role="result-message"></p>',
-      '    <div class="result-stars" data-role="result-stars" aria-label="획득 0/3"><span class="star-unearned">★</span><span class="star-unearned">★</span><span class="star-unearned">★</span></div><div class="result-stats"><div><i class="credit-icon" aria-hidden="true"></i><span data-i18n="result.credits">이번 크레딧</span><strong data-role="result-credits">0</strong></div></div>',
-      '    <div class="menu-stack result-actions"><button class="primary" data-action="next">다음 스테이지</button><button data-action="retry">다시 하기</button><button data-action="emergency-reward">긴급 동력 복구 · 광고 확인</button><button data-action="credit-double">광고 보고 이번 보상 2배</button><button data-action="result-select">해역 선택</button></div></div>',
-      '  </section>',
-      '  <div class="ad-overlay" data-role="ad-overlay" hidden><div><p class="eyebrow">ADVERTISEMENT</p><h2 data-i18n="ad.title">광고 출력 예정</h2><p data-role="ad-copy" data-i18n="ad.default">실제 SDK 연결 전 UX 확인 화면입니다.</p><button class="primary" data-action="ad-confirm">확인</button></div></div>',
-      '  <div class="modal-panel dive-preparation-panel" data-role="dive-preparation-panel" hidden><div><p class="eyebrow">DIVE PREPARATION</p><h2 data-role="dive-preparation-title">잠수 준비</h2><p class="dive-target" data-role="dive-preparation-target">STAGE 1</p><p data-role="dive-preparation-status">사용할 소나 장비를 선택하세요.</p><div class="menu-stack"><button class="primary" data-action="dive-normal"><span data-i18n="prep.normal">일반 소나 장비</span></button><button class="reward-action" data-action="dive-boosted"><span class="ad-badge" aria-label="광고">AD</span><span data-i18n="prep.boosted">증폭 소나 장비</span></button><button data-action="dive-cancel">취소</button></div></div></div>',
-      '  <div class="modal-panel hand-choice-panel" data-role="hand-choice-panel" hidden><div><p class="eyebrow">CONTROL SETUP</p><h2 data-i18n="handChoice.title">어느 손으로 소나를 쏠까요?</h2><p data-i18n="handChoice.copy">소나 버튼은 선택한 손에, 이동 가이드는 반대쪽에 놓입니다. 일시정지에서 언제든 바꿀 수 있습니다.</p><div class="modal-actions"><button data-action="hand-choice-left">왼손</button><button class="primary" data-action="hand-choice-right">오른손</button></div></div></div>',
-      '  <div class="modal-panel settings-panel" data-role="settings-panel" hidden><div><button class="modal-close" data-action="settings-close" data-i18n-aria="settings.close" aria-label="닫기"></button><p class="eyebrow">SETTINGS</p><h2 data-role="settings-title">설정</h2><p class="current-language" data-role="settings-language-current">언어 · 한국어</p><fieldset class="language-settings"><legend data-role="settings-language-legend">언어</legend><div><button data-action="language-ko" aria-pressed="true"><b>가</b><span>한국어</span></button><button data-action="language-en" aria-pressed="false"><b>A</b><span>English</span></button></div></fieldset><fieldset class="hand-settings"><legend data-role="settings-hand-legend">조작 손</legend><p data-i18n="settings.handCopy">소나 버튼을 놓을 손을 선택하세요.</p><div><button data-action="settings-hand-left" aria-pressed="false">왼손</button><button data-action="settings-hand-right" aria-pressed="true">오른손</button></div></fieldset></div></div>',
-      '  <div class="modal-panel onboarding-panel" data-role="onboarding-panel" hidden><div><p class="eyebrow">FIRST DIVE GUIDE</p><h2 data-role="onboarding-title"></h2><p class="onboarding-copy" data-role="onboarding-copy"><i class="guide-inline-icon" data-role="onboarding-icon" aria-hidden="true"></i><span data-role="onboarding-text"></span></p><button class="primary" data-action="onboarding-ack">확인</button></div></div>',
-      '  <div class="modal-panel cosmetics-panel" data-role="cosmetics-panel" hidden><div class="cosmetics-card"><button class="modal-close" data-action="cosmetics-close" data-i18n-aria="common.close" aria-label="닫기"></button><header class="cosmetics-fixed-header"><p class="eyebrow">RESONANCE SKINS</p><h2 data-i18n="cosmetic.title">외형 모듈</h2><div class="credit-wallet"><i class="credit-icon" aria-hidden="true"></i><span data-i18n="cosmetic.wallet">크레딧 지갑</span><strong data-role="cosmetics-balance">0</strong></div><p class="cosmetics-description" data-i18n="cosmetic.copy">모든 외형은 능력 중립입니다.</p></header><div class="cosmetic-list" data-role="cosmetic-list"></div></div></div>',
-      '  <div class="modal-panel purchase-panel" data-role="purchase-panel" hidden><div><p class="eyebrow">PURCHASE CONFIRM</p><h2 data-role="purchase-title">외형 구매</h2><p data-role="purchase-copy"></p><div class="modal-actions"><button data-action="purchase-cancel">취소</button><button class="primary" data-action="purchase-confirm">구매 확인</button></div></div></div>',
-      '  <div class="modal-panel" data-role="product-panel" hidden><div><p class="eyebrow">PRODUCT</p><h2 data-i18n="product.title">광고 제거권</h2><p data-role="product-copy"></p><strong class="coming-soon" data-i18n="product.soon">결제 연동 예정</strong><button data-action="product-close">닫기</button></div></div>',
-      '  <div class="modal-panel gm-panel" data-role="gm-panel" hidden><div><p class="eyebrow">DEVELOPMENT ONLY</p><h2>GM 도구</h2><p>스테이지 개방은 실제 연속 진행이나 무저갱 해금으로 처리되지 않습니다.</p><div data-role="gm-tools-host"></div><button data-action="gm-stage-select">열린 해역 테스트</button><button data-action="gm-close">닫기</button></div></div>',
-      '  <aside class="global-ad-banner" data-role="global-ad-banner" data-banner-profile="toss" data-banner-height-dp="96" data-banner-surface="simulated" aria-label="고정 배너 광고 검증 영역"><div class="banner-placeholder" data-role="banner-placeholder"><b>AD</b><span><strong data-i18n="banner.title">심해 신호 후원</strong><small data-i18n="banner.copy">검증용 배너 · 실제 광고가 아닙니다</small></span><em data-i18n="banner.confirm">광고 확인</em></div><div class="banner-sdk-slot" data-role="banner-sdk-slot" hidden></div></aside>',
-      '  <div class="toast" data-role="toast" aria-live="polite"></div>',
-      '</main>'
-    ].join('');
-
-    var elements = {};
-    [
-      'title-screen', 'hub-gm-entry', 'hub-sound', 'hub-sound-label', 'settings-language-current', 'hub-actions', 'hub-difficulty', 'hub-progress', 'hub-secondary', 'hub-progress-kicker', 'hub-progress-value',
-      'hub-progress-meta', 'hub-progress-stars', 'hub-progress-fill', 'hub-abyss-best', 'pause-sound', 'pause-sound-label',
-      'game-screen', 'canvas', 'zone-tabs', 'stage-list', 'game-controls', 'movement-guide', 'sonar-button',
-      'stage-label', 'core-label', 'rival-broadcast', 'boosted-sonar-hud', 'power-track', 'power-bar', 'sonar-bar', 'pause-panel', 'pause-title', 'pause-copy', 'pause-hand-legend',
-      'result-mark', 'result-zone', 'result-title', 'result-message', 'result-stars', 'result-credits', 'ad-overlay', 'ad-copy',
-      'dive-preparation-panel', 'dive-preparation-title', 'dive-preparation-target', 'dive-preparation-status', 'hand-choice-panel', 'settings-panel', 'settings-title', 'settings-language-legend', 'settings-hand-legend',
-      'onboarding-panel', 'onboarding-title', 'onboarding-copy', 'onboarding-icon', 'onboarding-text', 'cosmetics-panel', 'cosmetics-balance', 'cosmetic-list',
-      'purchase-panel', 'purchase-title', 'purchase-copy', 'product-panel', 'product-copy', 'gm-panel', 'gm-tools-host',
-      'ending-seal', 'ending-title', 'ending-copy', 'ending-next', 'global-ad-banner', 'banner-placeholder', 'banner-sdk-slot', 'toast'
-    ].forEach(function (role) { elements[role] = app.querySelector('[data-role="' + role + '"]'); });
-
-    if (contestMode) {
-      ['hub-gm-entry', 'gm-panel', 'global-ad-banner', 'ad-overlay', 'product-panel'].forEach(function (role) {
-        elements[role].hidden = true;
-        elements[role].setAttribute('aria-hidden', 'true');
-      });
-      ['remove-ads-product', 'dive-boosted', 'emergency-reward', 'credit-double'].forEach(function (action) {
-        var node = app.querySelector('[data-action="' + action + '"]');
-        node.hidden = true;
-        node.setAttribute('aria-hidden', 'true');
-      });
-    }
-
-    var pendingAd = null;
-    var sonarButton = elements['sonar-button'];
-    sonarButton.addEventListener('pointerdown', function (event) {
-      if (event.button > 0) return;
-      event.preventDefault();
-      if (callbacks.sonar) callbacks.sonar(sonarButton);
-    });
-    sonarButton.addEventListener('click', function (event) {
-      if (event.detail === 0) return;
-      event.preventDefault();
-      event.stopPropagation();
-    });
-    function resetSimulatedAd(status) {
-      var session = pendingAd;
-      pendingAd = null;
-      try { elements['ad-overlay'].hidden = true; } catch (_) { /* 다음 화면 복귀를 계속합니다. */ }
-      var confirm = app.querySelector('[data-action="ad-confirm"]');
-      if (confirm) {
-        try { confirm.disabled = false; confirm.removeAttribute('aria-busy'); } catch (_) { /* 입력 잠금 잔류를 피합니다. */ }
-      }
-      if (!session || session.completed) return false;
-      session.completed = true;
-      session.resolve({ status: status || 'cancelled' });
-      return true;
-    }
-    function resolveAd() {
-      if (!pendingAd || pendingAd.completed) return false;
-      var confirm = app.querySelector('[data-action="ad-confirm"]');
-      if (confirm) {
-        try { confirm.disabled = true; confirm.setAttribute('aria-busy', 'true'); } catch (_) { /* overlay 자체를 즉시 닫습니다. */ }
-      }
-      return resetSimulatedAd(pendingAd.completionStatus);
-    }
-    app.addEventListener('click', function (event) {
-      var button = event.target.closest('[data-action]');
-      if (!button) return;
-      var action = button.getAttribute('data-action');
-      if (action === 'ad-confirm') { resolveAd(); return; }
-      if (callbacks[action]) callbacks[action](button);
-    });
-    function presentSimulatedAd(kind, request) {
-      if (!advertisingEnabled) return Promise.resolve({ status: 'unsupported', rewardAvailable: false });
-      if (pendingAd) return Promise.resolve({ status: 'duplicate-blocked' });
-      var placement = request && request.placement;
-      elements['ad-copy'].textContent = PP.core.i18n.t(placement === 'emergency-revive' ? 'ad.emergency'
-        : (placement === 'boosted-sonar' ? 'ad.boosted'
-          : (placement === 'credit-double' ? 'ad.double' : 'ad.interstitial')));
-      var confirm = app.querySelector('[data-action="ad-confirm"]');
-      if (confirm) confirm.disabled = false;
-      elements['ad-overlay'].hidden = false;
-      return new Promise(function (resolve) {
-        pendingAd = {
-          completed: false,
-          completionStatus: kind === 'rewarded' ? 'rewarded' : 'completed',
-          resolve: resolve
-        };
-      });
-    }
-    function show(name) {
-      app.querySelectorAll('[data-screen]').forEach(function (screen) {
-        screen.classList.toggle('is-active', screen.getAttribute('data-screen') === name);
-      });
-    }
-    function forceShow(name) {
-      var activated = false;
-      app.querySelectorAll('[data-screen]').forEach(function (screen) {
-        var selected = screen.getAttribute('data-screen') === name;
-        try {
-          screen.classList.toggle('is-active', selected);
-        } catch (_) {
-          try { screen.style.display = selected ? 'flex' : 'none'; } catch (_) { /* 가능한 화면부터 복구합니다. */ }
-        }
-        if (selected) activated = true;
-      });
-      return activated;
-    }
-    var selectedZone = 0;
-    function starMarkup(count) {
-      var earned = PP.core.utils.clamp(Number(count) || 0, 0, 3);
-      var markup = '';
-      for (var index = 0; index < 3; index += 1) {
-        markup += '<span class="' + (index < earned ? 'star-earned' : 'star-unearned') + '">'
-          + (index < earned ? '★' : '☆') + '</span>';
-      }
-      return markup;
-    }
-    function renderStages(save, requestedZone, maximumStage, difficultyId) {
-      var perZone = PP.data.config.campaign.stagesPerZone;
-      var records = PP.core.storage.recordsForDifficulty(save, difficultyId);
-      var accessibleStage = PP.core.utils.clamp(
-        Math.floor(Number(maximumStage) || 1),
-        1,
-        PP.data.config.campaign.stageCount
-      );
-      if (requestedZone !== undefined) selectedZone = PP.core.utils.clamp(requestedZone, 0, PP.data.zones.length - 1);
-      elements['zone-tabs'].innerHTML = '';
-      PP.data.zones.forEach(function (zone, zoneIndex) {
-        var tab = document.createElement('button');
-        tab.textContent = String(zoneIndex + 1); tab.className = zoneIndex === selectedZone ? 'is-active' : '';
-        tab.setAttribute('aria-label', PP.core.i18n.t('zone.' + zone.id));
-        tab.addEventListener('click', function () { renderStages(save, zoneIndex, accessibleStage, difficultyId); });
-        elements['zone-tabs'].appendChild(tab);
-      });
-      elements['stage-list'].innerHTML = '';
-      var zone = PP.data.zones[selectedZone];
-      var section = document.createElement('section'); section.className = 'zone-card';
-      var zoneStars = PP.data.stages.slice(selectedZone * perZone, selectedZone * perZone + perZone).reduce(function (sum, stage) {
-        return sum + (records[stage.id] ? PP.core.utils.clamp(Number(records[stage.id].bestStars) || 1, 1, 3) : 0);
-      }, 0);
-      section.setAttribute('aria-label', PP.core.i18n.t('select.zoneStarsAria', { stars: zoneStars }));
-      var heading = document.createElement('h3');
-      heading.innerHTML = '<span>' + PP.core.i18n.t('select.zone', { zone: selectedZone + 1 }) + '</span>'
-        + PP.core.i18n.t('zone.' + zone.id)
-        + '<small class="zone-star-total" aria-hidden="true">★ ' + zoneStars + ' / 60</small>';
-      section.appendChild(heading);
-      var grid = document.createElement('div'); grid.className = 'stage-grid';
-      PP.data.stages.slice(selectedZone * perZone, selectedZone * perZone + perZone).forEach(function (stage) {
-        var button = document.createElement('button');
-        var locked = stage.id > accessibleStage; var cleared = !!records[stage.id];
-        button.className = 'stage-tile' + (cleared ? ' is-cleared' : '') + (locked ? ' is-locked' : '');
-        button.disabled = locked; button.setAttribute('data-stage-id', stage.id);
-        var bestStars = cleared ? PP.core.utils.clamp(Number(records[stage.id].bestStars) || 1, 1, 3) : 0;
-        var stateLabel = locked ? PP.core.i18n.t('select.locked') : (cleared ? '★'.repeat(bestStars) + '☆'.repeat(3 - bestStars) : '☆☆☆');
-        button.innerHTML = '<strong>' + stage.id + '</strong><small aria-hidden="true">'
-          + (locked ? PP.core.i18n.t('select.locked') : starMarkup(bestStars)) + '</small>';
-        button.setAttribute('aria-label', PP.core.i18n.t('select.stageAria', { stage: stage.id, state: stateLabel }));
-        button.addEventListener('click', function () { callbacks.selectStage(stage.id); }); grid.appendChild(button);
-      });
-      section.appendChild(grid); elements['stage-list'].appendChild(section);
-    }
-    function setHud(stage) {
-      elements['stage-label'].textContent = stage.mode === 'abyss'
-        ? PP.core.i18n.t('hud.abyss', { segment: stage.abyss.segmentIndex + 1 })
-        : PP.core.i18n.t('hud.stage', {
-          zone: PP.core.i18n.t('zone.' + stage.definition.zoneId), stage: stage.definition.id
-        });
-      elements['core-label'].textContent = PP.systems.relayProgress(stage) + ' / ' + stage.definition.requiredCores;
-      elements['power-bar'].style.width = Math.max(0, stage.player.power) + '%';
-      elements['power-track'].classList.toggle(
-        'is-critical',
-        stage.player.power <= PP.data.config.starRating.powerThresholdPercent
-      );
-      elements['power-track'].setAttribute('aria-label', PP.core.i18n.t('hud.powerAria', {
-        power: Math.max(0, Math.round(stage.player.power))
-      }));
-      elements['sonar-bar'].style.width = Math.max(0, stage.player.sonarCharge) + '%';
-      elements['rival-broadcast'].hidden = !stage.rival;
-      if (stage.rival) elements['rival-broadcast'].textContent = PP.core.i18n.t('hud.rival', {
-        broadcast: stage.rival.broadcast(stage)
-      });
-      elements['boosted-sonar-hud'].hidden = stage.sonarMode !== 'boosted-run';
-    }
-    function setPaused(value) { elements['pause-panel'].hidden = !value; }
-    function setAbyssMode(enabled) { app.querySelector('[data-action="abyss-end"]').hidden = !enabled; }
-    function setSoundState(enabled) {
-      var label = PP.core.i18n.t(enabled ? 'sound.on' : 'sound.off');
-      [elements['hub-sound'], elements['pause-sound']].forEach(function (button) {
-        if (!button) return;
-        button.setAttribute('aria-pressed', String(!!enabled));
-        button.setAttribute('aria-label', label);
-        button.setAttribute('title', label);
-        button.setAttribute('data-sound-state', enabled ? 'on' : 'off');
-      });
-      elements['hub-sound-label'].textContent = label;
-      elements['pause-sound-label'].textContent = label;
-    }
-    function setLanguage(locale) {
-      PP.core.i18n.setLocale(locale);
-      app.setAttribute('data-language', PP.core.i18n.getLocale());
-      if (app.querySelectorAll) {
-        app.querySelectorAll('[data-i18n]').forEach(function (node) {
-          node.textContent = PP.core.i18n.t(node.getAttribute('data-i18n'));
-        });
-        app.querySelectorAll('[data-i18n-aria]').forEach(function (node) {
-          node.setAttribute('aria-label', PP.core.i18n.t(node.getAttribute('data-i18n-aria')));
-        });
-      }
-      var actionKeys = {
-        'stage-select': 'hub.stageSelect', cosmetics: 'hub.cosmetics',
-        resume: 'pause.resume', 'pause-restart': 'pause.restart', quit: 'pause.quit', 'abyss-end': 'pause.abyssEnd',
-        'dive-cancel': 'prep.cancel',
-        next: 'result.next', retry: 'result.retry', 'result-select': 'result.select',
-        'emergency-reward': 'result.emergency', 'credit-double': 'result.double',
-        'pause-hand-left': 'hand.left', 'pause-hand-right': 'hand.right',
-        'settings-hand-left': 'hand.left', 'settings-hand-right': 'hand.right',
-        'hand-choice-left': 'hand.left', 'hand-choice-right': 'hand.right',
-        'ad-confirm': 'common.confirm',
-        'purchase-cancel': 'common.cancel', 'purchase-confirm': 'common.buy', 'product-close': 'common.close',
-        'difficulty-normal': 'difficulty.normal', 'difficulty-hard': 'difficulty.hard', 'difficulty-extreme': 'difficulty.extreme',
-        'ending-result': 'ending.result', 'ending-main': 'ending.main'
-      };
-      Object.keys(actionKeys).forEach(function (action) {
-        var node = app.querySelector('[data-action="' + action + '"]');
-        if (node) node.textContent = PP.core.i18n.t(actionKeys[action]);
-      });
-      if (elements['pause-title']) elements['pause-title'].textContent = PP.core.i18n.t('pause.title');
-      if (elements['pause-copy']) elements['pause-copy'].textContent = PP.core.i18n.t('pause.copy');
-      if (elements['pause-hand-legend']) elements['pause-hand-legend'].textContent = PP.core.i18n.t('settings.hand');
-      if (elements['settings-title']) elements['settings-title'].textContent = PP.core.i18n.t('settings.title');
-      if (elements['settings-language-legend']) elements['settings-language-legend'].textContent = PP.core.i18n.t('settings.language');
-      if (elements['settings-hand-legend']) elements['settings-hand-legend'].textContent = PP.core.i18n.t('settings.hand');
-      if (elements['settings-language-current']) elements['settings-language-current'].textContent = PP.core.i18n.t('settings.currentLanguage');
-      if (elements['dive-preparation-title']) elements['dive-preparation-title'].textContent = PP.core.i18n.t('prep.title');
-      if (elements['ending-title']) elements['ending-title'].textContent = PP.core.i18n.t('ending.title');
-      if (elements['ending-copy']) elements['ending-copy'].textContent = PP.core.i18n.t('ending.copy');
-      var ko = app.querySelector('[data-action="language-ko"]');
-      var en = app.querySelector('[data-action="language-en"]');
-      if (ko) ko.setAttribute('aria-pressed', String(PP.core.i18n.getLocale() === 'ko'));
-      if (en) en.setAttribute('aria-pressed', String(PP.core.i18n.getLocale() === 'en'));
-      elements['sonar-button'].setAttribute('aria-label', PP.core.i18n.t('aria.sonar'));
-      elements.canvas.setAttribute('aria-label', PP.core.i18n.t('aria.canvas'));
-      elements['zone-tabs'].setAttribute('aria-label', PP.core.i18n.t('aria.zoneTabs'));
-      elements['global-ad-banner'].setAttribute('aria-label', PP.core.i18n.t('aria.banner'));
-      var settingsOpen = app.querySelector('[data-action="settings-open"]');
-      if (settingsOpen) {
-        settingsOpen.setAttribute('aria-label', PP.core.i18n.t('aria.settings'));
-        settingsOpen.setAttribute('title', PP.core.i18n.t('aria.settings'));
-      }
-      var pauseButton = app.querySelector('[data-action="pause"]');
-      if (pauseButton) pauseButton.setAttribute('aria-label', PP.core.i18n.t('aria.pause'));
-    }
-    function setSonarHand(hand) {
-      var selected = hand === 'left' ? 'left' : 'right';
-      elements['game-screen'].setAttribute('data-sonar-hand', selected);
-      elements['game-controls'].setAttribute('data-sonar-hand', selected);
-      elements['sonar-button'].setAttribute('aria-label', PP.core.i18n.t('aria.sonar'));
-      app.querySelector('[data-action="pause-hand-left"]').setAttribute('aria-pressed', String(selected === 'left'));
-      app.querySelector('[data-action="pause-hand-right"]').setAttribute('aria-pressed', String(selected === 'right'));
-      app.querySelector('[data-action="settings-hand-left"]').setAttribute('aria-pressed', String(selected === 'left'));
-      app.querySelector('[data-action="settings-hand-right"]').setAttribute('aria-pressed', String(selected === 'right'));
-    }
-    function setBannerLayout(layout) {
-      if (contestMode) {
-        elements['global-ad-banner'].hidden = true;
-        app.setAttribute('data-banner-profile', 'contest');
-        app.setAttribute('data-banner-height-dp', '0');
-        if (document.documentElement && document.documentElement.style) {
-          document.documentElement.style.setProperty('--global-banner-height', '0px');
-        }
-        return;
-      }
-      var normalized = layout && typeof layout === 'object' ? layout : { profileId: 'toss', heightDp: 96, cssHeight: '96px' };
-      var banner = elements['global-ad-banner'];
-      banner.setAttribute('data-banner-profile', normalized.profileId);
-      banner.setAttribute('data-banner-height-dp', normalized.heightDp);
-      app.setAttribute('data-banner-profile', normalized.profileId);
-      app.setAttribute('data-banner-height-dp', normalized.heightDp);
-      if (document.documentElement && document.documentElement.style) {
-        document.documentElement.style.setProperty('--global-banner-height', normalized.cssHeight);
-      }
-    }
-    function attachBannerSurface(node) {
-      if (contestMode) return;
-      var slot = elements['banner-sdk-slot'];
-      slot.innerHTML = '';
-      if (node) slot.appendChild(node);
-      elements['banner-placeholder'].hidden = true;
-      slot.hidden = false;
-      elements['global-ad-banner'].setAttribute('data-banner-surface', 'attached');
-    }
-    function resetBannerSurface() {
-      if (contestMode) return;
-      elements['banner-sdk-slot'].innerHTML = '';
-      elements['banner-sdk-slot'].hidden = true;
-      elements['banner-placeholder'].hidden = false;
-      elements['global-ad-banner'].setAttribute('data-banner-surface', 'simulated');
-    }
-    function renderHub(model, soundEnabled) {
-      var title = elements['title-screen'];
-      var primary = app.querySelector('[data-action="hub-primary"]');
-      var stageSelect = app.querySelector('[data-action="stage-select"]');
-      var cosmetics = app.querySelector('[data-action="cosmetics"]');
-      var product = app.querySelector('[data-action="remove-ads-product"]');
-      title.setAttribute('data-hub-state', model.state);
-      title.classList.toggle('has-gm-divergence', model.developmentTestAccess);
-      elements['hub-gm-entry'].hidden = !PP.data.config.development.gmToolsEnabled;
-      primary.textContent = model.primaryLabel;
-      primary.setAttribute('data-primary-action', model.primaryAction);
-      if (model.primaryStageId) primary.setAttribute('data-primary-stage', model.primaryStageId);
-      else primary.removeAttribute('data-primary-stage');
-      elements['hub-progress'].hidden = !model.showProgressCard;
-      elements['hub-progress-kicker'].textContent = PP.core.i18n.t(model.complete ? 'hub.complete' : 'hub.nextDive');
-      elements['hub-progress-value'].textContent = model.contiguousClears + ' / ' + PP.data.config.campaign.stageCount;
-      elements['hub-progress-meta'].textContent = model.complete
-        ? PP.core.i18n.t('hub.completeMeta')
-        : PP.core.i18n.t('hub.nextMeta', { zone: model.zoneName, stage: model.nextStage });
-      elements['hub-progress-stars'].textContent = '★ ' + model.totalStars;
-      elements['hub-progress-fill'].style.width = Math.round(model.progressRatio * 100) + '%';
-      elements['hub-abyss-best'].hidden = !model.showAbyssBest;
-      elements['hub-abyss-best'].textContent = PP.core.i18n.t('hub.abyssBest', {
-        segment: model.abyssBestSegment, score: model.abyssBestScore
-      });
-      stageSelect.hidden = !model.showStageSelect;
-      stageSelect.textContent = PP.core.i18n.t('hub.stageSelect');
-      cosmetics.hidden = !model.showCosmetics;
-      elements['hub-secondary'].hidden = !model.showStageSelect && !model.showCosmetics;
-      product.hidden = contestMode || !model.showRemoveAds;
-      product.textContent = model.entitlementLabel;
-      product.disabled = model.entitlementRemoved;
-      product.setAttribute('data-entitled', String(model.entitlementRemoved));
-      product.setAttribute('aria-disabled', String(model.entitlementRemoved));
-      elements['hub-difficulty'].hidden = !model.hardUnlocked;
-      var normalDifficulty = app.querySelector('[data-action="difficulty-normal"]');
-      var hardDifficulty = app.querySelector('[data-action="difficulty-hard"]');
-      var extremeDifficulty = app.querySelector('[data-action="difficulty-extreme"]');
-      if (normalDifficulty) normalDifficulty.setAttribute('aria-pressed', String(model.difficultyId === 'normal'));
-      if (hardDifficulty) {
-        hardDifficulty.disabled = !model.hardUnlocked;
-        hardDifficulty.setAttribute('aria-pressed', String(model.difficultyId === 'hard'));
-      }
-      if (extremeDifficulty) {
-        extremeDifficulty.disabled = !model.extremeUnlocked;
-        extremeDifficulty.setAttribute('aria-pressed', String(model.difficultyId === 'extreme'));
-        extremeDifficulty.setAttribute('aria-label', model.extremeUnlocked
-          ? PP.core.i18n.t('difficulty.extreme')
-          : PP.core.i18n.t('difficulty.locked', { difficulty: PP.core.i18n.t('difficulty.extreme') }));
-      }
-      setSoundState(soundEnabled);
-    }
-    function showDivePreparation(definition, status, difficultyId) {
-      var stageLabel = PP.core.i18n.t('hud.stage', {
-        zone: PP.core.i18n.t('zone.' + definition.zoneId), stage: definition.id
-      });
-      elements['dive-preparation-target'].textContent = PP.core.i18n.t('prep.target', {
-        difficulty: PP.core.i18n.t('difficulty.' + (difficultyId || PP.data.config.difficulty.defaultId)),
-        stage: stageLabel
-      });
-      elements['dive-preparation-status'].textContent = status || (contestMode
-        ? PP.core.i18n.t('prep.contest')
-        : PP.core.i18n.t('prep.copy'));
-      app.querySelector('[data-action="dive-boosted"]').hidden = !advertisingEnabled;
-      elements['dive-preparation-panel'].hidden = false;
-    }
-    function hideDivePreparation() { elements['dive-preparation-panel'].hidden = true; }
-    function showHandChoice() { elements['hand-choice-panel'].hidden = false; }
-    function hideHandChoice() { elements['hand-choice-panel'].hidden = true; }
-    function showSettings() { elements['settings-panel'].hidden = false; }
-    function hideSettings() { elements['settings-panel'].hidden = true; }
-    function setDivePreparationBusy(busy) {
-      app.querySelector('[data-action="dive-normal"]').disabled = !!busy;
-      app.querySelector('[data-action="dive-boosted"]').disabled = !!busy;
-      app.querySelector('[data-action="dive-boosted"]').hidden = !advertisingEnabled;
-    }
-    function setResult(stage, won, message, stars) {
-      elements['result-mark'].textContent = won ? '◆' : '◇';
-      elements['result-zone'].textContent = stage.mode === 'abyss' ? 'ABYSS · SEED ' + stage.abyss.seed
-        : PP.core.i18n.t('hud.stage', {
-          zone: PP.core.i18n.t('zone.' + stage.definition.zoneId), stage: stage.definition.id
-        });
-      elements['result-title'].textContent = stage.mode === 'abyss' ? PP.core.i18n.t('pause.abyssEnd') : PP.core.i18n.t(won ? 'result.win' : 'result.fail');
-      elements['result-message'].textContent = message;
-      var earnedStars = won ? stars : 0;
-      elements['result-stars'].innerHTML = starMarkup(earnedStars);
-      elements['result-stars'].setAttribute('aria-label', PP.core.i18n.t('stars.earnedAria', { stars: earnedStars }));
-      elements['result-credits'].textContent = stage.creditEarned ? '+' + stage.creditEarned : '0';
-      app.querySelector('[data-action="next"]').hidden = stage.mode === 'abyss' || !won || stage.definition.id >= PP.data.config.campaign.stageCount;
-      app.querySelector('[data-action="emergency-reward"]').hidden = !advertisingEnabled || stage.mode === 'abyss' || won || stage.rewardOfferUsed;
-      app.querySelector('[data-action="credit-double"]').hidden = !advertisingEnabled || !won || !stage.creditEarned || stage.creditDoubleClaimed;
-    }
-    function showOnboarding(stageId) {
-      var guide = PP.data.config.onboarding[stageId];
-      elements['onboarding-title'].textContent = PP.core.i18n.t(guide.titleKey);
-      var copy = PP.core.i18n.t(guide.textKey);
-      elements['onboarding-text'].innerHTML = '';
-      elements['onboarding-icon'].hidden = stageId === 1;
-      elements['onboarding-icon'].setAttribute('data-icon', guide.icon || 'guide');
-      if (stageId === 1) {
-        copy.split(/(\{core\}|\{relay\})/).forEach(function (part) {
-          if (part !== '{core}' && part !== '{relay}') {
-            var text = document.createElement('span');
-            text.textContent = part;
-            elements['onboarding-text'].appendChild(text);
-            return;
-          }
-          var kind = part === '{core}' ? 'core' : 'relay';
-          var label = document.createElement('span');
-          label.className = 'guide-entity-label';
-          label.textContent = PP.core.i18n.t('guide.' + kind);
-          var image = document.createElement('img');
-          image.className = 'guide-entity-image';
-          image.setAttribute('src', 'assets/images/entities/' + (kind === 'core'
-            ? 'resonance-core.svg' : 'player-relay-gate.svg'));
-          image.setAttribute('alt', PP.core.i18n.t('guide.' + kind));
-          elements['onboarding-text'].appendChild(image);
-          elements['onboarding-text'].appendChild(label);
-        });
-      } else {
-        elements['onboarding-text'].textContent = copy;
-      }
-      app.querySelector('[data-action="onboarding-ack"]').textContent = PP.core.i18n.t(
-        stageId === 1 ? 'onboarding.start' : 'onboarding.confirm'
-      );
-      elements['onboarding-panel'].hidden = false;
-    }
-    function showEnding(sealUrl, nextDifficultyId) {
-      if (sealUrl) elements['ending-seal'].setAttribute('src', sealUrl);
-      elements['ending-title'].textContent = PP.core.i18n.t('ending.title');
-      elements['ending-copy'].textContent = nextDifficultyId
-        ? PP.core.i18n.t('ending.unlockCopy', { difficulty: PP.core.i18n.t('difficulty.' + nextDifficultyId) })
-        : PP.core.i18n.t('ending.copy');
-      elements['ending-next'].hidden = !nextDifficultyId;
-      if (nextDifficultyId) {
-        elements['ending-next'].setAttribute('data-next-difficulty', nextDifficultyId);
-        elements['ending-next'].textContent = PP.core.i18n.t('ending.startDifficulty', {
-          difficulty: PP.core.i18n.t('difficulty.' + nextDifficultyId)
-        });
-      } else {
-        elements['ending-next'].removeAttribute('data-next-difficulty');
-      }
-      show('ending');
-    }
-    function hideOnboarding() { elements['onboarding-panel'].hidden = true; }
-    function showCosmetics(save) {
-      elements['cosmetics-balance'].textContent = save.resonanceCredits; elements['cosmetic-list'].innerHTML = '';
-      var labels = {
-        player: PP.core.i18n.t('cosmetic.category.player'),
-        guardian: PP.core.i18n.t('cosmetic.category.guardian'),
-        rival: PP.core.i18n.t('cosmetic.category.rival')
-      };
-      var baseAssets = {
-        player: 'entity-player-recovery-drone',
-        guardian: 'entity-guardian-gate-pin',
-        rival: 'entity-rival-probe-drone'
-      };
-      var imageEntries = {};
-      (PP.core.runtimeManifest.images || []).forEach(function (entry) { imageEntries[entry.id] = entry; });
-      function assetUrl(assetId) {
-        var entry = imageEntries[assetId];
-        var path = entry && (entry.path || entry.src || entry.file || entry.url);
-        if (!path) return '';
-        if (/^(?:[a-z]+:|\/)/i.test(path) || path.indexOf('assets/') === 0) return path;
-        return (PP.core.runtimeManifest.imageBasePath || 'assets/images/') + path;
-      }
-      function fillCosmeticButton(button, model) {
-        var previewFrame = document.createElement('span');
-        previewFrame.className = 'cosmetic-preview-frame';
-        function appendPreview(assetId, layerClass) {
-          var preview = document.createElement('img');
-          preview.className = 'cosmetic-preview ' + layerClass;
-          preview.setAttribute('src', assetUrl(assetId));
-          preview.setAttribute('alt', '');
-          preview.setAttribute('aria-hidden', 'true');
-          previewFrame.appendChild(preview);
-        }
-        appendPreview(model.assetId, model.overlayAssetId ? 'cosmetic-preview-base' : 'cosmetic-preview-single');
-        if (model.overlayAssetId) appendPreview(model.overlayAssetId, 'cosmetic-preview-overlay');
-        var copy = document.createElement('span'); copy.className = 'cosmetic-copy';
-        var name = document.createElement('strong'); name.textContent = model.name;
-        var state = document.createElement('small'); state.className = 'cosmetic-state';
-        state.textContent = PP.core.i18n.t(model.equipped ? 'cosmetic.equipped' : (model.owned ? 'cosmetic.owned' : 'cosmetic.locked'), {
-          price: model.price
-        });
-        copy.appendChild(name); copy.appendChild(state);
-        button.appendChild(previewFrame); button.appendChild(copy);
-        button.setAttribute('aria-label', PP.core.i18n.t('cosmetic.aria', {
-          name: model.name, state: state.textContent, balance: save.resonanceCredits
-        }));
-        button.className = 'cosmetic-item ' + (model.equipped ? 'is-equipped' : (model.owned ? 'is-owned' : 'is-locked'));
-      }
-      ['player', 'guardian', 'rival'].forEach(function (category) {
-        var group = document.createElement('section'); var heading = document.createElement('h3'); heading.textContent = labels[category]; group.appendChild(heading);
-        var base = document.createElement('button'); var baseEquipped = save.settings.equippedCosmetics[category] === 'base';
-        fillCosmeticButton(base, { name: PP.core.i18n.t('cosmetic.base'), assetId: baseAssets[category], owned: true, equipped: baseEquipped, price: 0 });
-        base.addEventListener('click', function () { callbacks.equipCosmetic(category, 'base'); }); group.appendChild(base);
-        PP.data.config.cosmetics.filter(function (item) { return item.category === category; }).forEach(function (item) {
-          var owned = save.ownedCosmetics.indexOf(item.id) >= 0; var equipped = save.settings.equippedCosmetics[category] === item.id;
-          var button = document.createElement('button'); button.style.setProperty('--cosmetic-color', item.color);
-          fillCosmeticButton(button, {
-            name: PP.core.i18n.t('cosmetic.' + item.id), assetId: category === 'guardian' ? baseAssets.guardian : item.assetId,
-            overlayAssetId: category === 'guardian' ? item.assetId : '',
-            owned: owned, equipped: equipped, price: item.price
-          });
-          button.setAttribute('data-cosmetic-id', item.id);
-          button.addEventListener('click', function () { if (owned) callbacks.equipCosmetic(category, item.id); else callbacks.requestCosmeticPurchase(item.id); }); group.appendChild(button);
-        });
-        elements['cosmetic-list'].appendChild(group);
-      });
-      elements['cosmetics-panel'].hidden = false;
-    }
-    function hideCosmetics() { elements['cosmetics-panel'].hidden = true; }
-    function showPurchaseConfirmation(item, balance) {
-      elements['purchase-title'].textContent = PP.core.i18n.t('cosmetic.purchaseTitle', {
-        name: PP.core.i18n.t('cosmetic.' + item.id)
-      });
-      elements['purchase-copy'].textContent = PP.core.i18n.t('cosmetic.purchaseCopy', {
-        price: item.price, balance: balance
-      });
-      elements['purchase-panel'].hidden = false;
-    }
-    function hidePurchaseConfirmation() { elements['purchase-panel'].hidden = true; }
-    function showRemoveAdsProduct() {
-      var product = PP.data.config.products.removeAds;
-      elements['product-copy'].textContent = PP.core.i18n.t('product.description');
-      elements['product-panel'].hidden = false;
-    }
-    function hideRemoveAdsProduct() { elements['product-panel'].hidden = true; }
-    function showGm() { if (!contestMode) elements['gm-panel'].hidden = false; }
-    function hideGm() { elements['gm-panel'].hidden = true; }
-    var toastTimer = 0;
-    function toast(message) {
-      elements.toast.textContent = message; elements.toast.classList.add('is-visible'); clearTimeout(toastTimer);
-      toastTimer = setTimeout(function () { elements.toast.classList.remove('is-visible'); }, 1500);
-    }
-
-    return {
-      elements: elements, show: show, forceShow: forceShow, renderStages: renderStages, setHud: setHud, setPaused: setPaused,
-      setAbyssMode: setAbyssMode, setSoundState: setSoundState, setSonarHand: setSonarHand, setBannerLayout: setBannerLayout,
-      setLanguage: setLanguage,
-      attachBannerSurface: attachBannerSurface, resetBannerSurface: resetBannerSurface,
-      renderHub: renderHub,
-      showDivePreparation: showDivePreparation, hideDivePreparation: hideDivePreparation,
-      showHandChoice: showHandChoice, hideHandChoice: hideHandChoice,
-      showSettings: showSettings, hideSettings: hideSettings, setDivePreparationBusy: setDivePreparationBusy,
-      setResult: setResult, showOnboarding: showOnboarding, hideOnboarding: hideOnboarding, showEnding: showEnding,
-      showCosmetics: showCosmetics, hideCosmetics: hideCosmetics,
-      showPurchaseConfirmation: showPurchaseConfirmation, hidePurchaseConfirmation: hidePurchaseConfirmation,
-      showRemoveAdsProduct: showRemoveAdsProduct, hideRemoveAdsProduct: hideRemoveAdsProduct,
-      showGm: showGm, hideGm: hideGm,
-      presentSimulatedAd: presentSimulatedAd, resetSimulatedAd: resetSimulatedAd, toast: toast
-    };
-  }
-
-  PP.ui.createScreens = createScreens;
-})(window.PingPanic);
-
-// ---- src/dev/gm-tools.js ----
-(function (PP) {
-  'use strict';
-
-  function createGmTools(host, callbacks) {
-    if (!PP.data.config.development.gmToolsEnabled || !host) return null;
-
-    var root = document.createElement('div');
-    var stageInput = document.createElement('input');
-    var unlockButton = document.createElement('button');
-    var resetAllButton = document.createElement('button');
-    var resetAllArmed = false;
-    root.className = 'gm-tools';
-    root.setAttribute('aria-label', '개발자 도구');
-    stageInput.type = 'number';
-    stageInput.min = '1';
-    stageInput.max = String(PP.data.config.campaign.stageCount);
-    stageInput.value = '1';
-    stageInput.setAttribute('aria-label', '해금할 스테이지');
-    unlockButton.type = 'button';
-    unlockButton.textContent = '선택 스테이지 개방';
-    unlockButton.setAttribute('data-gm-action', 'unlock-stage');
-    unlockButton.addEventListener('click', function () {
-      if (callbacks && callbacks.unlockStage) callbacks.unlockStage(Math.floor(Number(stageInput.value)));
-    });
-    resetAllButton.type = 'button';
-    resetAllButton.textContent = '모든 스테이지 초기화';
-    resetAllButton.setAttribute('data-gm-action', 'reset-all');
-    resetAllButton.addEventListener('click', function () {
-      if (!resetAllArmed) {
-        resetAllArmed = true;
-        resetAllButton.textContent = '다시 눌러 초기화 확인';
-        resetAllButton.setAttribute('aria-pressed', 'true');
-        return;
-      }
-      resetAllArmed = false;
-      resetAllButton.textContent = '모든 스테이지 초기화';
-      resetAllButton.setAttribute('aria-pressed', 'false');
-      if (callbacks && callbacks.resetAll) callbacks.resetAll();
-    });
-    root.appendChild(stageInput);
-    root.appendChild(unlockButton);
-    root.appendChild(resetAllButton);
-    host.appendChild(root);
-    return { root: root, stageInput: stageInput };
-  }
-
-  PP.dev.createGmTools = createGmTools;
-})(window.PingPanic);
-
-// ---- src/game.js ----
-(function (PP) {
-  'use strict';
-
-  function boot() {
-    var app = document.getElementById('app');
-    if (!app) throw new Error('#app 요소가 없습니다.');
-
-    function updateAppHeight() {
-      var viewportHeight = window.visualViewport && Number(window.visualViewport.height);
-      var innerHeight = Number(window.innerHeight);
-      var documentHeight = document.documentElement && Number(document.documentElement.clientHeight);
-      var height = viewportHeight || innerHeight || documentHeight;
-      if (!height || !document.documentElement || !document.documentElement.style) return;
-      document.documentElement.style.setProperty('--app-height', height + 'px');
-      document.documentElement.style.setProperty('--vh', (height * 0.01) + 'px');
-    }
-    updateAppHeight();
-    window.addEventListener('resize', updateAppHeight);
-    window.addEventListener('orientationchange', updateAppHeight);
-    if (window.visualViewport && window.visualViewport.addEventListener) {
-      window.visualViewport.addEventListener('resize', updateAppHeight);
-    }
-
-    var save = PP.core.storage.load();
-    PP.core.i18n.setLocale(save.settings.language);
-    var assets = new PP.core.AssetLibrary(PP.core.runtimeManifest);
-    var audio = new PP.core.AudioPlayer(assets, save.settings.sound);
-    var ads = new PP.systems.AdCoordinator(PP.platform.current);
-    var stage = null;
-    var paused = false;
-    var boostedRewardSequence = 0;
-    var pendingCosmeticId = null;
-    var pendingOnboardingStageId = 0;
-    var pendingCampaignStart = null;
-    var pendingCampaignOrigin = 'title';
-    var manualResumePending = false;
-    var adFlowSequence = 0;
-    var activeAdFlow = null;
-    var hubModel = null;
-    var stageSelectMaximum = 1;
-    var visibilityHidden = !!(PP.platform.current.lifecycle.isHidden && PP.platform.current.lifecycle.isHidden());
-    var hudUpdatePending = false;
-    var simulationClock = new PP.core.FixedStepClock(
-      PP.data.config.runtime.fixedStepSeconds,
-      PP.data.config.runtime.maximumFrameDeltaSeconds,
-      PP.data.config.runtime.maximumCatchUpSteps
-    );
-    var lastFrame = performance.now();
-    function resetFrameTiming() {
-      simulationClock.reset();
-      lastFrame = performance.now();
-    }
-    var callbacks = {};
-    var ui = PP.ui.createScreens(app, callbacks);
-    function playGameplayMusic() {
-      if (!stage) return false;
-      return audio.play(stage.mode === 'abyss' ? 'bgm-abyss' : 'bgm-campaign');
-    }
-    ui.setLanguage(save.settings.language);
-    function applyBannerLayout(layout) {
-      var source = layout;
-      if (!source && PP.platform.current.banner && PP.platform.current.banner.getLayout) {
-        source = PP.platform.current.banner.getLayout();
-      }
-      var resolved = PP.platform.bannerLayout.resolve(
-        source && source.profileId,
-        source && source.heightDp
-      );
-      ui.setBannerLayout(resolved);
-      return resolved;
-    }
-    applyBannerLayout();
-    if (PP.platform.current.banner && PP.platform.current.banner.onLayoutChange) {
-      PP.platform.current.banner.onLayoutChange(applyBannerLayout);
-    }
-    var canvas = ui.elements.canvas;
-    var context = canvas.getContext('2d');
-    var input = new PP.core.Input(canvas, function () {
-      var onboardingOpen = pendingOnboardingStageId > 0 && !ui.elements['onboarding-panel'].hidden;
-      var preparationOpen = !ui.elements['dive-preparation-panel'].hidden || !ui.elements['hand-choice-panel'].hidden;
-      if (stage && stage.status === 'playing' && !onboardingOpen && !preparationOpen && !activeAdFlow) setPaused(!paused);
-    });
-    if (PP.data.config.development.gmToolsEnabled) {
-      PP.dev.getRuntimeState = function () {
-        return {
-          adsInFlight: ads.inFlight,
-          adState: activeAdFlow ? activeAdFlow.state : 'idle',
-          paused: paused,
-          manualResumePending: manualResumePending,
-          stageStatus: stage ? stage.status : 'none',
-          inputNeutral: Object.keys(input.keys).length === 0 && !input.pointer.active && input.pointer.id === null
-            && input.pointer.startX === 0 && input.pointer.startY === 0 && input.pointer.x === 0 && input.pointer.y === 0
-            && !input.sonarRequested,
-          visibilityHidden: visibilityHidden,
-          lastFrame: lastFrame,
-          currentStage: stage,
-          pendingStageId: pendingCampaignStart ? pendingCampaignStart.definition.id : 0,
-          sonarHand: save.settings.sonarHand
-        };
-      };
-      PP.dev.prepareAutomaticAdGateForTest = function () {
-        ads.activeSeconds = PP.data.config.ads.firstActiveSeconds;
-        ads.rewardDeferralSuccesses = 0;
-        ads.interstitialShows = [];
-        ads.interstitialShowCount = 0;
-      };
-    }
-    assets.preloadImages(['title-key-art', 'ui-resonance-credit', 'ui-campaign-ending-seal']).then(function () {
-      var titleUrl = assets.url('title-key-art');
-      if (assets.image('title-key-art') && titleUrl) ui.elements['title-screen'].style.backgroundImage = 'linear-gradient(rgba(1,8,13,.18), rgba(1,8,13,.88)), url("' + titleUrl + '")';
-      var endingUrl = assets.url('ui-campaign-ending-seal');
-      if (endingUrl) ui.elements['ending-seal'].setAttribute('src', endingUrl);
-    });
-    if (PP.data.config.development.simulatedAdsEnabled && PP.platform.current.development) {
-      PP.platform.current.development.setAdPresenter(ui.presentSimulatedAd, ui.resetSimulatedAd);
-    }
-
-    var gmTools = PP.dev.createGmTools ? PP.dev.createGmTools(ui.elements['gm-tools-host'], {
-      unlockStage: function (stageId) {
-        if (!Number.isInteger(stageId) || stageId < 1 || stageId > PP.data.config.campaign.stageCount) {
-          ui.toast('GM: 1~' + PP.data.config.campaign.stageCount + ' 스테이지를 선택하세요.');
-          return;
-        }
-        if (!PP.core.storage.unlockStage(save, stageId)) { ui.toast(PP.core.i18n.t('toast.saveError')); return; }
-        renderHub();
-        ui.toast('GM: ' + stageId + ' 스테이지가 열렸습니다.');
-      },
-      resetAll: function () {
-        if (!PP.core.storage.resetAllStageRecords(save)) { ui.toast(PP.core.i18n.t('toast.saveError')); return; }
-        renderHub();
-        ui.toast('GM: 모든 스테이지를 초기화했습니다.');
-      }
-    }) : null;
-    renderHub();
-    ui.setSonarHand(save.settings.sonarHand);
-
-    callbacks['hub-primary'] = function () {
-      if (!hubModel) renderHub();
-      if (hubModel.primaryAction === 'abyss') startAbyss();
-      else requestCampaignStart(hubModel.primaryStageId, hubModel.productMaxStage, 'title');
-    };
-    callbacks['stage-select'] = function () { showStageSelect(false); };
-    callbacks.title = showTitle;
-    function toggleSound() {
-      var transaction = PP.core.storage.atomicUpdate(save, function () { save.settings.sound = !save.settings.sound; });
-      if (!transaction.persisted) { ui.toast(PP.core.i18n.t('toast.saveError')); return; }
-      audio.setEnabled(save.settings.sound);
-      renderHub();
-      audio.play('ui');
-    }
-    callbacks.sound = toggleSound;
-    callbacks['pause-sound'] = toggleSound;
-    function chooseLanguage(locale) {
-      var normalizedLocale = PP.core.i18n.normalizeLocale(locale);
-      var transaction = PP.core.storage.atomicUpdate(save, function () { save.settings.language = normalizedLocale; });
-      if (!transaction.persisted) { ui.toast(PP.core.i18n.t('toast.saveError')); return; }
-      ui.setLanguage(save.settings.language);
-      ui.setSonarHand(save.settings.sonarHand);
-      renderHub();
-      if (stage) ui.setHud(stage);
-      if (pendingCampaignStart && !ui.elements['dive-preparation-panel'].hidden) {
-        ui.showDivePreparation(pendingCampaignStart.definition, null, pendingCampaignStart.difficultyId);
-      }
-      if (stage && stage.definition.onboardingStageId && !ui.elements['onboarding-panel'].hidden) {
-        ui.showOnboarding(stage.definition.onboardingStageId);
-      }
-      ui.toast(PP.core.i18n.t('toast.language'));
-    }
-    callbacks['language-ko'] = function () { chooseLanguage('ko'); };
-    callbacks['language-en'] = function () { chooseLanguage('en'); };
-    function chooseDifficulty(difficultyId) {
-      var selected = PP.core.storage.setCampaignDifficulty(save, difficultyId);
-      if (!selected) { ui.toast(PP.core.i18n.t('toast.saveError')); return null; }
-      renderHub();
-      ui.toast(PP.core.i18n.t('toast.difficulty', { difficulty: PP.core.i18n.t('difficulty.' + selected) }));
-      return selected;
-    }
-    callbacks['difficulty-normal'] = function () { chooseDifficulty('normal'); };
-    callbacks['difficulty-hard'] = function () { chooseDifficulty('hard'); };
-    callbacks['difficulty-extreme'] = function () { chooseDifficulty('extreme'); };
-    callbacks['settings-open'] = ui.showSettings;
-    callbacks['settings-close'] = ui.hideSettings;
-    callbacks['gm-open'] = ui.showGm;
-    callbacks['gm-close'] = ui.hideGm;
-    callbacks['gm-stage-select'] = function () { ui.hideGm(); showStageSelect(true); };
-    callbacks.pause = function () { setPaused(true); };
-    callbacks.resume = function () { setPaused(false, true); };
-    callbacks['pause-restart'] = function () {
-      if (!stage) return;
-      if (stage.mode === 'abyss') startAbyss();
-      else requestCampaignStart(stage.definition.id, Math.max(stage.definition.id, hubModel ? hubModel.productMaxStage : 1), 'game');
-    };
-    callbacks.quit = function () { showStageSelect(false); };
-    callbacks.sonar = function () { input.requestSonar(); };
-    callbacks.retry = function () {
-      if (!stage) return;
-      if (stage.mode === 'abyss') startAbyss();
-      else requestCampaignStart(stage.definition.id, Math.max(stage.definition.id, hubModel ? hubModel.productMaxStage : 1), 'result');
-    };
-    callbacks.next = function () {
-      if (stage) requestCampaignStart(
-        Math.min(PP.data.config.campaign.stageCount, stage.definition.id + 1),
-        hubModel ? hubModel.productMaxStage : stage.definition.id + 1,
-        'result'
-      );
-    };
-    callbacks['result-select'] = function () { showStageSelect(false); };
-    callbacks.selectStage = function (stageId) { requestCampaignStart(stageId, stageSelectMaximum, 'select'); };
-    callbacks.abyss = startAbyss;
-    callbacks['abyss-end'] = function () {
-      if (stage && stage.mode === 'abyss') endAbyss(PP.core.i18n.t('toast.abyssStopped'));
-    };
-    callbacks['emergency-reward'] = requestEmergencyReward;
-    callbacks['dive-normal'] = function () { choosePendingDive(false); };
-    callbacks['dive-boosted'] = requestBoostedDive;
-    callbacks['dive-cancel'] = cancelPendingCampaign;
-    callbacks['hand-choice-left'] = function () { chooseSonarHand('left', true); };
-    callbacks['hand-choice-right'] = function () { chooseSonarHand('right', true); };
-    callbacks['pause-hand-left'] = function () { chooseSonarHand('left', false); };
-    callbacks['pause-hand-right'] = function () { chooseSonarHand('right', false); };
-    callbacks['settings-hand-left'] = function () { chooseSonarHand('left', false); };
-    callbacks['settings-hand-right'] = function () { chooseSonarHand('right', false); };
-    callbacks['credit-double'] = requestCreditDouble;
-    callbacks['onboarding-ack'] = function () {
-      pendingOnboardingStageId = 0;
-      ui.hideOnboarding();
-      input.reset();
-      resetFrameTiming();
-      paused = false;
-      if (stage && stage.status === 'playing') playGameplayMusic();
-    };
-    callbacks.cosmetics = function () { ui.showCosmetics(save); };
-    callbacks['cosmetics-close'] = ui.hideCosmetics;
-    callbacks.equipCosmetic = function (category, id) {
-      var equipped = PP.core.storage.equipCosmetic(save, category, id);
-      if (equipped === 'storage-error') { ui.toast(PP.core.i18n.t('toast.saveError')); return; }
-      if (!equipped) { ui.toast(PP.core.i18n.t('toast.ownedOnly')); return; }
-      ui.showCosmetics(save);
-    };
-    callbacks.requestCosmeticPurchase = requestCosmeticPurchase;
-    callbacks['purchase-cancel'] = function () { pendingCosmeticId = null; ui.hidePurchaseConfirmation(); };
-    callbacks['purchase-confirm'] = confirmCosmeticPurchase;
-    callbacks['remove-ads-product'] = ui.showRemoveAdsProduct;
-    callbacks['product-close'] = ui.hideRemoveAdsProduct;
-    callbacks['ending-result'] = function () { ui.show('result'); };
-    callbacks['ending-main'] = showTitle;
-    callbacks['ending-next'] = function (button) {
-      var nextDifficultyId = button && button.getAttribute('data-next-difficulty');
-      if (!nextDifficultyId) return;
-      if (!chooseDifficulty(nextDifficultyId)) return;
-      requestCampaignStart(1, 1, 'ending');
-    };
-
-    var campaignErrors = PP.systems.validateCampaign(PP.data.stages).concat(PP.systems.validateAbyss());
-    if (campaignErrors.length) {
-      console.error('[PingPanic] 콘텐츠 검증 실패', campaignErrors);
-      ui.toast(PP.core.i18n.t('toast.contentError'));
-    }
-
-    function removeAdsEntitlement() {
-      try {
-        var entitlements = PP.platform.current.entitlements;
-        return entitlements && entitlements.get
-          ? entitlements.get(PP.data.config.entitlements.removeAds)
-          : { status: 'unsupported', value: false };
-      } catch (_) {
-        return { status: 'error', value: false };
-      }
-    }
-    function renderHub() {
-      hubModel = PP.ui.deriveHubState(
-        save,
-        removeAdsEntitlement(),
-        PP.data.config.development.gmToolsEnabled
-      );
-      ui.renderHub(hubModel, save.settings.sound);
-      return hubModel;
-    }
-    function showTitle() {
-      if (stage) stage.status = 'stopped';
-      audio.stopAll();
-      stage = null;
-      manualResumePending = false;
-      pendingCampaignStart = null;
-      pendingCampaignOrigin = 'title';
-      ui.hideDivePreparation();
-      ui.hideHandChoice();
-      paused = false;
-      input.reset();
-      renderHub();
-      ui.show('title');
-    }
-    function adErrorResult(error) {
-      return { status: 'error', granted: false, reason: error && error.message ? error.message : String(error || 'unknown error') };
-    }
-    function safeAdStep(label, operation) {
-      try { return { ok: true, value: operation() }; }
-      catch (error) {
-        console.error('[PingPanic] 광고 복구 단계 실패: ' + label, error);
-        return { ok: false, error: error };
-      }
-    }
-    function resetAdPresenter(reason) {
-      if (PP.platform.current.development && PP.platform.current.development.resetAdPresenter) {
-        return PP.platform.current.development.resetAdPresenter(reason || 'cancelled');
-      }
-      return ui.resetSimulatedAd(reason || 'cancelled');
-    }
-    function fallbackAfterAd(transaction, error) {
-      var fallback = transaction.options.fallback || 'result';
-      input.reset();
-      paused = false;
-      resetFrameTiming();
-      safeAdStep('pause-ui-fallback', function () { ui.setPaused(false); });
-      if (fallback === 'result' && stage) {
-        stage.status = transaction.options.fallbackWon ? 'won' : 'lost';
-        stage.resultShown = true;
-      } else if (fallback === 'select' && stage) {
-        stage.status = 'stopped';
-      }
-      safeAdStep('force-' + fallback, function () { ui.forceShow(fallback); });
-      safeAdStep('fallback-toast', function () { ui.toast(PP.core.i18n.t('toast.adRecovery')); });
-      if (error) console.error('[PingPanic] 광고 목적 화면 대신 ' + fallback + ' 화면으로 복구했습니다.', error);
-    }
-    function restoreAdTransaction(transaction) {
-      transaction.state = 'restoring';
-      try {
-        input.reset();
-        paused = false;
-        resetFrameTiming();
-        safeAdStep('pause-ui-clear', function () { ui.setPaused(false); });
-        var restored = safeAdStep('destination', function () { transaction.options.restore(transaction.result); });
-        if (!restored.ok) fallbackAfterAd(transaction, restored.error);
-      } finally {
-        transaction.state = 'settled';
-        if (activeAdFlow === transaction) activeAdFlow = null;
-      }
-    }
-    function settleAdTransaction(transaction) {
-      transaction.state = 'settling';
-      safeAdStep('presenter-reset', function () { resetAdPresenter('cancelled'); });
-      input.reset();
-      resetFrameTiming();
-      var hiddenCheck = safeAdStep('visibility-check', function () {
-        return PP.platform.current.lifecycle.isHidden ? PP.platform.current.lifecycle.isHidden() : false;
-      });
-      visibilityHidden = hiddenCheck.ok ? !!hiddenCheck.value : false;
-      if (visibilityHidden) {
-        paused = true;
-        safeAdStep('pause-ui-hidden', function () { ui.setPaused(false); });
-        transaction.state = 'waiting-visible';
-        return;
-      }
-      restoreAdTransaction(transaction);
-    }
-    function runAdTransaction(options) {
-      if (activeAdFlow) return Promise.resolve({ status: 'duplicate-blocked', granted: false });
-      var transaction = { id: 'game-ad-' + (++adFlowSequence), state: 'starting', options: options, result: null };
-      activeAdFlow = transaction;
-      paused = true;
-      input.reset();
-      audio.stopAll();
-      resetFrameTiming();
-      safeAdStep('stale-presenter-reset', function () { resetAdPresenter('cancelled'); });
-      safeAdStep('pause-ui-before-ad', function () { ui.setPaused(false); });
-      transaction.state = 'presenting';
-      var requestAttempt;
-      try { requestAttempt = Promise.resolve(options.request()); }
-      catch (error) { requestAttempt = Promise.reject(error); }
-      return requestAttempt.catch(function (error) {
-        return adErrorResult(error);
-      }).then(function (result) {
-        transaction.state = 'applying';
-        result = result && typeof result === 'object' ? result : adErrorResult('invalid ad result');
-        result.granted = false;
-        if (options.applyReward && result.rewardAvailable) {
-          var claim = ads.claimReward(result.transactionId, options.applyReward);
-          result.granted = claim.granted;
-          if (!claim.granted && claim.status === 'apply-error') {
-            result.status = claim.status;
-            result.reason = claim.reason;
-          }
-        }
-        transaction.result = result;
-        return result;
-      }).catch(function (error) {
-        transaction.result = adErrorResult(error);
-        return transaction.result;
-      }).finally(function () {
-        if (!transaction.result) transaction.result = adErrorResult('ad transaction ended without a result');
-        try {
-          settleAdTransaction(transaction);
-        } catch (error) {
-          safeAdStep('fatal-presenter-reset', function () { resetAdPresenter('cancelled'); });
-          ads.cancelActive('game-finalizer-error');
-          fallbackAfterAd(transaction, error);
-          transaction.state = 'settled';
-          if (activeAdFlow === transaction) activeAdFlow = null;
-        }
-      });
-    }
-    function cosmeticById(id) {
-      return PP.data.config.cosmetics.filter(function (item) { return item.id === id; })[0] || null;
-    }
-    function requestCosmeticPurchase(id) {
-      var item = cosmeticById(id);
-      if (!item || save.ownedCosmetics.indexOf(id) >= 0) return;
-      if (save.resonanceCredits < item.price) {
-        ui.toast(PP.core.i18n.t('toast.creditShort', { amount: item.price - save.resonanceCredits }));
-        return;
-      }
-      pendingCosmeticId = id;
-      ui.showPurchaseConfirmation(item, save.resonanceCredits);
-    }
-    function confirmCosmeticPurchase() {
-      if (!pendingCosmeticId) return;
-      var result = PP.core.storage.purchaseCosmetic(save, pendingCosmeticId);
-      pendingCosmeticId = null;
-      ui.hidePurchaseConfirmation();
-      if (result.status === 'purchased') ui.toast(PP.core.i18n.t('toast.cosmeticUnlocked', {
-        name: PP.core.i18n.t('cosmetic.' + result.item.id)
-      }));
-      else if (result.status === 'insufficient') ui.toast(PP.core.i18n.t('toast.creditInsufficient'));
-      else if (result.status === 'storage-error') ui.toast(PP.core.i18n.t('toast.saveError'));
-      ui.showCosmetics(save);
-    }
-    function chooseSonarHand(hand, continueStart) {
-      var selectedHand = hand === 'left' ? 'left' : 'right';
-      var transaction = PP.core.storage.atomicUpdate(save, function () {
-        save.settings.sonarHand = selectedHand;
-        save.settings.sonarHandSelected = true;
-      });
-      if (!transaction.persisted) { ui.toast(PP.core.i18n.t('toast.saveError')); return; }
-      ui.setSonarHand(save.settings.sonarHand);
-      if (!continueStart) {
-      ui.toast(PP.core.i18n.t('toast.hand', { hand: PP.core.i18n.t(save.settings.sonarHand === 'left' ? 'hand.left' : 'hand.right') }));
-        return;
-      }
-      ui.hideHandChoice();
-      if (pendingCampaignStart) {
-        ui.setDivePreparationBusy(false);
-        ui.showDivePreparation(pendingCampaignStart.definition, null, pendingCampaignStart.difficultyId);
-        scheduleStageImagePrewarm(pendingCampaignStart.definition);
-      }
-    }
-    function choosePendingDive(boosted, fromAdRestore) {
-      if (!pendingCampaignStart || (activeAdFlow && !fromAdRestore)) return;
-      if (pendingCampaignStart.definition.id === 1 && !save.settings.sonarHandSelected) return;
-      pendingCampaignStart.sonarMode = boosted ? 'boosted-run' : 'standard';
-      ui.setDivePreparationBusy(false);
-      beginPendingCampaign();
-    }
-    function requestBoostedDive() {
-      if (!pendingCampaignStart || activeAdFlow) return;
-      if (pendingCampaignStart.definition.id === 1 && !save.settings.sonarHandSelected) return;
-      if (!PP.data.config.runtime.advertisingEnabled) {
-        choosePendingDive(false);
-        return;
-      }
-      boostedRewardSequence += 1;
-      var rewardToken = 'boosted-sonar-' + boostedRewardSequence;
-      ui.setDivePreparationBusy(true);
-      runAdTransaction({
-        fallback: 'select',
-        request: function () { return ads.showRewarded(rewardToken, 'boosted-sonar'); },
-        applyReward: function () { return true; },
-        restore: function (result) {
-          ui.setDivePreparationBusy(false);
-          if (!pendingCampaignStart) { showStageSelect(false); return; }
-          if (result.granted) {
-            choosePendingDive(true, true);
-            return;
-          }
-          input.reset();
-          ui.showDivePreparation(
-            pendingCampaignStart.definition,
-            result.status === 'closed' || result.status === 'cancelled'
-              ? PP.core.i18n.t('prep.adCancelled')
-              : PP.core.i18n.t('prep.adNoReward'),
-            pendingCampaignStart.difficultyId
-          );
-          ui.toast(PP.core.i18n.t('toast.boostStatus', { status: result.status }));
-        }
-      });
-    }
-    function showStageSelect(gmTestMode) {
-      if (stage) stage.status = 'stopped';
-      audio.stopAll();
-      stage = null;
-      manualResumePending = false;
-      pendingCampaignStart = null;
-      ui.hideDivePreparation();
-      ui.hideHandChoice();
-      paused = false;
-      input.reset();
-      if (!hubModel) renderHub();
-      stageSelectMaximum = gmTestMode ? save.highestUnlockedStage : hubModel.productMaxStage;
-      ui.renderStages(
-        save,
-        Math.floor((stageSelectMaximum - 1) / PP.data.config.campaign.stagesPerZone),
-        stageSelectMaximum,
-        save.settings.campaignDifficulty
-      );
-      ui.show('select');
-    }
-    function requestCampaignStart(stageId, accessMaximum, origin) {
-      var definition = PP.data.stages[stageId - 1];
-      var allowedStage = PP.core.utils.clamp(
-        Math.floor(Number(accessMaximum) || (hubModel ? hubModel.productMaxStage : 1)),
-        1,
-        PP.data.config.campaign.stageCount
-      );
-      if (!definition || stageId > allowedStage) return;
-      pendingCampaignOrigin = origin || 'title';
-      pendingCampaignStart = {
-        definition: definition,
-        accessMaximum: allowedStage,
-        sonarMode: 'standard',
-        difficultyId: save.settings.campaignDifficulty
-      };
-      paused = true;
-      input.reset();
-      audio.stopAll();
-      ui.setPaused(false);
-      ui.setDivePreparationBusy(false);
-      if (definition.id === 1 && !save.settings.sonarHandSelected) {
-        ui.hideDivePreparation();
-        ui.showHandChoice();
-      } else {
-        ui.hideHandChoice();
-        ui.showDivePreparation(definition, null, pendingCampaignStart.difficultyId);
-        scheduleStageImagePrewarm(definition);
-      }
-    }
-    function cancelPendingCampaign() {
-      if (!pendingCampaignStart) return;
-      var origin = pendingCampaignOrigin;
-      pendingCampaignStart = null;
-      ui.hideDivePreparation();
-      ui.hideHandChoice();
-      input.reset();
-      if (origin === 'game' && stage && stage.status === 'playing') {
-        paused = true;
-        ui.show('game');
-        ui.setPaused(true);
-      } else {
-        paused = false;
-        ui.setPaused(false);
-        ui.show(origin === 'ending' ? 'ending' : origin);
-      }
-      resetFrameTiming();
-    }
-    function beginPendingCampaign() {
-      if (!pendingCampaignStart) return;
-      var request = pendingCampaignStart;
-      pendingCampaignStart = null;
-      ui.hideDivePreparation();
-      ui.hideHandChoice();
-      beginCampaignStage(request.definition, request.sonarMode, request.difficultyId);
-    }
-    function beginCampaignStage(definition, sonarMode, difficultyId) {
-      stage = PP.systems.createStageRun(definition, difficultyId);
-      manualResumePending = false;
-      stage.sonarMode = sonarMode === 'boosted-run' ? 'boosted-run' : 'standard';
-      stage.damageFeedback = { blinkUntil: 0, shakeUntil: 0, impactUntil: 0, lastSource: '' };
-      audio.stopAll();
-      paused = false;
-      input.reset();
-      ui.setPaused(false);
-      ui.setAbyssMode(false);
-      ui.setSonarHand(save.settings.sonarHand);
-      ui.show('game');
-      scheduleStageImagePrewarm(definition);
-      ui.setHud(stage);
-      ui.toast(PP.core.i18n.t('toast.objective'));
-      if (definition.onboardingStageId) {
-        pendingOnboardingStageId = definition.onboardingStageId;
-        paused = true;
-        audio.stopAll();
-        ui.showOnboarding(definition.onboardingStageId);
-      }
-      resetFrameTiming();
-      audio.play('ui');
-      if (!paused) playGameplayMusic();
-    }
-    function startAbyss() {
-      if (!save.records[PP.data.config.campaign.stageCount]) return;
-      pendingCampaignStart = null;
-      ui.hideDivePreparation();
-      ui.hideHandChoice();
-      stage = PP.systems.createAbyssRun(PP.data.config.abyss.baseSeed, 0, 0, null);
-      manualResumePending = false;
-      stage.sonarMode = 'standard';
-      stage.damageFeedback = { blinkUntil: 0, shakeUntil: 0, impactUntil: 0, lastSource: '' };
-      audio.stopAll();
-      paused = false;
-      input.reset();
-      ui.setPaused(false);
-      ui.setAbyssMode(true);
-      ui.setSonarHand(save.settings.sonarHand);
-      ui.show('game');
-      scheduleStageImagePrewarm(stage.definition);
-      ui.setHud(stage);
-      ui.toast(PP.core.i18n.t('toast.abyssStart'));
-      resetFrameTiming();
-      audio.play('ui');
-      playGameplayMusic();
-    }
-    function backgroundImageId(definition) {
-      var ids = {
-        'sunken-relay': 'bg-zone-01-sunken-relay',
-        'ghost-garden': 'bg-zone-02-ghost-garden',
-        'red-channel': 'bg-zone-03-thermal-conduit',
-        'silent-trench': 'bg-zone-04-silent-archive',
-        'resonance-heart': 'bg-zone-05-resonance-heart'
-      };
-      return ids[definition.zoneId] || '';
-    }
-    var stagePrewarmTasks = {};
-    function stageImageIds(definition) {
-      var ids = ['entity-player-recovery-drone', 'entity-resonance-core', 'entity-player-relay-gate', 'effect-impact-fracture'];
-      function add(id) { if (id && ids.indexOf(id) < 0) ids.push(id); }
-      var background = backgroundImageId(definition);
-      add(background);
-      var layout = PP.data.obstacles.stageLayouts[String(definition.id)];
-      var pattern = PP.data.obstacles.patterns[layout ? layout.patternId : definition.obstaclePatternId];
-      if (pattern) pattern.groups.forEach(function (group) {
-        var profile = PP.data.obstacles.profiles[group.profileId];
-        add(profile && profile.assetId);
-      });
-      (definition.guardianTypes || []).forEach(function (type) {
-        add(type === 'pin' ? 'entity-guardian-gate-pin' : (type === 'hound' ? 'entity-guardian-lock-hound' : 'entity-guardian-chorus-watcher'));
-      });
-      if (definition.rivalPreset) {
-        add(definition.rivalPreset === 'carrier' ? 'entity-rival-carrier-drone' : 'entity-rival-probe-drone');
-        add('entity-rival-relay-boundary');
-        add('effect-rival-projectile');
-      }
-      (definition.environment || []).forEach(function (entry) {
-        if (entry.type === 'variablePassage') add('terrain-gimmick-variable-passage');
-        if (entry.type === 'thermalVent') add('terrain-hazard-thermal-vent');
-      });
-      var playerSkin = equippedCosmetic('player');
-      var guardianSkin = definition.guardianTypes && definition.guardianTypes.length ? equippedCosmetic('guardian') : null;
-      var rivalSkin = definition.rivalPreset ? equippedCosmetic('rival') : null;
-      add(playerSkin && playerSkin.assetId);
-      add(guardianSkin && guardianSkin.assetId);
-      add(rivalSkin && rivalSkin.assetId);
-      return ids;
-    }
-    function scheduleStageImagePrewarm(definition) {
-      var ids = stageImageIds(definition);
-      var key = ids.slice().sort().join('|');
-      if (stagePrewarmTasks[key]) return;
-      stagePrewarmTasks[key] = true;
-      function preload() {
-        assets.preloadImages(ids).then(function () { delete stagePrewarmTasks[key]; });
-      }
-      if (typeof window.requestIdleCallback === 'function') window.requestIdleCallback(preload, { timeout: 1000 });
-      else (window.setTimeout || setTimeout)(preload, 0);
-    }
-    function setPaused(value, explicitResume) {
-      if (!stage || stage.status !== 'playing') return;
-      if (!value && manualResumePending && !explicitResume) return;
-      if (!value && explicitResume) manualResumePending = false;
-      paused = value;
-      input.reset();
-      ui.setPaused(paused);
-      if (paused) audio.stopAll();
-      else playGameplayMusic();
-      resetFrameTiming();
-    }
-
-    function emitSignal(source, x, y, intensity, revealSeconds, boosted) {
-      return stage.sonar.emit(source, x, y, intensity, stage.elapsed, revealSeconds, boosted);
-    }
-    function useSonar() {
-      if (!stage) return;
-      var boosted = stage.sonarMode === 'boosted-run';
-      var cost = stage.definition.sonarCost;
-      if (stage.player.sonarCharge < cost) { ui.toast(PP.core.i18n.t('toast.sonarLow')); return; }
-      stage.player.sonarCharge -= cost;
-      stage.sonarsUsed += 1;
-      emitSignal('player', stage.player.x, stage.player.y, boosted ? PP.data.config.sonar.boosted.radiusMultiplier : 1,
-        boosted ? PP.data.config.sonar.boosted.revealSeconds : PP.data.config.sonar.revealSeconds, boosted);
-      ui.toast(PP.core.i18n.t(boosted ? 'toast.sonarBoosted' : 'toast.sonar'));
-      audio.play('sonar');
-    }
-    function coreVisible(core) {
-      return core.owner === 'rival' || core.revealedUntil > stage.elapsed
-        || PP.core.utils.distance(stage.player, core) <= PP.data.config.visibility.radius;
-    }
-    function collectPlayerCores() {
-      stage.cores.forEach(function (core) {
-        if (core.owner !== 'free' || core.pickupCooldown > 0 || !coreVisible(core)) return;
-        if (PP.core.utils.distance(stage.player, core) > stage.player.radius + core.radius) return;
-        core.owner = 'player';
-        stage.player.collected += 1;
-        stage.score += 500 + Math.round(stage.player.power * 2);
-        ui.toast(PP.core.i18n.t('toast.core', {
-          current: PP.systems.relayProgress(stage), required: stage.definition.requiredCores
-        }));
-        audio.play('core');
-      });
-    }
-    function handleSonarContact(pulse, entity) {
-      var actors = { player: stage.player, rival: stage.rival };
-      var environmentEvent = PP.systems.environment.onSonarContact(pulse, entity, stage);
-      if (!environmentEvent && entity.entityKind === 'guardian') {
-        if (pulse.source === 'rival' && stage.rival) stage.rival.recognizeGuardian(entity, stage.elapsed);
-        if (entity.contactSignal(pulse.signal, actors)) {
-          if (entity.targetType === 'player') {
-            ui.toast(PP.core.i18n.t('toast.guardianDetected'));
-            audio.play('guardian-alert');
-          }
-        }
-      } else if (entity.entityKind === 'player' && pulse.source === 'rival' && stage.rival) {
-        stage.rival.recognize(stage.elapsed);
-        ui.toast(PP.core.i18n.t('toast.rivalSonar'));
-      } else if (stage.rival && pulse.source === 'rival' && entity.owner === 'free' && entity.id
-        && entity.id.indexOf('core-') === 0) {
-        stage.rival.discoverCore(entity, stage.elapsed);
-      } else if (stage.rival && entity === stage.rival && pulse.source === 'player') {
-        stage.rival.contactSignal(pulse.signal, stage);
-        ui.toast(PP.core.i18n.t('toast.rivalSignal'));
-      }
-    }
-    function collideWithRival() {
-      var rival = stage.rival;
-      if (!rival || rival.destroyed || rival.escaped) return;
-      var collisionThreshold = (stage.player.radius + rival.radius) * PP.data.config.rival.collisionDistanceRatio;
-      if (PP.core.utils.distance(stage.player, rival) > collisionThreshold) return;
-      var transferred = rival.destroyByPlayer();
-      stage.player.forceDamage(PP.data.config.player.rivalCollisionDamage, 'rival-collision');
-      stage.player.knockBackFrom(rival, 95, stage);
-      if (transferred) {
-        stage.player.collected += 1;
-        stage.score += 500 + Math.round(stage.player.power * 2);
-      }
-      ui.toast(PP.core.i18n.t(transferred ? 'toast.rivalDestroyedCore' : 'toast.rivalDestroyed'));
-    }
-    function processPlayerDamage() {
-      var damageEvents = stage.player.consumeDamageEvents();
-      if (!damageEvents.length) return;
-      stage.hits += damageEvents.length;
-      var feedback = PP.data.config.player.damageFeedback;
-      stage.damageFeedback.blinkUntil = stage.elapsed + feedback.blinkSeconds;
-      stage.damageFeedback.shakeUntil = stage.elapsed + feedback.shakeSeconds;
-      stage.damageFeedback.impactUntil = stage.elapsed + feedback.impactSeconds;
-      stage.damageFeedback.lastSource = damageEvents[damageEvents.length - 1].source;
-      audio.play('hit');
-    }
-    function updateGuardians(dt) {
-      stage.guardians.forEach(function (guardian) {
-        if (guardian.destroyed) return;
-        var events = guardian.update(dt, stage, { player: stage.player, rival: stage.rival });
-        if ((events.targetStarted || events.targetSwitched) && guardian.targetType === 'player') {
-          ui.toast(PP.core.i18n.t('toast.guardianDetected'));
-          audio.play('guardian-alert');
-        }
-        if (events.waveWarning) ui.toast(PP.core.i18n.t('toast.chorusWarning'));
-        if (events.waveHit) ui.toast(PP.core.i18n.t('toast.chorusHit'));
-        var contactDistance = (guardian.radius + stage.player.radius) * PP.data.config.guardian.contactDistanceRatio;
-        if (PP.core.utils.distance(guardian, stage.player) < contactDistance && guardian.hitCooldown <= 0) {
-          guardian.hitCooldown = 0.8;
-          if (stage.player.damage(guardian.damage, 'guardian-contact')) {
-            ui.toast(PP.core.i18n.t('toast.guardianHit', { damage: guardian.damage }));
-          }
-        }
-        if (stage.rival && stage.rival.carriedCore && !stage.rival.escaped && !stage.rival.destroyed
-          && PP.core.utils.distance(guardian, stage.rival) < guardian.radius + stage.rival.radius) {
-          if (stage.rival.hitByGuardian(stage.elapsed, guardian)) {
-            PP.entities.Rival.separateFromGuardian(guardian, stage.rival, stage);
-            guardian.hitCooldown = 0.8;
-            ui.toast(PP.core.i18n.t('toast.guardianDrop'));
-          }
-        }
-      });
-    }
-
-    function update(dt) {
-      if (!stage || stage.status !== 'playing' || paused || ads.inFlight) return;
-      hudUpdatePending = true;
-      stage.elapsed += dt;
-      ads.updateActive(dt);
-      stage.player.power = Math.max(0, stage.player.power - (100 / stage.definition.timeLimit)
-        * stage.difficultyModifiers.powerDrainMultiplier * dt);
-      stage.cores.forEach(function (core) { core.pickupCooldown = Math.max(0, core.pickupCooldown - dt); });
-      var environmentEvents = PP.systems.environment.update(stage, dt);
-      if (environmentEvents.thermalHit) ui.toast(PP.core.i18n.t('toast.thermal'));
-      stage.player.update(dt, input, stage);
-      if (input.consumeSonar()) useSonar();
-
-      var revealables = stage.cores.concat(stage.guardians.filter(function (guardian) {
-        return !guardian.destroyed;
-      })).concat(stage.walls)
-        .concat(stage.environment ? stage.environment.revealables : []).concat([stage.player]);
-      if (stage.rival) revealables.push(stage.rival);
-      var sonarObstacles = stage.walls.filter(function (wall) { return wall.blockSignals !== false; });
-      stage.sonar.update(dt, stage.elapsed, revealables, handleSonarContact, sonarObstacles, stage);
-      collectPlayerCores();
-
-      if (stage.rival) {
-        var rivalEvent = stage.rival.update(dt, stage);
-        if (rivalEvent.signal) emitSignal('rival', rivalEvent.signal.x, rivalEvent.signal.y, rivalEvent.signal.intensity);
-        if (rivalEvent.fired) audio.play('rival-shot');
-        if (rivalEvent.extracted) { ui.toast(PP.core.i18n.t('toast.rivalExtracted')); audio.play('extract'); }
-        collideWithRival();
-        var projectileHits = PP.entities.Rival.updateProjectiles(dt, stage);
-        if (projectileHits) ui.toast(PP.core.i18n.t('toast.rivalShotHit'));
-      }
-      updateGuardians(dt);
-      processPlayerDamage();
-
-      var invariantErrors = PP.systems.coreInvariantErrors(stage);
-      if (invariantErrors.length) {
-        console.error('[PingPanic] 코어 불변식 위반', stage.definition.id, invariantErrors);
-        stage.status = 'invalid';
-        finish(false, PP.core.i18n.t('toast.stageInvalid'), true);
-        return;
-      }
-      if (PP.systems.relayActive(stage) && PP.core.utils.distance(stage.player, stage.relay) < stage.player.radius + stage.relay.radius) {
-        if (stage.mode === 'abyss') advanceAbyssSegment();
-        else finish(true, PP.core.i18n.t('toast.stageClear'));
-      } else if (stage.player.power <= 0) {
-        if (stage.mode === 'abyss') endAbyss(PP.core.i18n.t('toast.powerEmpty'));
-        else finish(false, PP.core.i18n.t('toast.powerEmpty'));
-      }
-    }
-
-    function showResult(won, resultMessage, stars) {
-      if (!stage || stage.resultShown) return;
-      paused = false;
-      input.reset();
-      resetFrameTiming();
-      stage.resultShown = true;
-      stage.resultStars = stars;
-      stage.status = won ? 'won' : 'lost';
-      ui.setResult(stage, won, resultMessage, stars);
-      ui.show('result');
-      audio.stopAll();
-      audio.play(won ? 'win' : 'fail');
-    }
-    function finish(won, message, force) {
-      if (!stage || (!force && stage.status !== 'playing')) return;
-      stage.status = 'resolving';
-      input.reset();
-      var stars = 0;
-      var resultMessage = message;
-      if (won) {
-        stage.score += Math.round(stage.player.power * 18) + Math.max(0, Math.round((stage.definition.timeLimit - stage.elapsed) * 12));
-        stars = PP.systems.calculateStars(stage);
-        var difficultyId = PP.core.storage.normalizeDifficulty(save, stage.difficultyId);
-        var difficultyRecords = PP.core.storage.recordsForDifficulty(save, difficultyId);
-        var previous = difficultyRecords[stage.definition.id];
-        var improved = !previous || stars > (previous.bestStars || 0) || stage.score > (previous.bestScore || 0) || stage.elapsed < (previous.bestTime || Infinity);
-        var creditReport = PP.core.storage.recordClear(save, stage.definition.id, {
-          stars: stars, score: stage.score, power: stage.player.power,
-          time: stage.elapsed, sonars: stage.sonarsUsed, hits: stage.hits
-        }, difficultyId);
-        if (!creditReport.persisted) {
-          improved = false;
-          ui.toast(PP.core.i18n.t('toast.saveError'));
-          resultMessage += PP.core.i18n.t('result.saveError');
-        }
-        stage.creditEarned = creditReport.creditsEarned;
-        stage.creditDoubleKey = 'credit-' + difficultyId + '-stage-' + stage.definition.id + '-from-'
-          + creditReport.previousAwardedStars + '-to-' + creditReport.newAwardedStars;
-        stage.creditDoubleClaimed = !!save.creditDoubleClaims[stage.creditDoubleKey];
-        var unlockedDifficultyId = creditReport.unlockedDifficultyId;
-        renderHub();
-        if (creditReport.creditsEarned > 0) resultMessage += PP.core.i18n.t('toast.credits', {
-          stars: creditReport.newStars, credits: creditReport.creditsEarned
-        });
-        if (improved) resultMessage += PP.core.i18n.t('toast.record');
-        var onboardingComplete = [1, 2, 3, 4].every(function (id) { return !!save.records[id]; });
-        audio.stopAll();
-        function presentClearOutcome() {
-          showResult(true, resultMessage, stars);
-          if (unlockedDifficultyId) ui.showEnding(assets.url('ui-campaign-ending-seal'), unlockedDifficultyId);
-        }
-        if (!PP.data.config.runtime.advertisingEnabled) {
-          presentClearOutcome();
-        } else {
-          runAdTransaction({
-            fallback: 'result',
-            fallbackWon: true,
-            request: function () { return ads.afterSuccess({ stageId: stage.definition.id, onboardingComplete: onboardingComplete }); },
-            restore: presentClearOutcome
-          });
-        }
-      } else {
-        showResult(false, resultMessage, 0);
-      }
-    }
-    function advanceAbyssSegment() {
-      var previous = stage;
-      var score = previous.abyss.totalScore + previous.score + 1000 + previous.definition.difficultyTier * 100;
-      var nextIndex = previous.abyss.segmentIndex + 1;
-      stage = PP.systems.createAbyssRun(previous.abyss.seed, nextIndex, score, previous.player);
-      stage.sonarMode = 'standard';
-      stage.damageFeedback = { blinkUntil: 0, shakeUntil: 0, impactUntil: 0, lastSource: '' };
-      ui.setPaused(false);
-      ui.setAbyssMode(true);
-      ui.toast(PP.core.i18n.t('toast.abyssSegment', {
-        segment: nextIndex + 1, tier: stage.definition.difficultyTier
-      }));
-      audio.play('core');
-    }
-    function endAbyss(message) {
-      if (!stage || stage.mode !== 'abyss' || stage.status === 'lost') return;
-      paused = false;
-      var completed = stage.abyss.segmentIndex;
-      var totalScore = stage.abyss.totalScore + stage.score;
-      stage.score = totalScore;
-      stage.status = 'lost';
-      stage.resultShown = false;
-      if (!PP.core.storage.recordAbyssBest(save, completed, totalScore)) ui.toast(PP.core.i18n.t('toast.saveError'));
-      showResult(false, PP.core.i18n.t('toast.abyssResult', {
-        message: message, segment: completed, score: totalScore
-      }), 0);
-      renderHub();
-    }
-    function requestEmergencyReward() {
-      if (!PP.data.config.runtime.advertisingEnabled) return;
-      if (!stage || stage.status !== 'lost' || stage.rewardOfferUsed) return;
-      stage.rewardOfferUsed = true;
-      runAdTransaction({
-        fallback: 'result',
-        request: function () { return ads.showRewarded(stage.runToken, 'emergency-revive'); },
-        applyReward: function () {
-          stage.player.power = Math.max(35, stage.player.power);
-          stage.projectiles.length = 0;
-          return true;
-        },
-        restore: function (result) {
-          if (result.granted) {
-            stage.status = 'playing';
-            stage.resultShown = false;
-            manualResumePending = true;
-            ui.setHud(stage);
-            ui.show('game');
-            paused = true;
-            ui.setPaused(true);
-            ui.toast(PP.core.i18n.t('toast.recovery'));
-          } else {
-            stage.status = 'lost';
-            stage.resultShown = true;
-            ui.setResult(stage, false, PP.core.i18n.t(result.status === 'closed'
-              ? 'result.recoveryClosed' : 'result.recoveryFailed'), 0);
-            ui.show('result');
-            ui.toast(PP.core.i18n.t('toast.noReward', { status: result.status }));
-          }
-        }
-      });
-    }
-    function requestCreditDouble() {
-      if (!PP.data.config.runtime.advertisingEnabled) return;
-      if (!stage || stage.status !== 'won' || !stage.creditEarned || stage.creditDoubleClaimed) return;
-      runAdTransaction({
-        fallback: 'result',
-        fallbackWon: true,
-        request: function () { return ads.showRewarded(stage.creditDoubleKey, 'credit-double'); },
-        applyReward: function () {
-          var report = PP.core.storage.grantCreditDouble(save, stage.creditDoubleKey, stage.creditEarned);
-          stage.creditDoubleSaveFailed = report.status === 'storage-error';
-          stage.creditDoubleClaimed = report.granted || !!save.creditDoubleClaims[stage.creditDoubleKey];
-          return report.granted;
-        },
-        restore: function (result) {
-          ui.setResult(stage, true, PP.core.i18n.t(result.granted ? 'result.doubleGranted' : 'result.doubleNone', {
-            credits: stage.creditEarned
-          }), Number(stage.resultStars) || 0);
-          ui.show('result');
-          ui.toast(PP.core.i18n.t(stage.creditDoubleSaveFailed ? 'toast.saveError'
-            : (result.granted ? 'toast.doubleGranted' : 'toast.doubleNone')));
-        }
-      });
-    }
-
-    function drawRing(x, y, radius, color, width, alpha, dash) {
-      context.save();
-      context.globalAlpha = alpha === undefined ? 1 : alpha;
-      context.strokeStyle = color;
-      context.lineWidth = width;
-      context.shadowBlur = 18;
-      context.shadowColor = color;
-      if (dash) context.setLineDash(dash);
-      context.beginPath();
-      context.arc(x, y, radius, 0, Math.PI * 2);
-      context.stroke();
-      context.restore();
-    }
-    function drawImage(id, x, y, width, height, angle, alpha) {
-      var image = assets.image(id);
-      if (!image) return false;
-      context.save();
-      context.globalAlpha = alpha === undefined ? 1 : alpha;
-      context.translate(x, y);
-      context.rotate(angle || 0);
-      context.drawImage(image, -width / 2, -height / 2, width, height);
-      context.restore();
-      return true;
-    }
-    function equippedCosmetic(category) {
-      var id = save.settings.equippedCosmetics[category];
-      if (save.ownedCosmetics.indexOf(id) < 0) return null;
-      return PP.data.config.cosmetics.filter(function (item) { return item.category === category && item.id === id; })[0] || null;
-    }
-    function pulseBlockerSignature(pulse, obstacles, sourceKind) {
-      return sourceKind + '|' + pulse.x + ',' + pulse.y + '|' + obstacles.map(function (wall) {
-        return [wall.id || '', wall.cx, wall.cy, wall.width, wall.height, wall.rotationDegrees, wall.rotationRadians].join(',');
-      }).join(';');
-    }
-    function pulseBlockDistances(pulse, obstacles, sourceKind, segments) {
-      var signature = pulseBlockerSignature(pulse, obstacles, sourceKind);
-      var cache = pulse._renderOcclusion;
-      if (cache && cache.signature === signature && cache.blockDistances.length === segments) return cache.blockDistances;
-      var distances = [];
-      for (var i = 0; i < segments; i += 1) {
-        distances.push(PP.core.utils.waveBlockDistance(pulse, i * Math.PI * 2 / segments, obstacles));
-      }
-      pulse._renderOcclusion = { signature: signature, blockDistances: distances };
-      return distances;
-    }
-    function drawOccludedPulse(pulse, style) {
-      style = style || {};
-      var color = style.color || (pulse.source === 'rival' ? '#ff9a6b' : (pulse.boosted ? '#ffd369' : '#57e3d6'));
-      var alpha = style.alpha === undefined ? Math.max(0, pulse.life / PP.data.config.sonar.waveSeconds) : style.alpha;
-      var segments = 120;
-      var sourceKind = pulse.source === 'chorus' ? 'chorus' : 'signal';
-      var pulseObstacles = sourceKind === 'chorus'
-        ? stage.walls.filter(function (wall) { return wall.blockChorusWave !== false; })
-        : stage.walls.filter(function (wall) { return wall.blockSignals !== false; });
-      var blockDistances = pulseBlockDistances(pulse, pulseObstacles, sourceKind, segments);
-      context.save();
-      context.strokeStyle = color;
-      context.lineWidth = style.lineWidth || (pulse.boosted ? 12 : (pulse.source === 'rival' ? 5 : 8));
-      context.globalAlpha = alpha;
-      context.shadowBlur = style.shadowBlur || (pulse.boosted ? 26 : 18);
-      context.shadowColor = color;
-      context.beginPath();
-      var hasVisibleArc = false;
-      for (var i = 0; i < segments; i += 1) {
-        var a = i * Math.PI * 2 / segments;
-        var b = (i + 0.82) * Math.PI * 2 / segments;
-        if (pulse.radius > blockDistances[i] + context.lineWidth) continue;
-        context.moveTo(pulse.x + Math.cos(a) * pulse.radius, pulse.y + Math.sin(a) * pulse.radius);
-        context.arc(pulse.x, pulse.y, pulse.radius, a, b);
-        hasVisibleArc = true;
-      }
-      if (hasVisibleArc) context.stroke();
-      context.restore();
-    }
-    function drawGlobalCurrent(definition, elapsed) {
-      var signedStrength = Number(definition.currentStrength) || 0;
-      if (signedStrength === 0) return;
-      var stageId = Math.max(1, Number(definition.id) || 1);
-      var phase = (Number(definition.currentPhase) || 0) + (signedStrength < 0 ? Math.PI : 0);
-      var laneCount = stageId <= 9 ? 2 : (stageId <= 24 ? 4 : 6);
-      var normalizedStrength = PP.core.utils.clamp(Math.abs(signedStrength) / 48, 0, 1);
-      var flowSpeed = 28 + 72 * normalizedStrength;
-      var flowOpacity = 0.12 + 0.16 * normalizedStrength;
-      var W = PP.data.config.world.width;
-      var H = PP.data.config.world.height;
-      var extent = Math.sqrt(W * W + H * H);
-      var chevronBudget = 18;
-      var chevronsPerLane = Math.floor(chevronBudget / laneCount);
-      var travelSpan = extent * 2;
-      var spacing = travelSpan / chevronsPerLane;
-      var offset = elapsed * flowSpeed % travelSpan;
-      var ctx = context;
-      ctx.save();
-      ctx.translate(W / 2, H / 2);
-      ctx.rotate(phase);
-      ctx.strokeStyle = '#56b9d8';
-      ctx.lineCap = 'round';
-      ctx.globalAlpha = flowOpacity;
-      for (var lane = 0; lane < laneCount; lane += 1) {
-        var laneY = -extent / 2 + extent * (lane + 1) / (laneCount + 1);
-        ctx.save();
-        ctx.lineWidth = 3;
-        ctx.setLineDash([64, 96]);
-        ctx.lineDashOffset = -offset;
-        ctx.beginPath();
-        ctx.moveTo(-extent, laneY);
-        ctx.lineTo(extent, laneY);
-        ctx.stroke();
-        ctx.restore();
-        ctx.lineWidth = 7;
-        for (var chevronIndex = 0; chevronIndex < chevronsPerLane; chevronIndex += 1) {
-          var travel = -extent + (chevronIndex * spacing + offset) % travelSpan;
-          ctx.beginPath();
-          ctx.moveTo(travel - 16, laneY - 10);
-          ctx.lineTo(travel + 16, laneY);
-          ctx.lineTo(travel - 16, laneY + 10);
-          ctx.stroke();
-        }
-      }
-      ctx.restore();
-    }
-    function drawCurrentBand(band, elapsed) {
-      var sample = { x: band.cx, y: band.cy, entityKind: 'current-visual-sample' };
-      var vector = PP.systems.environment.currentVector(stage, sample);
-      var magnitude = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
-      if (magnitude <= 0.001) return;
-      var normalizedStrength = PP.core.utils.clamp(magnitude / 48, 0, 1);
-      var flowSpeed = 28 + 72 * normalizedStrength;
-      var flowOpacity = 0.32 + 0.18 * normalizedStrength;
-      var halfWidth = band.halfExtents.x;
-      var halfHeight = band.halfExtents.y;
-      var ctx = context;
-      ctx.save();
-      ctx.translate(band.cx, band.cy);
-      ctx.rotate(band.rotationRadians);
-      var washLayerCount = 12;
-      ctx.fillStyle = band.mode === 'override' ? '#01080d' : '#56b9d8';
-      ctx.globalAlpha = band.mode === 'override' ? 0.1 : 0.015;
-      for (var washLayer = 1; washLayer <= washLayerCount; washLayer += 1) {
-        var washInset = band.feather * washLayer / washLayerCount;
-        ctx.fillRect(
-          -halfWidth + washInset,
-          -halfHeight + washInset,
-          band.width - washInset * 2,
-          band.height - washInset * 2
-        );
-      }
-      var endFadeRatio = PP.core.utils.clamp(band.feather / band.width, 0.04, 0.45);
-      var boundaryFade = ctx.createLinearGradient(-halfWidth, 0, halfWidth, 0);
-      boundaryFade.addColorStop(0, 'rgba(121,204,226,0)');
-      boundaryFade.addColorStop(endFadeRatio, 'rgba(121,204,226,.8)');
-      boundaryFade.addColorStop(1 - endFadeRatio, 'rgba(121,204,226,.8)');
-      boundaryFade.addColorStop(1, 'rgba(121,204,226,0)');
-      ctx.strokeStyle = boundaryFade;
-      ctx.lineWidth = 3;
-      ctx.globalAlpha = 0.2;
-      ctx.beginPath();
-      ctx.moveTo(-halfWidth, -halfHeight); ctx.lineTo(halfWidth, -halfHeight);
-      ctx.moveTo(-halfWidth, halfHeight); ctx.lineTo(halfWidth, halfHeight);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.rect(-halfWidth, -halfHeight, band.width, band.height);
-      ctx.clip();
-      var localAngle = Math.atan2(vector.y, vector.x) - band.rotationRadians;
-      var directionX = Math.cos(localAngle);
-      var directionY = Math.sin(localAngle);
-      var perpendicularX = -directionY;
-      var perpendicularY = directionX;
-      var supportLength = Math.min(
-        Math.abs(directionX) < 0.0001 ? Infinity : halfWidth / Math.abs(directionX),
-        Math.abs(directionY) < 0.0001 ? Infinity : halfHeight / Math.abs(directionY)
-      );
-      var supportWidth = Math.min(
-        Math.abs(perpendicularX) < 0.0001 ? Infinity : halfWidth / Math.abs(perpendicularX),
-        Math.abs(perpendicularY) < 0.0001 ? Infinity : halfHeight / Math.abs(perpendicularY)
-      );
-      var travelSpan = supportLength * 2;
-      var offset = elapsed * flowSpeed % travelSpan;
-      var laneCount = 2;
-      var chevronBudget = 8;
-      var chevronsPerLane = chevronBudget / laneCount;
-      var spacing = travelSpan / chevronsPerLane;
-      for (var lane = 0; lane < laneCount; lane += 1) {
-        var laneOffset = (lane ? 1 : -1) * Math.min(48, supportWidth * 0.22);
-        for (var chevronIndex = 0; chevronIndex < chevronsPerLane; chevronIndex += 1) {
-          var travel = -supportLength + (chevronIndex * spacing + offset) % travelSpan;
-          var localX = directionX * travel + perpendicularX * laneOffset;
-          var localY = directionY * travel + perpendicularY * laneOffset;
-          var worldPoint = {
-            x: band.cx + localX * band.cos - localY * band.sin,
-            y: band.cy + localX * band.sin + localY * band.cos
-          };
-          var visualWeight = PP.systems.environment.currentBandWeight(band, worldPoint);
-          if (visualWeight <= 0) continue;
-          ctx.save();
-          ctx.translate(localX, localY);
-          ctx.rotate(localAngle);
-          ctx.strokeStyle = '#8be5f0';
-          ctx.lineCap = 'round';
-          ctx.lineWidth = 6;
-          ctx.globalAlpha = flowOpacity * visualWeight;
-          ctx.beginPath();
-          ctx.moveTo(-14, -9);
-          ctx.lineTo(14, 0);
-          ctx.lineTo(-14, 9);
-          ctx.stroke();
-          ctx.restore();
-        }
-      }
-      ctx.restore();
-    }
-    function guardianSilhouettePath(ctx, type, radius) {
-      ctx.beginPath();
-      if (type === 'pin') {
-        var arm = radius * 0.72;
-        var bar = radius * 0.22;
-        ctx.moveTo(-bar, -arm); ctx.lineTo(bar, -arm);
-        ctx.lineTo(bar, -bar); ctx.lineTo(arm, -bar);
-        ctx.lineTo(arm, bar); ctx.lineTo(bar, bar);
-        ctx.lineTo(bar, arm); ctx.lineTo(-bar, arm);
-        ctx.lineTo(-bar, bar); ctx.lineTo(-arm, bar);
-        ctx.lineTo(-arm, -bar); ctx.lineTo(-bar, -bar);
-        ctx.closePath();
-      } else if (type === 'hound') {
-        ctx.moveTo(-radius * 0.82, 0);
-        ctx.lineTo(0, -radius * 0.46);
-        ctx.lineTo(radius * 0.82, 0);
-        ctx.lineTo(0, radius * 0.46);
-        ctx.closePath();
-      } else {
-        ctx.arc(0, 0, radius * 0.68, 0, Math.PI * 2);
-      }
-    }
-    function drawGuardianSkinOverlay(cosmetic, guardian, alpha) {
-      var image = assets.image(cosmetic.assetId);
-      if (!image) return false;
-      var radius = guardian.radius;
-      context.save();
-      context.globalAlpha = alpha === undefined ? 1 : alpha;
-      context.translate(guardian.x, guardian.y);
-      context.rotate(guardian.phase * 0.1);
-      guardianSilhouettePath(context, guardian.type, radius * 0.76);
-      context.clip();
-      context.drawImage(image, -radius * 1.125, -radius * 1.125, radius * 2.25, radius * 2.25);
-      context.restore();
-      return true;
-    }
-    function drawGuardianSkinFallback(cosmetic, guardian) {
-      context.save();
-      context.translate(guardian.x, guardian.y);
-      context.rotate(guardian.phase * 0.1);
-      guardianSilhouettePath(context, guardian.type, guardian.radius * 0.76);
-      context.clip();
-      context.globalAlpha = 0.34;
-      context.fillStyle = cosmetic.color;
-      context.fillRect(-guardian.radius, -guardian.radius, guardian.radius * 2, guardian.radius * 2);
-      context.restore();
-    }
-    function render() {
-      if (!stage) return;
-      var W = PP.data.config.world.width;
-      var H = PP.data.config.world.height;
-      var ctx = context;
-      var zoneColor = stage.mode === 'abyss' ? '#6b77a8'
-        : PP.data.config.colors[Math.floor((stage.definition.id - 1) / PP.data.config.campaign.stagesPerZone)];
-      ctx.clearRect(0, 0, W, H);
-      ctx.save();
-      if (stage.damageFeedback && stage.elapsed < stage.damageFeedback.shakeUntil) {
-        var remainingShake = (stage.damageFeedback.shakeUntil - stage.elapsed) / PP.data.config.player.damageFeedback.shakeSeconds;
-        var amount = PP.data.config.player.damageFeedback.shakeWorldUnits * remainingShake;
-        ctx.translate(Math.sin(stage.elapsed * 117) * amount, Math.cos(stage.elapsed * 91) * amount * 0.72);
-      }
-      var gradient = ctx.createLinearGradient(0, 0, 0, H);
-      gradient.addColorStop(0, '#062b39');
-      gradient.addColorStop(0.5, '#03141f');
-      gradient.addColorStop(1, '#01080d');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, W, H);
-      var backgroundId = backgroundImageId(stage.definition);
-      if (backgroundId) drawImage(backgroundId, W / 2, H / 2, W, H, 0, 0.72);
-      ctx.save();
-      ctx.globalAlpha = 0.11;
-      ctx.fillStyle = zoneColor;
-      for (var y = 160; y < H; y += 130) for (var x = 70; x < W; x += 120) {
-        ctx.beginPath(); ctx.arc(x + Math.sin(stage.elapsed + y) * 8, y, 3, 0, Math.PI * 2); ctx.fill();
-      }
-      ctx.restore();
-      drawGlobalCurrent(stage.definition, stage.elapsed);
-      (stage.environment ? stage.environment.zones : []).filter(function (zone) {
-        return zone.environmentKind === 'currentBand';
-      }).forEach(function (band) { drawCurrentBand(band, stage.elapsed); });
-      (stage.environment ? stage.environment.zones : []).forEach(function (zone) {
-        if (zone.environmentKind === 'currentBand') return;
-        var palette = {
-          thermalVent: zone.active ? '#ff5c46' : '#9a433d',
-          absorptionZone: '#a978dc',
-          signalEcho: '#4de0d2',
-          decoyWave: '#ffd369'
-        };
-        var color = palette[zone.environmentKind] || '#8ecac7';
-        if (zone.environmentKind === 'thermalVent') {
-          drawImage('terrain-hazard-thermal-vent', zone.x, zone.y, zone.radius * 2, zone.radius * 2, 0, zone.active ? 1 : 0.72);
-          if (zone.active) {
-            var pulse = 0.82 + Math.sin(stage.elapsed * 7.5) * 0.08;
-            var thermalGlow = ctx.createRadialGradient(zone.x, zone.y, 0, zone.x, zone.y, zone.radius);
-            thermalGlow.addColorStop(0, 'rgba(255,245,226,' + (0.34 * pulse) + ')');
-            thermalGlow.addColorStop(0.28, 'rgba(255,37,63,' + (0.42 * pulse) + ')');
-            thermalGlow.addColorStop(1, 'rgba(255,37,63,0.04)');
-            ctx.save(); ctx.fillStyle = thermalGlow;
-            ctx.beginPath(); ctx.arc(zone.x, zone.y, zone.radius, 0, Math.PI * 2); ctx.fill(); ctx.restore();
-            drawRing(zone.x, zone.y, zone.radius, '#ffedf0', 9, 0.94);
-          } else {
-            ctx.save(); ctx.globalAlpha = 0.14; ctx.fillStyle = '#8b4748';
-            ctx.beginPath(); ctx.arc(zone.x, zone.y, zone.radius, 0, Math.PI * 2); ctx.fill(); ctx.restore();
-            drawRing(zone.x, zone.y, zone.radius, '#a95b59', 4, zone.warning ? 0.9 : 0.42);
-            ctx.save();
-            ctx.fillStyle = '#fff2e8'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-            ctx.font = '700 24px system-ui, sans-serif';
-            ctx.fillText(PP.core.i18n.t('thermal.countdown', {
-              seconds: Math.ceil(Math.max(0, zone.secondsUntilActive || 0))
-            }), zone.x, zone.y);
-            ctx.restore();
-          }
-          return;
-        }
-        if (zone.environmentKind === 'decoyWave') {
-          if (!zone.activated || zone.resolved) return;
-          if (drawImage('entity-resonance-core', zone.x, zone.y, 60, 60, stage.elapsed * 0.55)) return;
-          ctx.save(); ctx.translate(zone.x, zone.y); ctx.rotate(stage.elapsed * 0.55);
-          ctx.fillStyle = '#ffd369'; ctx.shadowBlur = 24; ctx.shadowColor = ctx.fillStyle;
-          ctx.beginPath(); ctx.moveTo(0, -22); ctx.lineTo(22, 0); ctx.lineTo(0, 22); ctx.lineTo(-22, 0); ctx.closePath(); ctx.fill(); ctx.restore();
-          return;
-        }
-        ctx.save();
-        ctx.globalAlpha = zone.environmentKind === 'thermalVent' && zone.active ? 0.3 : 0.14;
-        ctx.fillStyle = color;
-        ctx.beginPath(); ctx.arc(zone.x, zone.y, zone.radius, 0, Math.PI * 2); ctx.fill();
-        ctx.restore();
-        drawRing(zone.x, zone.y, zone.radius, color, zone.active ? 8 : 4, zone.warning ? 0.9 : 0.42);
-      });
-      stage.walls.forEach(function (wall) {
-        var responding = wall.revealedUntil > stage.elapsed;
-        var drewObstacle = drawImage(
-          wall.visualAssetId,
-          wall.cx,
-          wall.cy,
-          wall.width,
-          wall.height,
-          wall.rotationRadians,
-          wall.environmentKind ? (wall.isClosed ? 1 : 0.2) : (responding ? 1 : 0.88)
-        );
-        ctx.save();
-        ctx.translate(wall.cx, wall.cy);
-        ctx.rotate(wall.rotationRadians);
-        ctx.fillStyle = wall.environmentKind && !wall.isClosed ? 'rgba(87,227,214,.06)'
-          : (responding ? 'rgba(17,103,120,.5)' : '#0c3e4b');
-        ctx.strokeStyle = wall.environmentKind ? (wall.isClosed ? '#ffd369' : '#57e3d6')
-          : (responding ? '#c8fff8' : '#4fbfc2');
-        ctx.lineWidth = wall.collisionFrameWidth;
-        ctx.shadowBlur = responding ? 24 : 8;
-        ctx.shadowColor = responding ? '#57e3d6' : '#0b7180';
-        if (!drewObstacle || responding) ctx.fillRect(-wall.width / 2, -wall.height / 2, wall.width, wall.height);
-        ctx.strokeRect(-wall.width / 2, -wall.height / 2, wall.width, wall.height);
-        ctx.restore();
-        if (wall.environmentKind === 'variablePassage') {
-          ctx.save();
-          ctx.fillStyle = wall.closeDeferred ? '#ff9a6b' : '#e8ffff';
-          ctx.strokeStyle = 'rgba(1,12,18,.9)';
-          ctx.lineWidth = 6;
-          ctx.font = '900 28px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          var counter = PP.core.i18n.t(wall.isClosed ? 'passage.closed' : 'passage.open', {
-            seconds: Math.max(0, Math.ceil(wall.secondsUntilChange || 0))
-          });
-          ctx.strokeText(counter, wall.cx, wall.cy);
-          ctx.fillText(counter, wall.cx, wall.cy);
-          ctx.restore();
-        }
-      });
-
-      var light = ctx.createRadialGradient(stage.player.x, stage.player.y, 20, stage.player.x, stage.player.y, PP.data.config.visibility.radius * 2.2);
-      light.addColorStop(0, 'rgba(0,4,8,0)');
-      light.addColorStop(0.45, 'rgba(0,4,8,.08)');
-      light.addColorStop(1, 'rgba(0,4,8,.78)');
-      ctx.fillStyle = light;
-      ctx.fillRect(0, 0, W, H);
-      if (PP.data.config.visibility.showDevelopmentBoundary) {
-        drawRing(stage.player.x, stage.player.y, PP.data.config.visibility.radius, '#8ecac7', 3, 0.38, [12, 12]);
-      }
-
-      var relayActive = PP.systems.relayActive(stage);
-      if (!drawImage('entity-player-relay-gate', stage.relay.x, stage.relay.y, stage.relay.radius * 2, stage.relay.radius * 2, 0, relayActive ? 1 : 0.55)) {
-        drawRing(stage.relay.x, stage.relay.y, stage.relay.radius + (relayActive ? Math.sin(stage.elapsed * 4) * 5 : 0), relayActive ? '#57e3d6' : '#31545b', 8, relayActive ? 1 : 0.55);
-      }
-      ctx.fillStyle = relayActive ? '#c8fff8' : '#638085'; ctx.font = '800 18px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText(PP.core.i18n.t(relayActive ? 'hud.return' : 'hud.relay'), stage.relay.x, stage.relay.y + 6);
-
-      stage.cores.forEach(function (core) {
-        if (core.owner === 'player' || core.owner === 'extracted' || !coreVisible(core)) return;
-        if (drawImage('entity-resonance-core', core.x, core.y, 60, 60, stage.elapsed * 0.55)) return;
-        ctx.save(); ctx.translate(core.x, core.y); ctx.rotate(stage.elapsed * 0.55);
-        ctx.fillStyle = core.owner === 'rival' ? '#ff9a6b' : '#ffd369'; ctx.shadowBlur = 24; ctx.shadowColor = ctx.fillStyle;
-        ctx.beginPath(); ctx.moveTo(0, -22); ctx.lineTo(22, 0); ctx.lineTo(0, 22); ctx.lineTo(-22, 0); ctx.closePath(); ctx.fill(); ctx.restore();
-      });
-      stage.guardians.forEach(function (guardian) {
-        if (guardian.destroyed) return;
-        var visible = guardian.revealedUntil > stage.elapsed || PP.core.utils.distance(guardian, stage.player) <= PP.data.config.visibility.radius;
-        if (!visible) return;
-        var guardianImageId = guardian.type === 'pin' ? 'entity-guardian-gate-pin' : (guardian.type === 'hound' ? 'entity-guardian-lock-hound' : 'entity-guardian-chorus-watcher');
-        var guardianAlpha = guardian.hitBlinkUntil > stage.elapsed && Math.floor(stage.elapsed * 40) % 2 === 0 ? 0.3 : 1;
-        var drewGuardian = drawImage(guardianImageId, guardian.x, guardian.y, guardian.radius * 2, guardian.radius * 2, guardian.phase * 0.1, guardianAlpha);
-        if (!drewGuardian) {
-          ctx.save(); ctx.translate(guardian.x, guardian.y); ctx.rotate(guardian.phase * 0.1); ctx.strokeStyle = guardian.state === 'chase' ? '#ff786f' : '#8aaeb0';
-          ctx.fillStyle = guardian.state === 'chase' ? 'rgba(255,120,111,.28)' : 'rgba(81,119,124,.35)'; ctx.lineWidth = 6;
-          guardianSilhouettePath(ctx, guardian.type, guardian.radius * 0.86);
-          ctx.fill(); ctx.stroke(); ctx.restore();
-        }
-        var guardianCosmetic = equippedCosmetic('guardian');
-        if (guardianCosmetic) {
-          if (!drawGuardianSkinOverlay(guardianCosmetic, guardian, guardianAlpha)) drawGuardianSkinFallback(guardianCosmetic, guardian);
-        }
-        if (guardian.chorusWarning > 0) drawRing(guardian.x, guardian.y, 82, '#ffd369', 8, 0.8);
-        if (guardian.chorusWave) drawOccludedPulse(guardian.chorusWave, { color: '#b79cff', alpha: 0.8, lineWidth: 7 });
-      });
-      if (stage.rival) {
-        if (!drawImage('entity-rival-relay-boundary', stage.rivalExit.x, stage.rivalExit.y, 96, 180, 0, 0.72)) drawRing(stage.rivalExit.x, stage.rivalExit.y, stage.rivalExit.radius, '#ff9a6b', 6, 0.52, [15, 10]);
-        ctx.fillStyle = '#ffcfaa'; ctx.font = '800 16px sans-serif';
-        ctx.fillText(PP.core.i18n.t('hud.rivalRelay'), stage.rivalExit.x - 30, stage.rivalExit.y + 100);
-      }
-      if (stage.rival && !stage.rival.escaped && !stage.rival.destroyed) {
-        var rivalVisible = stage.rival.revealedUntil > stage.elapsed || stage.rival.isRecognizing(stage)
-          || PP.core.utils.distance(stage.rival, stage.player) <= PP.data.config.visibility.radius;
-        var rivalCosmetic = equippedCosmetic('rival');
-        var rivalImageId = rivalCosmetic ? rivalCosmetic.assetId : (stage.rival.preset === 'carrier' ? 'entity-rival-carrier-drone' : 'entity-rival-probe-drone');
-        if (rivalVisible && !drawImage(rivalImageId, stage.rival.x, stage.rival.y, stage.rival.radius * 2, stage.rival.radius * 2, 0)) {
-          ctx.save(); ctx.translate(stage.rival.x, stage.rival.y); ctx.strokeStyle = rivalCosmetic ? rivalCosmetic.color : '#ff9a6b'; ctx.lineWidth = 8; ctx.setLineDash([13, 9]);
-          ctx.beginPath(); ctx.arc(0, 0, stage.rival.radius, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
-        }
-      }
-      stage.projectiles.forEach(function (shot) {
-        if (!drawImage('effect-rival-projectile', shot.x, shot.y, 52, 26, Math.atan2(shot.vy, shot.vx))) {
-          ctx.fillStyle = '#ff786f'; ctx.shadowBlur = 18; ctx.shadowColor = '#ff786f'; ctx.beginPath(); ctx.arc(shot.x, shot.y, shot.radius, 0, Math.PI * 2); ctx.fill();
-        }
-      });
-      stage.sonar.pulses.forEach(function (pulse) {
-        drawOccludedPulse(pulse);
-      });
-
-      var player = stage.player;
-      var playerCosmetic = equippedCosmetic('player');
-      var playerImageId = playerCosmetic ? playerCosmetic.assetId : 'entity-player-recovery-drone';
-      var playerAlpha = stage.damageFeedback && stage.elapsed < stage.damageFeedback.blinkUntil
-        ? 0.32 + Math.abs(Math.sin(stage.elapsed * 42)) * 0.68 : 1;
-      if (!drawImage(playerImageId, player.x, player.y, player.radius * 2, player.radius * 2, player.angle, playerAlpha)) {
-        ctx.save(); ctx.translate(player.x, player.y); ctx.rotate(player.angle);
-        ctx.globalAlpha = playerAlpha;
-        ctx.strokeStyle = playerCosmetic ? playerCosmetic.color : '#57e3d6'; ctx.fillStyle = 'rgba(87,227,214,.17)'; ctx.lineWidth = 9; ctx.shadowBlur = 24; ctx.shadowColor = ctx.strokeStyle;
-        ctx.beginPath(); ctx.arc(0, 0, player.radius, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-        ctx.fillStyle = '#c8fff8'; ctx.beginPath(); ctx.moveTo(29, 0); ctx.lineTo(9, -9); ctx.lineTo(9, 9); ctx.closePath(); ctx.fill(); ctx.restore();
-      }
-      if (input.pointer.active) {
-        var start = input.canvasPoint(input.pointer.startX, input.pointer.startY, PP.data.config.world);
-        var point = input.canvasPoint(input.pointer.x, input.pointer.y, PP.data.config.world);
-        drawRing(start.x, start.y, 48, '#8ecac7', 4, 0.38); drawRing(point.x, point.y, 20, '#c8fff8', 5, 0.7);
-      }
-      if (stage.damageFeedback && stage.elapsed < stage.damageFeedback.impactUntil) {
-        var impactAlpha = (stage.damageFeedback.impactUntil - stage.elapsed) / PP.data.config.player.damageFeedback.impactSeconds;
-        if (!drawImage('effect-impact-fracture', player.x, player.y, 210, 210, stage.elapsed * 8, impactAlpha)) drawRing(player.x, player.y, 82 + (1 - impactAlpha) * 70, '#ff786f', 12, impactAlpha);
-        var vignette = ctx.createRadialGradient(W / 2, H / 2, W * 0.18, W / 2, H / 2, H * 0.68);
-        vignette.addColorStop(0, 'rgba(255,40,30,0)'); vignette.addColorStop(1, 'rgba(120,0,0,' + (impactAlpha * 0.56) + ')');
-        ctx.fillStyle = vignette; ctx.fillRect(0, 0, W, H);
-      }
-      ctx.restore();
-    }
-
-    function frame(now) {
-      var frameDelta = Math.max(0, (now - lastFrame) / 1000);
-      lastFrame = now;
-      simulationClock.advance(frameDelta, update);
-      if (hudUpdatePending) {
-        hudUpdatePending = false;
-        if (stage) ui.setHud(stage);
-      }
-      render();
-      window.requestAnimationFrame(frame);
-    }
-    PP.platform.current.lifecycle.onVisibilityChange(function (hidden) {
-      var hiddenCheck = safeAdStep('visibility-event', function () {
-        return PP.platform.current.lifecycle.isHidden ? PP.platform.current.lifecycle.isHidden() : hidden;
-      });
-      var actualHidden = hiddenCheck.ok ? !!hiddenCheck.value : !!hidden;
-      visibilityHidden = actualHidden;
-      if (actualHidden) {
-        audio.stopAll();
-        if (activeAdFlow) {
-          paused = true;
-          input.reset();
-        } else if (stage && stage.status === 'playing' && !paused) setPaused(true);
-      } else if (activeAdFlow && activeAdFlow.state === 'waiting-visible') {
-        restoreAdTransaction(activeAdFlow);
-      }
-      resetFrameTiming();
-    });
-    window.requestAnimationFrame(frame);
-  }
-
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
-})(window.PingPanic);
+      'prep.adNoReward': '보상이 확인되��]�ۛh��춻�q�^u�K�[�HOOH	�X�\����	�͘���N	��]K��ۙ�Y˘��ܜ��X]���܊
+�Y�K�Y�[�][ۋ�YHJH��]K��ۙ�Y˘�[\ZYۋ��Y�\�\��ۙJWN���X\��X�
+�
+N���]�J
+NY�
+�Y�K�[XY�Q�YY�X��	���Y�K�[\�Y�Y�K�[XY�Q�YY�X�˜�Z�U[�[
+H�\��[XZ[�[���Z�HH
+�Y�K�[XY�Q�YY�X�˜�Z�U[�[H�Y�K�[\�Y
+H��]K��ۙ�Y˜^Y\��[XY�Q�YY�X�˜�Z�T�X�ۙ��\�[[�[�H�]K��ۙ�Y˜^Y\��[XY�Q�YY�X�˜�Z�U�ܛ[�]�
+��[XZ[�[���Z�N���[��]JX]��[��Y�K�[\�Y
+�LM�H
+�[[�[�X]�����Y�K�[\�Y
+�LJH
+�[[�[�
+��̊NB��\�ܘYY[�H��ܙX]S[�X\�ܘYY[�
+
+NܘYY[��Y��ܔ��
+	������I�NܘYY[��Y��ܔ��
+�K	���MY��NܘYY[��Y��ܔ��
+K	��L	�N���[�[HHܘYY[����[�X�
+�
+N�\��X��ܛ�[�YH�X��ܛ�[�[XY�RY
+�Y�K�Y�[�][ۊNY�
+�X��ܛ�[�Y
+H�]�[XY�J�X��ܛ�[�Y�������̊N���]�J
+N���ؘ[[HH�LN���[�[HH�ۙP��܎�܈
+�\�HHM��H�H
+�HL�
+H�܈
+�\�H����
+�HL�
+H���Y�[�]
+
+N���\��
+�X]��[��Y�K�[\�Y
+�JH
+�K�X]�H
+��N����[
+
+NB����\�ܙJ
+N�]��ؘ[�\��[�
+�Y�K�Y�[�][ۋ�Y�K�[\�Y
+N
+�Y�K�[��\�ۛY[���Y�K�[��\�ۛY[���ۙ\���JK��[\��[��[ۈ
+�ۙJH�]\���ۙK�[��\�ۛY[��[�OOH	��\��[��[�	�JK��ܑXX�
+�[��[ۈ
+�[�
+H��]��\��[��[�
+�[��Y�K�[\�Y
+N�JN
+�Y�K�[��\�ۛY[���Y�K�[��\�ۛY[���ۙ\���JK��ܑXX�
+�[��[ۈ
+�ۙJHY�
+�ۙK�[��\�ۛY[��[�OOH	��\��[��[�	�H�]\���\�[]HH\�X[�[���ۙK�X�]�H�	�ٙ�X����	��XM��	��X��ܜ[ۖ�ۙN�	��NM�����Yۘ[X�Έ	��L���X��U�]�N�	�ٙ�͎IN�\���܈H[]VޛۙK�[��\�ۛY[��[�H	��X�X���Y�
+�ۙK�[��\�ۛY[��[�OOH	�\�X[�[�	�H�]�[XY�J	�\��Z[�Z^�\�]\�X[]�[�	��ۙK��ۙK�K�ۙK��Y]\�
+���ۙK��Y]\�
+���ۙK�X�]�H�H��̊NY�
+�ۙK�X�]�JH�\�[�HH��
+�X]��[��Y�K�[\�Y
+�ˍJH
+���\�\�X[���H��ܙX]T�YX[ܘYY[�
+�ۙK��ۙK�K�ۙK��ۙK�K�ۙK��Y]\�N\�X[��˘Y��ܔ��
+	ܙؘJ�MK�K���	�
+�
+��
+�[�JH
+�	�I�N\�X[��˘Y��ܔ��
+��	ܙؘJ�MK����	�
+�
+��
+�[�JH
+�	�I�N\�X[��˘Y��ܔ��
+K	ܙؘJ�MK�����
+I�N���]�J
+N����[�[HH\�X[������Y�[�]
+
+N���\���ۙK��ۙK�K�ۙK��Y]\�X]�H
+��N����[
+
+N����\�ܙJ
+N�]Ԛ[���ۙK��ۙK�K�ۙK��Y]\�	�ٙ�Y�	�K�M
+NH[�H���]�J
+N����ؘ[[HH�M����[�[HH	����	����Y�[�]
+
+N���\���ۙK��ۙK�K�ۙK��Y]\�X]�H
+��N����[
+
+N����\�ܙJ
+N�]Ԛ[���ۙK��ۙK�K�ۙK��Y]\�	��NMX�NI��ۙK��\��[����H���N���]�J
+N���[�[HH	�ٙ���N	����^[YۈH	��[�\�����^�\�[[�HH	�ZYI����۝H	����\�[K]ZK�[��\�\�Y�����[^
+��ܙK�LN��
+	�\�X[���[��ۉ��X�ۙΈX]��Z[
+X]�X^
+�ۙK��X�ۙ�[�[X�]�H
+JB�JK�ۙK��ۙK�JN���\�ܙJ
+NB��]\��B�Y�
+�ۙK�[��\�ۛY[��[�OOH	�X��U�]�I�HY�
+^�ۙK�X�]�]Y�ۙK��\���Y
+H�]\��Y�
+�]�[XY�J	�[�]K\�\�ۘ[��KX�ܙI��ۙK��ۙK�K���Y�K�[\�Y
+��MJJH�]\�����]�J
+N����[��]J�ۙK��ۙK�JN�����]J�Y�K�[\�Y
+��MJN���[�[HH	�ٙ�͎I�����Y�Л\�H�����Y����܈H���[�[N���Y�[�]
+
+N���[ݙU�L��N���[�U���
+N���[�U���N���[�U�L��
+N������T]
+
+N����[
+
+N����\�ܙJ
+N�]\��B����]�J
+N���ؘ[[HH�ۙK�[��\�ۛY[��[�OOH	�\�X[�[�	�	���ۙK�X�]�H�����M���[�[HH��܎���Y�[�]
+
+N���\���ۙK��ۙK�K�ۙK��Y]\�X]�H
+��N����[
+
+N���\�ܙJ
+N�]Ԛ[���ۙK��ۙK�K�ۙK��Y]\���܋�ۙK�X�]�H���ۙK��\��[����H���NJN�Y�K��[˙�ܑXX�
+�[��[ۈ
+�[
+H�\��\�ۙ[��H�[��]�X[Y[�[��Y�K�[\�Y�\��]�؜�X�HH�]�[XY�J��[��\�X[\��]Y��[����[��K��[��Y��[�ZY���[���][۔�YX[����[�[��\�ۛY[��[��
+�[�\����Y�H���H�
+�\�ۙ[���H��
+B�
+N���]�J
+N���[��]J�[���[��JN����]J�[���][۔�YX[��N���[�[HH�[�[��\�ۛY[��[�	��]�[�\����Y�	ܙؘJ�����M��I�
+�\�ۙ[���	ܙؘJM�L�L��JI��	����M��N������T�[HH�[�[��\�ۛY[��[��
+�[�\����Y�	�ٙ�͎I��	��M�L���B��
+�\�ۙ[���	������	��	�����̉�N��[�U�YH�[���\�[ۑ��[YU�Y���Y�Л\�H�\�ۙ[��������Y����܈H�\�ۙ[���	��M�L����	����N	�Y�
+Y�]�؜�X�H�\�ۙ[��H���[�X�
+]�[��Y��]�[�ZY����[��Y�[�ZY�
+N������T�X�
+]�[��Y��]�[�ZY����[��Y�[�ZY�
+N���\�ܙJ
+NY�
+�[�[��\�ۛY[��[�OOH	ݘ\�XX�T\��Y�I�H���]�J
+N���[�[HH�[����QY�\��Y�	�ٙ�XM����	��N�����������T�[HH	ܙؘJKL�N�JI���[�U�YH����۝H	�L��[��\�\�Y����^[YۈH	��[�\����^�\�[[�HH	�ZYI��\���[�\�H��ܙK�LN��
+�[�\����Y�	�\��Y�K����Y	��	�\��Y�K��[���X�ۙΈX]�X^
+X]��Z[
+�[��X�ۙ�[�[�[��H
+JB�JN������U^
+��[�\��[���[��JN���[^
+��[�\��[���[��JN���\�ܙJ
+NB�JN��\�Y�H��ܙX]T�YX[ܘYY[�
+�Y�K�^Y\���Y�K�^Y\��K��Y�K�^Y\���Y�K�^Y\��K�]K��ۙ�Y˝�\�X�[]K��Y]\�
+����NY��Y��ܔ��
+	ܙؘJ
+I�NY��Y��ܔ��
+�K	ܙؘJ�
+I�NY��Y��ܔ��
+K	ܙؘJ��
+I�N���[�[HHY����[�X�
+�
+NY�
+�]K��ۙ�Y˝�\�X�[]K����]�[�Y[���[�\�JH�]Ԛ[���Y�K�^Y\���Y�K�^Y\��K�]K��ۙ�Y˝�\�X�[]K��Y]\�	��X�X�������L�L�JNB���\��[^PX�]�HH��\�[\˜�[^PX�]�J�Y�JNY�
+Y�]�[XY�J	�[�]K\^Y\�\�[^KY�]I��Y�K��[^K��Y�K��[^K�K�Y�K��[^K��Y]\�
+���Y�K��[^K��Y]\�
+���[^PX�]�H�H��MJJH�]Ԛ[���Y�K��[^K��Y�K��[^K�K�Y�K��[^K��Y]\�
+�
+�[^PX�]�H�X]��[��Y�K�[\�Y
+�
+H
+�H�
+K�[^PX�]�H�	��M�L����	���MMX���[^PX�]�H�H��MJNB����[�[HH�[^PX�]�H�	������	��	�͌�I�����۝H	�N�[��\�\�Y�����^[YۈH	��[�\�����[^
+��ܙK�LN��
+�[^PX�]�H�	�Y��]\����	�Y��[^I�K�Y�K��[^K��Y�K��[^K�H
+��N��Y�K��ܙ\˙�ܑXX�
+�[��[ۈ
+�ܙJHY�
+�ܙK��ۙ\�OOH	�^Y\���ܙK��ۙ\�OOH	�^�X�Y	�X�ܙU�\�X�J�ܙJJH�]\��Y�
+�]�[XY�J	�[�]K\�\�ۘ[��KX�ܙI��ܙK��ܙK�K���Y�K�[\�Y
+��MJJH�]\�����]�J
+N����[��]J�ܙK��ܙK�JN�����]J�Y�K�[\�Y
+��MJN���[�[HH�ܙK��ۙ\�OOH	ܚ]�[	��	�ٙ�XM����	�ٙ�͎I�����Y�Л\�H�����Y����܈H���[�[N���Y�[�]
+
+N���[ݙU�L��N���[�U���
+N���[�U���N���[�U�L��
+N������T]
+
+N����[
+
+N����\�ܙJ
+NJN�Y�K��X\�X[�˙�ܑXX�
+�[��[ۈ
+�X\�X[�HY�
+�X\�X[��\���YY
+H�]\���\��\�X�HH�X\�X[���]�X[Y[�[��Y�K�[\�Y��ܙK�][˙\�[��J�X\�X[��Y�K�^Y\�HH�]K��ۙ�Y˝�\�X�[]K��Y]\�Y�
+]�\�X�JH�]\���\��X\�X[�[XY�RYH�X\�X[��\HOOH	�[���	�[�]KY�X\�X[�Y�]K\[���
+�X\�X[��\HOOH	��[�	��	�[�]KY�X\�X[�[���Z�[�	��	�[�]KY�X\�X[�X�ܝ\�]�]�\��N�\��X\�X[�[HH�X\�X[��]�[��[�[��Y�K�[\�Y	��X]���܊�Y�K�[\�Y
+�
+H	H�OOH����N�\��]��X\�X[�H�]�[XY�J�X\�X[�[XY�RY�X\�X[���X\�X[��K�X\�X[���Y]\�
+���X\�X[���Y]\�
+���X\�X[��\�H
+��K�X\�X[�[JNY�
+Y�]��X\�X[�H���]�J
+N����[��]J�X\�X[���X\�X[��JN�����]J�X\�X[��\�H
+��JN�������T�[HH�X\�X[���]HOOH	��\�I��	�ٙ������	��XYX�	����[�[HH�X\�X[���]HOOH	��\�I��	ܙؘJ�MKL�LLK��
+I��	ܙؘJKLNKL���JI����[�U�YH��X\�X[��[�Y]T]
+��X\�X[��\K�X\�X[���Y]\�
+���N���[
+
+N�������J
+N����\�ܙJ
+NB��\��X\�X[����Y]X�H\]Z\Y���Y]X�	��X\�X[��NY�
+�X\�X[����Y]X�HY�
+Y�]��X\�X[���[�ݙ\�^J�X\�X[����Y]X��X\�X[��X\�X[�[JJH�]��X\�X[���[��[�X���X\�X[����Y]X��X\�X[�NB�Y�
+�X\�X[���ܝ\��\��[���
+H�]Ԛ[���X\�X[���X\�X[��K�	�ٙ�͎I��
+NY�
+�X\�X[���ܝ\��]�JH�]����YY[�J�X\�X[���ܝ\��]�K���܎�	�؍�Xٙ��[N��[�U�Y��JNJNY�
+�Y�K��]�[
+HY�
+Y�]�[XY�J	�[�]K\�]�[\�[^KX��[�\�I��Y�K��]�[^]��Y�K��]�[^]�KM�N�̊JH�]Ԛ[���Y�K��]�[^]��Y�K��]�[^]�K�Y�K��]�[^]��Y]\�	�ٙ�XM�����L��MKLJN���[�[HH	�ٙ�٘XI�����۝H	�M��[��\�\�Y�����[^
+��ܙK�LN��
+	�Y��]�[�[^I�K�Y�K��]�[^]�H��Y�K��]�[^]�H
+�L
+NB�Y�
+�Y�K��]�[	��\�Y�K��]�[�\��\Y	��\�Y�K��]�[�\���YY
+H�\��]�[�\�X�HH�Y�K��]�[��]�X[Y[�[��Y�K�[\�Y�Y�K��]�[�\ԙX��ۚ^�[���Y�JB���ܙK�][˙\�[��J�Y�K��]�[�Y�K�^Y\�HH�]K��ۙ�Y˝�\�X�[]K��Y]\��\��]�[���Y]X�H\]Z\Y���Y]X�	ܚ]�[	�N�\��]�[[XY�RYH�]�[���Y]X���]�[���Y]X˘\��]Y�
+�Y�K��]�[��\�]OOH	��\��Y\���	�[�]K\�]�[X�\��Y\�Y�ۙI��	�[�]K\�]�[\�ؙKY�ۙI�NY�
+�]�[�\�X�H	��Y�]�[XY�J�]�[[XY�RY�Y�K��]�[��Y�K��]�[�K�Y�K��]�[��Y]\�
+���Y�K��]�[��Y]\�
+��
+JH���]�J
+N����[��]J�Y�K��]�[��Y�K��]�[�JN�������T�[HH�]�[���Y]X���]�[���Y]X˘��܈�	�ٙ�XM������[�U�YH����][�Q\�
+�L�WJN���Y�[�]
+
+N���\���Y�K��]�[��Y]\�X]�H
+��N�������J
+N����\�ܙJ
+NB�B��Y�K��ڙX�[\˙�ܑXX�
+�[��[ۈ
+��
+HY�
+Y�]�[XY�J	�Y��X�\�]�[\�ڙX�[I�������KL���X]�][������K����
+JJH���[�[HH	�ٙ���������Y�Л\�HN����Y����܈H	�ٙ���������Y�[�]
+
+N���\��������K����Y]\�X]�H
+��N����[
+
+NB�JN�Y�K��ۘ\��[�\˙�ܑXX�
+�[��[ۈ
+[�JH�]����YY[�J[�JNJN��\�^Y\�H�Y�K�^Y\��\�^Y\����Y]X�H\]Z\Y���Y]X�	�^Y\��N�\�^Y\�[XY�RYH^Y\����Y]X��^Y\����Y]X˘\��]Y�	�[�]K\^Y\�\�X�ݙ\�KY�ۙI��\�^Y\�[HH�Y�K�[XY�Q�YY�X��	���Y�K�[\�Y�Y�K�[XY�Q�YY�X�˘�[��[�[���̈
+�X]�X��X]��[��Y�K�[\�Y
+��JH
+����NY�
+Y�]�[XY�J^Y\�[XY�RY^Y\��^Y\��K^Y\���Y]\�
+��^Y\���Y]\�
+��^Y\��[��K^Y\�[JJH���]�J
+N����[��]J^Y\��^Y\��JN�����]J^Y\��[��JN���ؘ[[HH^Y\�[N������T�[HH^Y\����Y]X��^Y\����Y]X˘��܈�	��M�L�������[�[HH	ܙؘJ�����M�M�I����[�U�YHN����Y�Л\�H�����Y����܈H������T�[N���Y�[�]
+
+N���\��^Y\���Y]\�X]�H
+��N����[
+
+N�������J
+N���[�[HH	������	�����Y�[�]
+
+N���[ݙU��K
+N���[�U�KNJN���[�U�KJN������T]
+
+N����[
+
+N����\�ܙJ
+NB�Y�
+[�]��[�\��X�]�JH�\��\�H[�]��[��\��[�
+[�]��[�\���\�[�]��[�\���\�K�]K��ۙ�Y˝�ܛ
+N�\��[�H[�]��[��\��[�
+[�]��[�\��[�]��[�\��K�]K��ۙ�Y˝�ܛ
+N�]Ԛ[���\���\��K	��X�X�����
+N��]Ԛ[���[���[��K�	������	�K��NB�Y�
+�Y�K�[XY�Q�YY�X��	���Y�K�[\�Y�Y�K�[XY�Q�YY�X�˚[\X�[�[
+H�\�[\X�[HH
+�Y�K�[XY�Q�YY�X�˚[\X�[�[H�Y�K�[\�Y
+H��]K��ۙ�Y˜^Y\��[XY�Q�YY�X�˚[\X��X�ۙ�Y�
+Y�]�[XY�J	�Y��X�Z[\X�Y��X�\�I�^Y\��^Y\��K�L�L�Y�K�[\�Y
+�[\X�[JJH�]Ԛ[��^Y\��^Y\��K�
+�
+HH[\X�[JH
+��	�ٙ�����L�[\X�[JN�\��Yۙ]HH��ܙX]T�YX[ܘYY[�
+������
+��N�����
+���
+N�Yۙ]K�Y��ܔ��
+	ܙؘJ�MK�
+I�N��Yۙ]K�Y��ܔ��
+K	ܙؘJL�	�
+�
+[\X�[H
+��M�H
+�	�I�N���[�[HH�Yۙ]N����[�X�
+�
+NB����\�ܙJ
+NB���[��[ۈ��[YJ���H�\���[YQ[HHX]�X^
+
+���H\���[YJH�L
+N\���[YHH����[][][ې���˘Y�[��J��[YQ[K\]JNY�
+Y\]T[�[��HY\]T[�[��H�[�NY�
+�Y�JHZK��]Y
+�Y�JNB��[�\�
+N�[��˜�\]Y\�[�[X][ۑ��[YJ��[YJNB��]�ܛK��\��[��Y�X�X�K�ە�\�X�[]P�[��J�[��[ۈ
+Y[�H�\�Y[��X��H�Y�PY�\
+	ݚ\�X�[]KY]�[�	��[��[ۈ
+
+H�]\���]�ܛK��\��[��Y�X�X�K�\�Y[���]�ܛK��\��[��Y�X�X�K�\�Y[�
+H�Y[�JN�\�X�X[Y[�HY[��X�˛���HZY[��X�˝�[YH�HZY[��\�X�[]RY[�HX�X[Y[���K��]Y[�X�X[Y[�NY�
+X�X[Y[�H]Y[˜��[
+
+NY�
+X�]�PY���H]\�YH�YN[�]��\�]
+
+NH[�HY�
+�Y�H	���Y�K��]\�OOH	�^Z[���	��\]\�Y
+H�]]\�Y
+�YJNH[�HY�
+X�]�PY���	��X�]�PY��˜�]HOOH	��Z][��]�\�X�I�H�\�ܙPY�[��X�[ۊX�]�PY���NB��\�]��[YU[Z[��
+NJN�[��˜�\]Y\�[�[X][ۑ��[YJ��[YJNB��Y�
+��[Y[���XYT�]HOOH	��Y[���H��[Y[��Y]�[�\�[�\�	��P�۝[��YY	����
+N[�H���
+
+NJJ�[��˔[��[�X�N�

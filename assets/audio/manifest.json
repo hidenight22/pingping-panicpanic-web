@@ -1,8 +1,10 @@
 {
   "version": 1,
   "audio": [
-    { "id": "bgm-campaign", "src": "assets/audio/deep-blue-silence.mp3", "volume": 0.16, "loop": true },
-    { "id": "bgm-abyss", "src": "assets/audio/deep-blue-silence.mp3", "volume": 0.16, "loop": true },
+    { "id": "bgm-player-base", "src": "assets/audio/Base.mp3", "volume": 0.16, "loop": true },
+    { "id": "bgm-player-prism", "src": "assets/audio/Skin1.mp3", "volume": 0.16, "loop": true },
+    { "id": "bgm-player-archive", "src": "assets/audio/Skin2.mp3", "volume": 0.16, "loop": true },
+    { "id": "bgm-player-ember", "src": "assets/audio/Skin3.mp3", "volume": 0.16, "loop": true },
     { "id": "ui", "src": "assets/audio/ui.wav", "volume": 0.32 },
     { "id": "sonar", "src": "assets/audio/sonar.wav", "volume": 0.48 },
     { "id": "core", "src": "assets/audio/core.wav", "volume": 0.45 },
