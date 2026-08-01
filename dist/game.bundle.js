@@ -4,7 +4,7 @@
   'use strict';
 
   var app = global.PingPanic || {};
-  app.version = '0.4.18';
+  app.version = '0.4.19';
   app.data = app.data || {};
   app.core = app.core || {};
   app.entities = app.entities || {};
@@ -1429,6 +1429,7 @@
     this.manifest = manifest || embedded;
     this.images = {};
     this.imageErrors = {};
+    this.imagePromises = {};
     this.imageEntries = {};
     this.audioEntries = {};
     (this.manifest.images || []).forEach(function (entry) {
@@ -1450,14 +1451,34 @@
     if (typeof window.Image !== 'function') return Promise.resolve([]);
     var requested = Array.isArray(ids) ? ids : Object.keys(this.imageEntries);
     return Promise.all(requested.map(function (id) {
-      return new Promise(function (resolve) {
-        var path = self.url(id);
-        if (!id || !path || self.images[id]) { resolve(self.images[id] || null); return; }
+      var path = self.url(id);
+      if (!id || !path || self.images[id]) return Promise.resolve(self.images[id] || null);
+      if (self.imagePromises[id]) return self.imagePromises[id];
+      var request = new Promise(function (resolve) {
         var image = new window.Image();
-        image.onload = function () { self.images[id] = image; resolve(image); };
+        image.onload = function () {
+          var decoded = null;
+          try {
+            decoded = typeof image.decode === 'function' ? image.decode() : null;
+          } catch (error) {
+            decoded = null;
+          }
+          Promise.resolve(decoded).catch(function () {
+            /* 일부 WebView는 표시 가능한 SVG도 decode()를 reject하므로 onload 이미지를 사용합니다. */
+          }).then(function () {
+            self.images[id] = image;
+            delete self.imageErrors[id];
+            resolve(image);
+          });
+        };
         image.onerror = function () { self.imageErrors[id] = true; resolve(null); };
         image.src = path;
       });
+      self.imagePromises[id] = request;
+      request.then(function () {
+        if (self.imagePromises[id] === request) delete self.imagePromises[id];
+      });
+      return request;
     }));
   };
   AssetLibrary.prototype.image = function (id) { return this.images[id] || null; };
@@ -5156,6 +5177,7 @@
       if (pendingCampaignStart) {
         ui.setDivePreparationBusy(false);
         ui.showDivePreparation(pendingCampaignStart.definition, null, pendingCampaignStart.difficultyId);
+        scheduleStageImagePrewarm(pendingCampaignStart.definition);
       }
     }
     function choosePendingDive(boosted, fromAdRestore) {
@@ -5244,6 +5266,7 @@
       } else {
         ui.hideHandChoice();
         ui.showDivePreparation(definition, null, pendingCampaignStart.difficultyId);
+        scheduleStageImagePrewarm(definition);
       }
     }
     function cancelPendingCampaign() {
@@ -5277,7 +5300,6 @@
       manualResumePending = false;
       stage.sonarMode = sonarMode === 'boosted-run' ? 'boosted-run' : 'standard';
       stage.damageFeedback = { blinkUntil: 0, shakeUntil: 0, impactUntil: 0, lastSource: '' };
-      preloadStageImages(definition);
       audio.stopAll();
       paused = false;
       input.reset();
@@ -5285,6 +5307,7 @@
       ui.setAbyssMode(false);
       ui.setSonarHand(save.settings.sonarHand);
       ui.show('game');
+      scheduleStageImagePrewarm(definition);
       ui.setHud(stage);
       ui.toast(PP.core.i18n.t('toast.objective'));
       if (definition.onboardingStageId) {
@@ -5306,7 +5329,6 @@
       manualResumePending = false;
       stage.sonarMode = 'standard';
       stage.damageFeedback = { blinkUntil: 0, shakeUntil: 0, impactUntil: 0, lastSource: '' };
-      preloadStageImages(stage.definition);
       audio.stopAll();
       paused = false;
       input.reset();
@@ -5314,6 +5336,7 @@
       ui.setAbyssMode(true);
       ui.setSonarHand(save.settings.sonarHand);
       ui.show('game');
+      scheduleStageImagePrewarm(stage.definition);
       ui.setHud(stage);
       ui.toast(PP.core.i18n.t('toast.abyssStart'));
       resetFrameTiming();
@@ -5330,24 +5353,48 @@
       };
       return ids[definition.zoneId] || '';
     }
-    function preloadStageImages(definition) {
-      var ids = [
-        'entity-player-recovery-drone', 'entity-resonance-core', 'entity-player-relay-gate',
-        'entity-rival-probe-drone', 'entity-rival-carrier-drone', 'entity-rival-relay-boundary',
-        'entity-guardian-gate-pin', 'entity-guardian-lock-hound', 'entity-guardian-chorus-watcher',
-        'effect-sonar-wave-player', 'effect-sonar-wave-rival', 'effect-guardian-chorus-wave',
-        'effect-rival-projectile', 'effect-impact-fracture',
-        'skin-player-prism', 'skin-player-archive', 'skin-player-ember',
-        'skin-guardian-porcelain', 'skin-guardian-reef', 'skin-guardian-obsidian',
-        'skin-rival-cobalt', 'skin-rival-scarlet'
-      ];
-      ids = ids.concat(PP.data.obstacles.solidAssetIds);
-      if (definition.environment && definition.environment.some(function (entry) {
-        return entry.type === 'variablePassage';
-      })) ids.push('terrain-gimmick-variable-passage');
+    var stagePrewarmTasks = {};
+    function stageImageIds(definition) {
+      var ids = ['entity-player-recovery-drone', 'entity-resonance-core', 'entity-player-relay-gate', 'effect-impact-fracture'];
+      function add(id) { if (id && ids.indexOf(id) < 0) ids.push(id); }
       var background = backgroundImageId(definition);
-      if (background) ids.push(background);
-      assets.preloadImages(ids);
+      add(background);
+      var layout = PP.data.obstacles.stageLayouts[String(definition.id)];
+      var pattern = PP.data.obstacles.patterns[layout ? layout.patternId : definition.obstaclePatternId];
+      if (pattern) pattern.groups.forEach(function (group) {
+        var profile = PP.data.obstacles.profiles[group.profileId];
+        add(profile && profile.assetId);
+      });
+      (definition.guardianTypes || []).forEach(function (type) {
+        add(type === 'pin' ? 'entity-guardian-gate-pin' : (type === 'hound' ? 'entity-guardian-lock-hound' : 'entity-guardian-chorus-watcher'));
+      });
+      if (definition.rivalPreset) {
+        add(definition.rivalPreset === 'carrier' ? 'entity-rival-carrier-drone' : 'entity-rival-probe-drone');
+        add('entity-rival-relay-boundary');
+        add('effect-rival-projectile');
+      }
+      (definition.environment || []).forEach(function (entry) {
+        if (entry.type === 'variablePassage') add('terrain-gimmick-variable-passage');
+        if (entry.type === 'thermalVent') add('terrain-hazard-thermal-vent');
+      });
+      var playerSkin = equippedCosmetic('player');
+      var guardianSkin = definition.guardianTypes && definition.guardianTypes.length ? equippedCosmetic('guardian') : null;
+      var rivalSkin = definition.rivalPreset ? equippedCosmetic('rival') : null;
+      add(playerSkin && playerSkin.assetId);
+      add(guardianSkin && guardianSkin.assetId);
+      add(rivalSkin && rivalSkin.assetId);
+      return ids;
+    }
+    function scheduleStageImagePrewarm(definition) {
+      var ids = stageImageIds(definition);
+      var key = ids.slice().sort().join('|');
+      if (stagePrewarmTasks[key]) return;
+      stagePrewarmTasks[key] = true;
+      function preload() {
+        assets.preloadImages(ids).then(function () { delete stagePrewarmTasks[key]; });
+      }
+      if (typeof window.requestIdleCallback === 'function') window.requestIdleCallback(preload, { timeout: 1000 });
+      else (window.setTimeout || setTimeout)(preload, 0);
     }
     function setPaused(value, explicitResume) {
       if (!stage || stage.status !== 'playing') return;
@@ -5697,26 +5744,49 @@
       if (save.ownedCosmetics.indexOf(id) < 0) return null;
       return PP.data.config.cosmetics.filter(function (item) { return item.category === category && item.id === id; })[0] || null;
     }
+    function pulseBlockerSignature(pulse, obstacles, sourceKind) {
+      return sourceKind + '|' + pulse.x + ',' + pulse.y + '|' + obstacles.map(function (wall) {
+        return [wall.id || '', wall.cx, wall.cy, wall.width, wall.height, wall.rotationDegrees, wall.rotationRadians].join(',');
+      }).join(';');
+    }
+    function pulseBlockDistances(pulse, obstacles, sourceKind, segments) {
+      var signature = pulseBlockerSignature(pulse, obstacles, sourceKind);
+      var cache = pulse._renderOcclusion;
+      if (cache && cache.signature === signature && cache.blockDistances.length === segments) return cache.blockDistances;
+      var distances = [];
+      for (var i = 0; i < segments; i += 1) {
+        distances.push(PP.core.utils.waveBlockDistance(pulse, i * Math.PI * 2 / segments, obstacles));
+      }
+      pulse._renderOcclusion = { signature: signature, blockDistances: distances };
+      return distances;
+    }
     function drawOccludedPulse(pulse, style) {
       style = style || {};
       var color = style.color || (pulse.source === 'rival' ? '#ff9a6b' : (pulse.boosted ? '#ffd369' : '#57e3d6'));
       var alpha = style.alpha === undefined ? Math.max(0, pulse.life / PP.data.config.sonar.waveSeconds) : style.alpha;
       var segments = 120;
-      var pulseObstacles = pulse.source === 'chorus'
+      var sourceKind = pulse.source === 'chorus' ? 'chorus' : 'signal';
+      var pulseObstacles = sourceKind === 'chorus'
         ? stage.walls.filter(function (wall) { return wall.blockChorusWave !== false; })
         : stage.walls.filter(function (wall) { return wall.blockSignals !== false; });
+      var blockDistances = pulseBlockDistances(pulse, pulseObstacles, sourceKind, segments);
       context.save();
       context.strokeStyle = color;
       context.lineWidth = style.lineWidth || (pulse.boosted ? 12 : (pulse.source === 'rival' ? 5 : 8));
       context.globalAlpha = alpha;
       context.shadowBlur = style.shadowBlur || (pulse.boosted ? 26 : 18);
       context.shadowColor = color;
+      context.beginPath();
+      var hasVisibleArc = false;
       for (var i = 0; i < segments; i += 1) {
         var a = i * Math.PI * 2 / segments;
         var b = (i + 0.82) * Math.PI * 2 / segments;
-        if (!PP.core.utils.waveArcVisible(pulse, a, pulse.radius, pulseObstacles, context.lineWidth)) continue;
-        context.beginPath(); context.arc(pulse.x, pulse.y, pulse.radius, a, b); context.stroke();
+        if (pulse.radius > blockDistances[i] + context.lineWidth) continue;
+        context.moveTo(pulse.x + Math.cos(a) * pulse.radius, pulse.y + Math.sin(a) * pulse.radius);
+        context.arc(pulse.x, pulse.y, pulse.radius, a, b);
+        hasVisibleArc = true;
       }
+      if (hasVisibleArc) context.stroke();
       context.restore();
     }
     function drawGlobalCurrent(definition, elapsed) {
