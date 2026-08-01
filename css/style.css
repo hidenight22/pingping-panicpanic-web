@@ -162,7 +162,7 @@ button.primary { border: 0; background: linear-gradient(135deg, var(--cyan), #64
 .game-controls[data-sonar-hand="left"] .sonar-button { grid-column: 1; }
 .game-controls[data-sonar-hand="left"] .movement-guide { grid-column: 2; }
 .game-controls small { grid-column: 1 / -1; grid-row: 3; margin-top: -7px; text-align: center; color: #78989a; font-size: 9px; pointer-events: none; }
-.sonar-button { width: 108px; min-width: 64px; min-height: 64px; justify-self: end; border: 0; border-radius: 50%; background: radial-gradient(circle, var(--mint), var(--cyan) 48%, #278c9d); color: #03232b; box-shadow: 0 0 30px rgba(87, 227, 214, .35); }
+.sonar-button { width: 108px; min-width: 64px; min-height: 64px; justify-self: end; border: 0; border-radius: 50%; touch-action: none; background: radial-gradient(circle, var(--mint), var(--cyan) 48%, #278c9d); color: #03232b; box-shadow: 0 0 30px rgba(87, 227, 214, .35); }
 .game-controls[data-sonar-hand="left"] .sonar-button { justify-self: start; }
 .sonar-button span { display: block; font-size: 8px; letter-spacing: 1px; opacity: .55; }
 .pause-panel { position: absolute; z-index: 20; inset: 0; place-items: center; padding: 20px; background: rgba(0, 7, 11, .86); backdrop-filter: blur(8px); }
