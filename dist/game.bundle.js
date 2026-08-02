@@ -4,7 +4,7 @@
   'use strict';
 
   var app = global.PingPanic || {};
-  app.version = '0.4.20';
+  app.version = '0.4.21';
   app.data = app.data || {};
   app.core = app.core || {};
   app.entities = app.entities || {};
@@ -4905,6 +4905,10 @@
     var hubModel = null;
     var stageSelectMaximum = 1;
     var visibilityHidden = !!(PP.platform.current.lifecycle.isHidden && PP.platform.current.lifecycle.isHidden());
+    var gameScreenVisible = false;
+    var renderPending = false;
+    var performanceMetrics = { frameCallbacks: 0, fixedUpdates: 0, worldRenders: 0 };
+    function requestWorldRender() { renderPending = true; }
     function playerBgmId() {
       var equipped = save.settings.equippedCosmetics.player;
       return {
@@ -4931,6 +4935,19 @@
     }
     var callbacks = {};
     var ui = PP.ui.createScreens(app, callbacks);
+    function showScreen(name) {
+      ui.show(name);
+      gameScreenVisible = name === 'game';
+      if (gameScreenVisible) requestWorldRender();
+      else renderPending = false;
+    }
+    function forceScreen(name) {
+      var shown = ui.forceShow(name);
+      gameScreenVisible = name === 'game';
+      if (gameScreenVisible) requestWorldRender();
+      else renderPending = false;
+      return shown;
+    }
     ui.setLanguage(save.settings.language);
     function applyBannerLayout(layout) {
       var source = layout;
@@ -4971,7 +4988,15 @@
           currentStage: stage,
           pendingStageId: pendingCampaignStart ? pendingCampaignStart.definition.id : 0,
           sonarHand: save.settings.sonarHand,
-          bgm: bgm.state()
+          bgm: bgm.state(),
+          performance: {
+            frameCallbacks: performanceMetrics.frameCallbacks,
+            fixedUpdates: performanceMetrics.fixedUpdates,
+            worldRenders: performanceMetrics.worldRenders,
+            renderPending: renderPending,
+            gameScreenVisible: gameScreenVisible,
+            accumulator: simulationClock.accumulator
+          }
         };
       };
       PP.dev.prepareAutomaticAdGateForTest = function () {
@@ -5119,7 +5144,7 @@
     callbacks['purchase-confirm'] = confirmCosmeticPurchase;
     callbacks['remove-ads-product'] = ui.showRemoveAdsProduct;
     callbacks['product-close'] = ui.hideRemoveAdsProduct;
-    callbacks['ending-result'] = function () { ui.show('result'); };
+    callbacks['ending-result'] = function () { showScreen('result'); };
     callbacks['ending-main'] = showTitle;
     callbacks['ending-next'] = function (button) {
       var nextDifficultyId = button && button.getAttribute('data-next-difficulty');
@@ -5165,7 +5190,7 @@
       paused = false;
       input.reset();
       renderHub();
-      ui.show('title');
+      showScreen('title');
     }
     function adErrorResult(error) {
       return { status: 'error', granted: false, reason: error && error.message ? error.message : String(error || 'unknown error') };
@@ -5195,7 +5220,7 @@
       } else if (fallback === 'select' && stage) {
         stage.status = 'stopped';
       }
-      safeAdStep('force-' + fallback, function () { ui.forceShow(fallback); });
+      safeAdStep('force-' + fallback, function () { forceScreen(fallback); });
       safeAdStep('fallback-toast', function () { ui.toast(PP.core.i18n.t('toast.adRecovery')); });
       if (error) console.error('[PingPanic] 광고 목적 화면 대신 ' + fallback + ' 화면으로 복구했습니다.', error);
     }
@@ -5377,7 +5402,7 @@
         stageSelectMaximum,
         save.settings.campaignDifficulty
       );
-      ui.show('select');
+      showScreen('select');
     }
     function requestCampaignStart(stageId, accessMaximum, origin) {
       var definition = PP.data.stages[stageId - 1];
@@ -5395,6 +5420,7 @@
         difficultyId: save.settings.campaignDifficulty
       };
       paused = true;
+      renderPending = false;
       input.reset();
       audio.stopAll();
       ui.setPaused(false);
@@ -5417,12 +5443,12 @@
       input.reset();
       if (origin === 'game' && stage && stage.status === 'playing') {
         paused = true;
-        ui.show('game');
+        showScreen('game');
         ui.setPaused(true);
       } else {
         paused = false;
         ui.setPaused(false);
-        ui.show(origin === 'ending' ? 'ending' : origin);
+        showScreen(origin === 'ending' ? 'ending' : origin);
       }
       resetFrameTiming();
     }
@@ -5444,7 +5470,7 @@
       ui.setPaused(false);
       ui.setAbyssMode(false);
       ui.setSonarHand(save.settings.sonarHand);
-      ui.show('game');
+      showScreen('game');
       scheduleStageImagePrewarm(definition);
       ui.setHud(stage);
       ui.toast(PP.core.i18n.t('toast.objective'));
@@ -5470,7 +5496,7 @@
       ui.setPaused(false);
       ui.setAbyssMode(true);
       ui.setSonarHand(save.settings.sonarHand);
-      ui.show('game');
+      showScreen('game');
       scheduleStageImagePrewarm(stage.definition);
       ui.setHud(stage);
       ui.toast(PP.core.i18n.t('toast.abyssStart'));
@@ -5538,6 +5564,7 @@
       input.reset();
       ui.setPaused(paused);
       if (paused) audio.stopAll();
+      requestWorldRender();
       resetFrameTiming();
     }
 
@@ -5650,6 +5677,7 @@
 
     function update(dt) {
       if (!stage || stage.status !== 'playing' || paused || ads.inFlight) return;
+      performanceMetrics.fixedUpdates += 1;
       hudUpdatePending = true;
       stage.elapsed += dt;
       ads.updateActive(dt);
@@ -5707,7 +5735,7 @@
       stage.resultStars = stars;
       stage.status = won ? 'won' : 'lost';
       ui.setResult(stage, won, resultMessage, stars);
-      ui.show('result');
+      showScreen('result');
       audio.stopAll();
       audio.play(won ? 'win' : 'fail');
     }
@@ -5768,6 +5796,7 @@
       var score = previous.abyss.totalScore + previous.score + 1000 + previous.definition.difficultyTier * 100;
       var nextIndex = previous.abyss.segmentIndex + 1;
       stage = PP.systems.createAbyssRun(previous.abyss.seed, nextIndex, score, previous.player);
+      requestWorldRender();
       stage.sonarMode = 'standard';
       stage.damageFeedback = { blinkUntil: 0, shakeUntil: 0, impactUntil: 0, lastSource: '' };
       ui.setPaused(false);
@@ -5809,7 +5838,7 @@
             stage.resultShown = false;
             manualResumePending = true;
             ui.setHud(stage);
-            ui.show('game');
+            showScreen('game');
             paused = true;
             ui.setPaused(true);
             ui.toast(PP.core.i18n.t('toast.recovery'));
@@ -5818,7 +5847,7 @@
             stage.resultShown = true;
             ui.setResult(stage, false, PP.core.i18n.t(result.status === 'closed'
               ? 'result.recoveryClosed' : 'result.recoveryFailed'), 0);
-            ui.show('result');
+            showScreen('result');
             ui.toast(PP.core.i18n.t('toast.noReward', { status: result.status }));
           }
         }
@@ -5841,7 +5870,7 @@
           ui.setResult(stage, true, PP.core.i18n.t(result.granted ? 'result.doubleGranted' : 'result.doubleNone', {
             credits: stage.creditEarned
           }), Number(stage.resultStars) || 0);
-          ui.show('result');
+          showScreen('result');
           ui.toast(PP.core.i18n.t(stage.creditDoubleSaveFailed ? 'toast.saveError'
             : (result.granted ? 'toast.doubleGranted' : 'toast.doubleNone')));
         }
@@ -6108,6 +6137,7 @@
     }
     function render() {
       if (!stage) return;
+      performanceMetrics.worldRenders += 1;
       var W = PP.data.config.world.width;
       var H = PP.data.config.world.height;
       var ctx = context;
@@ -6325,14 +6355,22 @@
     }
 
     function frame(now) {
+      performanceMetrics.frameCallbacks += 1;
       var frameDelta = Math.max(0, (now - lastFrame) / 1000);
       lastFrame = now;
-      simulationClock.advance(frameDelta, update);
+      var continuousWorld = !!stage && gameScreenVisible && stage.status === 'playing'
+        && !paused && !ads.inFlight && !visibilityHidden;
+      if (continuousWorld) simulationClock.advance(frameDelta, update);
       if (hudUpdatePending) {
         hudUpdatePending = false;
         if (stage) ui.setHud(stage);
       }
-      render();
+      continuousWorld = !!stage && gameScreenVisible && stage.status === 'playing'
+        && !paused && !ads.inFlight && !visibilityHidden;
+      if ((continuousWorld || renderPending) && stage && gameScreenVisible && !ads.inFlight && !visibilityHidden) {
+        renderPending = false;
+        render();
+      }
       window.requestAnimationFrame(frame);
     }
     PP.platform.current.lifecycle.onVisibilityChange(function (hidden) {
