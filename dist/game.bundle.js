@@ -4,7 +4,7 @@
   'use strict';
 
   var app = global.PingPanic || {};
-  app.version = '0.4.21';
+  app.version = '0.4.22';
   app.data = app.data || {};
   app.core = app.core || {};
   app.entities = app.entities || {};
@@ -295,6 +295,10 @@
       fixedStepSeconds: 1 / 60,
       maximumFrameDeltaSeconds: 0.25,
       maximumCatchUpSteps: 5
+    },
+    rendering: {
+      maximumDevicePixelRatio: 2,
+      maximumHudUpdatesPerSecond: 30
     },
     development: {
       gmToolsEnabled: 'development' !== 'contest',
@@ -1091,6 +1095,26 @@
     }
     return result;
   }
+  function resolveCanvasBackingSize(cssWidth, cssHeight, devicePixelRatio, world, maximumDevicePixelRatio) {
+    var width = Math.max(1, Number(cssWidth) || 1);
+    var height = Math.max(1, Number(cssHeight) || 1);
+    var ratio = Math.max(1, Number(devicePixelRatio) || 1);
+    var maximumRatio = Math.max(1, Number(maximumDevicePixelRatio) || 1);
+    var worldWidth = Math.max(1, Number(world && world.width) || width);
+    var worldHeight = Math.max(1, Number(world && world.height) || height);
+    var backingScale = Math.min(ratio, maximumRatio, worldWidth / width, worldHeight / height);
+    var backingWidth = Math.max(1, Math.round(width * backingScale));
+    var backingHeight = Math.max(1, Math.round(height * backingScale));
+    return {
+      cssWidth: width,
+      cssHeight: height,
+      devicePixelRatio: ratio,
+      effectivePixelRatio: backingScale,
+      width: backingWidth,
+      height: backingHeight,
+      pixels: backingWidth * backingHeight
+    };
+  }
   function normalizeObbDegrees(value) {
     var normalized = Number(value) || 0;
     normalized = ((normalized % 180) + 180) % 180;
@@ -1388,6 +1412,7 @@
     normalize: normalize,
     seededRandom: seededRandom,
     shuffle: shuffle,
+    resolveCanvasBackingSize: resolveCanvasBackingSize,
     normalizeObbDegrees: normalizeObbDegrees,
     prepareObb: prepareObb,
     createObb: createObb,
@@ -4907,7 +4932,9 @@
     var visibilityHidden = !!(PP.platform.current.lifecycle.isHidden && PP.platform.current.lifecycle.isHidden());
     var gameScreenVisible = false;
     var renderPending = false;
-    var performanceMetrics = { frameCallbacks: 0, fixedUpdates: 0, worldRenders: 0 };
+    var performanceMetrics = {
+      frameCallbacks: 0, fixedUpdates: 0, worldRenders: 0, hudUpdates: 0, canvasResizes: 0
+    };
     function requestWorldRender() { renderPending = true; }
     function playerBgmId() {
       var equipped = save.settings.equippedCosmetics.player;
@@ -4935,16 +4962,31 @@
     }
     var callbacks = {};
     var ui = PP.ui.createScreens(app, callbacks);
+    var lastHudUpdateAt = -Infinity;
+    var hudUpdateIntervalMs = 1000 / PP.data.config.rendering.maximumHudUpdatesPerSecond;
+    function setHudNow(currentStage, now) {
+      if (!currentStage) return;
+      ui.setHud(currentStage);
+      performanceMetrics.hudUpdates += 1;
+      lastHudUpdateAt = Number.isFinite(now) ? now : performance.now();
+      hudUpdatePending = false;
+    }
     function showScreen(name) {
       ui.show(name);
       gameScreenVisible = name === 'game';
-      if (gameScreenVisible) requestWorldRender();
+      if (gameScreenVisible) {
+        syncCanvasBackingResolution();
+        requestWorldRender();
+      }
       else renderPending = false;
     }
     function forceScreen(name) {
       var shown = ui.forceShow(name);
       gameScreenVisible = name === 'game';
-      if (gameScreenVisible) requestWorldRender();
+      if (gameScreenVisible) {
+        syncCanvasBackingResolution();
+        requestWorldRender();
+      }
       else renderPending = false;
       return shown;
     }
@@ -4967,6 +5009,47 @@
     }
     var canvas = ui.elements.canvas;
     var context = canvas.getContext('2d');
+    var backgroundGradient = null;
+    var canvasBacking = {
+      cssWidth: PP.data.config.world.width,
+      cssHeight: PP.data.config.world.height,
+      devicePixelRatio: 1,
+      effectivePixelRatio: 1,
+      width: Number(canvas.width) || PP.data.config.world.width,
+      height: Number(canvas.height) || PP.data.config.world.height,
+      pixels: (Number(canvas.width) || PP.data.config.world.width) * (Number(canvas.height) || PP.data.config.world.height)
+    };
+    function syncCanvasBackingResolution() {
+      if (!canvas || !gameScreenVisible || !canvas.getBoundingClientRect) return false;
+      var rect = canvas.getBoundingClientRect();
+      if (!(rect.width > 0) || !(rect.height > 0)) return false;
+      var resolved = PP.core.utils.resolveCanvasBackingSize(
+        rect.width,
+        rect.height,
+        window.devicePixelRatio,
+        PP.data.config.world,
+        PP.data.config.rendering.maximumDevicePixelRatio
+      );
+      var changed = canvas.width !== resolved.width || canvas.height !== resolved.height;
+      canvasBacking = resolved;
+      if (!changed) return false;
+      canvas.width = resolved.width;
+      canvas.height = resolved.height;
+      backgroundGradient = null;
+      context.setTransform(
+        resolved.width / PP.data.config.world.width, 0,
+        0, resolved.height / PP.data.config.world.height,
+        0, 0
+      );
+      performanceMetrics.canvasResizes += 1;
+      requestWorldRender();
+      return true;
+    }
+    window.addEventListener('resize', syncCanvasBackingResolution);
+    window.addEventListener('orientationchange', syncCanvasBackingResolution);
+    if (window.visualViewport && window.visualViewport.addEventListener) {
+      window.visualViewport.addEventListener('resize', syncCanvasBackingResolution);
+    }
     var input = new PP.core.Input(canvas, function () {
       var onboardingOpen = pendingOnboardingStageId > 0 && !ui.elements['onboarding-panel'].hidden;
       var preparationOpen = !ui.elements['dive-preparation-panel'].hidden || !ui.elements['hand-choice-panel'].hidden;
@@ -4993,6 +5076,17 @@
             frameCallbacks: performanceMetrics.frameCallbacks,
             fixedUpdates: performanceMetrics.fixedUpdates,
             worldRenders: performanceMetrics.worldRenders,
+            hudUpdates: performanceMetrics.hudUpdates,
+            canvasResizes: performanceMetrics.canvasResizes,
+            canvasBacking: {
+              cssWidth: canvasBacking.cssWidth,
+              cssHeight: canvasBacking.cssHeight,
+              devicePixelRatio: canvasBacking.devicePixelRatio,
+              effectivePixelRatio: canvasBacking.effectivePixelRatio,
+              width: canvasBacking.width,
+              height: canvasBacking.height,
+              pixels: canvasBacking.pixels
+            },
             renderPending: renderPending,
             gameScreenVisible: gameScreenVisible,
             accumulator: simulationClock.accumulator
@@ -5059,7 +5153,7 @@
       ui.setLanguage(save.settings.language);
       ui.setSonarHand(save.settings.sonarHand);
       renderHub();
-      if (stage) ui.setHud(stage);
+      if (stage) setHudNow(stage);
       if (pendingCampaignStart && !ui.elements['dive-preparation-panel'].hidden) {
         ui.showDivePreparation(pendingCampaignStart.definition, null, pendingCampaignStart.difficultyId);
       }
@@ -5472,7 +5566,7 @@
       ui.setSonarHand(save.settings.sonarHand);
       showScreen('game');
       scheduleStageImagePrewarm(definition);
-      ui.setHud(stage);
+      setHudNow(stage);
       ui.toast(PP.core.i18n.t('toast.objective'));
       if (definition.onboardingStageId) {
         pendingOnboardingStageId = definition.onboardingStageId;
@@ -5498,7 +5592,7 @@
       ui.setSonarHand(save.settings.sonarHand);
       showScreen('game');
       scheduleStageImagePrewarm(stage.definition);
-      ui.setHud(stage);
+      setHudNow(stage);
       ui.toast(PP.core.i18n.t('toast.abyssStart'));
       resetFrameTiming();
       audio.play('ui');
@@ -5689,12 +5783,17 @@
       stage.player.update(dt, input, stage);
       if (input.consumeSonar()) useSonar();
 
-      var revealables = stage.cores.concat(stage.guardians.filter(function (guardian) {
-        return !guardian.destroyed;
-      })).concat(stage.walls)
-        .concat(stage.environment ? stage.environment.revealables : []).concat([stage.player]);
-      if (stage.rival) revealables.push(stage.rival);
-      var sonarObstacles = stage.walls.filter(function (wall) { return wall.blockSignals !== false; });
+      var sonarActive = stage.sonar.pulses.length > 0;
+      var revealables = stage.sonarObstacles;
+      var sonarObstacles = stage.sonarObstacles;
+      if (sonarActive) {
+        revealables = stage.cores.concat(stage.guardians.filter(function (guardian) {
+          return !guardian.destroyed;
+        })).concat(stage.walls)
+          .concat(stage.environment ? stage.environment.revealables : []).concat([stage.player]);
+        if (stage.rival) revealables.push(stage.rival);
+        sonarObstacles = stage.walls.filter(function (wall) { return wall.blockSignals !== false; });
+      }
       stage.sonar.update(dt, stage.elapsed, revealables, handleSonarContact, sonarObstacles, stage);
       collectPlayerCores();
 
@@ -5837,7 +5936,7 @@
             stage.status = 'playing';
             stage.resultShown = false;
             manualResumePending = true;
-            ui.setHud(stage);
+            setHudNow(stage);
             showScreen('game');
             paused = true;
             ui.setPaused(true);
@@ -5901,10 +6000,14 @@
       context.restore();
       return true;
     }
+    var cosmeticsByCategoryAndId = {};
+    PP.data.config.cosmetics.forEach(function (item) {
+      cosmeticsByCategoryAndId[item.category + '|' + item.id] = item;
+    });
     function equippedCosmetic(category) {
       var id = save.settings.equippedCosmetics[category];
       if (save.ownedCosmetics.indexOf(id) < 0) return null;
-      return PP.data.config.cosmetics.filter(function (item) { return item.category === category && item.id === id; })[0] || null;
+      return cosmeticsByCategoryAndId[category + '|' + id] || null;
     }
     function pulseBlockerSignature(pulse, obstacles, sourceKind) {
       return sourceKind + '|' + pulse.x + ',' + pulse.y + '|' + obstacles.map(function (wall) {
@@ -5922,15 +6025,20 @@
       pulse._renderOcclusion = { signature: signature, blockDistances: distances };
       return distances;
     }
+    var renderSignalObstacles = null;
+    var renderChorusObstacles = null;
     function drawOccludedPulse(pulse, style) {
       style = style || {};
       var color = style.color || (pulse.source === 'rival' ? '#ff9a6b' : (pulse.boosted ? '#ffd369' : '#57e3d6'));
       var alpha = style.alpha === undefined ? Math.max(0, pulse.life / PP.data.config.sonar.waveSeconds) : style.alpha;
       var segments = 120;
       var sourceKind = pulse.source === 'chorus' ? 'chorus' : 'signal';
-      var pulseObstacles = sourceKind === 'chorus'
-        ? stage.walls.filter(function (wall) { return wall.blockChorusWave !== false; })
-        : stage.walls.filter(function (wall) { return wall.blockSignals !== false; });
+      if (sourceKind === 'chorus' && !renderChorusObstacles) {
+        renderChorusObstacles = stage.walls.filter(function (wall) { return wall.blockChorusWave !== false; });
+      } else if (sourceKind !== 'chorus' && !renderSignalObstacles) {
+        renderSignalObstacles = stage.walls.filter(function (wall) { return wall.blockSignals !== false; });
+      }
+      var pulseObstacles = sourceKind === 'chorus' ? renderChorusObstacles : renderSignalObstacles;
       var blockDistances = pulseBlockDistances(pulse, pulseObstacles, sourceKind, segments);
       context.save();
       context.strokeStyle = color;
@@ -6143,17 +6251,27 @@
       var ctx = context;
       var zoneColor = stage.mode === 'abyss' ? '#6b77a8'
         : PP.data.config.colors[Math.floor((stage.definition.id - 1) / PP.data.config.campaign.stagesPerZone)];
+      var guardianCosmetic = equippedCosmetic('guardian');
+      var rivalCosmetic = equippedCosmetic('rival');
+      var playerCosmetic = equippedCosmetic('player');
+      renderSignalObstacles = null;
+      renderChorusObstacles = null;
       ctx.clearRect(0, 0, W, H);
       ctx.save();
-      if (stage.damageFeedback && stage.elapsed < stage.damageFeedback.shakeUntil) {
+      var damageShaking = stage.damageFeedback && stage.elapsed < stage.damageFeedback.shakeUntil;
+      if (damageShaking) {
         var remainingShake = (stage.damageFeedback.shakeUntil - stage.elapsed) / PP.data.config.player.damageFeedback.shakeSeconds;
         var amount = PP.data.config.player.damageFeedback.shakeWorldUnits * remainingShake;
         ctx.translate(Math.sin(stage.elapsed * 117) * amount, Math.cos(stage.elapsed * 91) * amount * 0.72);
       }
-      var gradient = ctx.createLinearGradient(0, 0, 0, H);
-      gradient.addColorStop(0, '#062b39');
-      gradient.addColorStop(0.5, '#03141f');
-      gradient.addColorStop(1, '#01080d');
+      var gradient = damageShaking ? null : backgroundGradient;
+      if (!gradient) {
+        gradient = ctx.createLinearGradient(0, 0, 0, H);
+        gradient.addColorStop(0, '#062b39');
+        gradient.addColorStop(0.5, '#03141f');
+        gradient.addColorStop(1, '#01080d');
+        if (!damageShaking) backgroundGradient = gradient;
+      }
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, W, H);
       var backgroundId = backgroundImageId(stage.definition);
@@ -6296,7 +6414,6 @@
           guardianSilhouettePath(ctx, guardian.type, guardian.radius * 0.86);
           ctx.fill(); ctx.stroke(); ctx.restore();
         }
-        var guardianCosmetic = equippedCosmetic('guardian');
         if (guardianCosmetic) {
           if (!drawGuardianSkinOverlay(guardianCosmetic, guardian, guardianAlpha)) drawGuardianSkinFallback(guardianCosmetic, guardian);
         }
@@ -6311,7 +6428,6 @@
       if (stage.rival && !stage.rival.escaped && !stage.rival.destroyed) {
         var rivalVisible = stage.rival.revealedUntil > stage.elapsed || stage.rival.isRecognizing(stage)
           || PP.core.utils.distance(stage.rival, stage.player) <= PP.data.config.visibility.radius;
-        var rivalCosmetic = equippedCosmetic('rival');
         var rivalImageId = rivalCosmetic ? rivalCosmetic.assetId : (stage.rival.preset === 'carrier' ? 'entity-rival-carrier-drone' : 'entity-rival-probe-drone');
         if (rivalVisible && !drawImage(rivalImageId, stage.rival.x, stage.rival.y, stage.rival.radius * 2, stage.rival.radius * 2, 0)) {
           ctx.save(); ctx.translate(stage.rival.x, stage.rival.y); ctx.strokeStyle = rivalCosmetic ? rivalCosmetic.color : '#ff9a6b'; ctx.lineWidth = 8; ctx.setLineDash([13, 9]);
@@ -6328,7 +6444,6 @@
       });
 
       var player = stage.player;
-      var playerCosmetic = equippedCosmetic('player');
       var playerImageId = playerCosmetic ? playerCosmetic.assetId : 'entity-player-recovery-drone';
       var playerAlpha = stage.damageFeedback && stage.elapsed < stage.damageFeedback.blinkUntil
         ? 0.32 + Math.abs(Math.sin(stage.elapsed * 42)) * 0.68 : 1;
@@ -6362,8 +6477,8 @@
         && !paused && !ads.inFlight && !visibilityHidden;
       if (continuousWorld) simulationClock.advance(frameDelta, update);
       if (hudUpdatePending) {
-        hudUpdatePending = false;
-        if (stage) ui.setHud(stage);
+        if (!stage) hudUpdatePending = false;
+        else if (now - lastHudUpdateAt >= hudUpdateIntervalMs) setHudNow(stage, now);
       }
       continuousWorld = !!stage && gameScreenVisible && stage.status === 'playing'
         && !paused && !ads.inFlight && !visibilityHidden;
