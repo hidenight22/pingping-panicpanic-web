@@ -33,9 +33,9 @@
   "images": [
     {
       "id": "title-key-art",
-      "path": "title-key-art.png",
+      "path": "title-key-art.jpg",
       "category": "brand",
-      "format": "png",
+      "format": "jpg",
       "purpose": "타이틀 화면용 수몰 문명·회수 드론 키 아트",
       "intrinsicSize": [1024, 1536],
       "displaySpace": "screen",
