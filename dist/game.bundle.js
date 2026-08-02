@@ -4,7 +4,7 @@
   'use strict';
 
   var app = global.PingPanic || {};
-  app.version = '0.4.22';
+  app.version = '0.4.23';
   app.data = app.data || {};
   app.core = app.core || {};
   app.entities = app.entities || {};
@@ -1363,47 +1363,102 @@
       return ray.distance <= waveBlockDistance(origin, ray.angle, walls) + 0.0001;
     });
   }
+  var pathfindingMetrics = {
+    searches: 0,
+    queueReads: 0,
+    queueWrites: 0,
+    blockedCellEvaluations: 0,
+    blockedCellCacheHits: 0,
+    wallPredicateEvaluations: 0
+  };
+  function resetPathfindingMetrics() {
+    Object.keys(pathfindingMetrics).forEach(function (key) { pathfindingMetrics[key] = 0; });
+  }
+  function getPathfindingMetrics() {
+    return {
+      searches: pathfindingMetrics.searches,
+      queueReads: pathfindingMetrics.queueReads,
+      queueWrites: pathfindingMetrics.queueWrites,
+      blockedCellEvaluations: pathfindingMetrics.blockedCellEvaluations,
+      blockedCellCacheHits: pathfindingMetrics.blockedCellCacheHits,
+      wallPredicateEvaluations: pathfindingMetrics.wallPredicateEvaluations
+    };
+  }
   function findGridPath(start, goal, radius, bounds, walls, cellSize) {
     var size = cellSize || 50;
     var cols = Math.floor(bounds.width / size);
     var rows = Math.floor(bounds.height / size);
-    function cellOf(point) {
-      return { c: clamp(Math.floor(point.x / size), 0, cols - 1), r: clamp(Math.floor(point.y / size), 0, rows - 1) };
+    var totalCells = cols * rows;
+    var tracking = PP.data.config.development.gmToolsEnabled;
+    if (tracking) pathfindingMetrics.searches += 1;
+    function indexOf(c, r) { return r * cols + c; }
+    function columnOf(index) { return index % cols; }
+    function rowOf(index) { return Math.floor(index / cols); }
+    function pointOf(index) {
+      return { x: (columnOf(index) + 0.5) * size, y: (rowOf(index) + 0.5) * size };
     }
-    function key(cell) { return cell.c + ',' + cell.r; }
-    function center(cell) { return { x: (cell.c + 0.5) * size, y: (cell.r + 0.5) * size }; }
-    function blocked(cell) {
-      var point = center(cell);
-      if (point.x < radius || point.x > bounds.width - radius || point.y < 100 + radius || point.y > bounds.height - radius) return true;
-      return walls.some(function (wall) { return circleIntersectsObb(point, radius, wall); });
+    var blockedStates = new Int8Array(totalCells);
+    function blocked(index) {
+      if (blockedStates[index]) {
+        if (tracking) pathfindingMetrics.blockedCellCacheHits += 1;
+        return blockedStates[index] === 2;
+      }
+      if (tracking) pathfindingMetrics.blockedCellEvaluations += 1;
+      var point = pointOf(index);
+      var isBlocked = point.x < radius || point.x > bounds.width - radius
+        || point.y < 100 + radius || point.y > bounds.height - radius;
+      for (var wallIndex = 0; !isBlocked && wallIndex < walls.length; wallIndex += 1) {
+        if (tracking) pathfindingMetrics.wallPredicateEvaluations += 1;
+        if (circleIntersectsObb(point, radius, walls[wallIndex])) isBlocked = true;
+      }
+      blockedStates[index] = isBlocked ? 2 : 1;
+      return isBlocked;
     }
-    var startCell = cellOf(start);
-    var goalCell = cellOf(goal);
-    var queue = [startCell];
-    var cameFrom = {};
-    var visited = {};
-    var startKey = key(startCell);
-    visited[startKey] = true;
-    var best = startCell;
-    var bestDistance = Math.abs(startCell.c - goalCell.c) + Math.abs(startCell.r - goalCell.r);
-    while (queue.length) {
-      var current = queue.shift();
-      var currentDistance = Math.abs(current.c - goalCell.c) + Math.abs(current.r - goalCell.r);
-      if (currentDistance < bestDistance) { best = current; bestDistance = currentDistance; }
-      if (currentDistance === 0) { best = current; break; }
-      [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (offset) {
-        var next = { c: current.c + offset[0], r: current.r + offset[1] };
-        var nextKey = key(next);
-        if (next.c < 0 || next.r < 0 || next.c >= cols || next.r >= rows || visited[nextKey] || blocked(next)) return;
-        visited[nextKey] = true;
-        cameFrom[nextKey] = current;
-        queue.push(next);
-      });
+    var startColumn = clamp(Math.floor(start.x / size), 0, cols - 1);
+    var startRow = clamp(Math.floor(start.y / size), 0, rows - 1);
+    var goalColumn = clamp(Math.floor(goal.x / size), 0, cols - 1);
+    var goalRow = clamp(Math.floor(goal.y / size), 0, rows - 1);
+    var startIndex = indexOf(startColumn, startRow);
+    var queue = [startIndex];
+    var queueHead = 0;
+    var cameFrom = new Int32Array(totalCells);
+    cameFrom.fill(-1);
+    var visited = new Uint8Array(totalCells);
+    visited[startIndex] = 1;
+    if (tracking) pathfindingMetrics.queueWrites += 1;
+    var bestIndex = startIndex;
+    var bestDistance = Math.abs(startColumn - goalColumn) + Math.abs(startRow - goalRow);
+    while (queueHead < queue.length) {
+      var currentIndex = queue[queueHead];
+      queueHead += 1;
+      if (tracking) pathfindingMetrics.queueReads += 1;
+      var currentColumn = columnOf(currentIndex);
+      var currentRow = rowOf(currentIndex);
+      var currentDistance = Math.abs(currentColumn - goalColumn) + Math.abs(currentRow - goalRow);
+      if (currentDistance < bestDistance) { bestIndex = currentIndex; bestDistance = currentDistance; }
+      if (currentDistance === 0) { bestIndex = currentIndex; break; }
+      for (var directionIndex = 0; directionIndex < 4; directionIndex += 1) {
+        var nextColumn = currentColumn + (directionIndex === 0 ? 1 : (directionIndex === 1 ? -1 : 0));
+        var nextRow = currentRow + (directionIndex === 2 ? 1 : (directionIndex === 3 ? -1 : 0));
+        if (nextColumn < 0 || nextRow < 0 || nextColumn >= cols || nextRow >= rows) continue;
+        var nextIndex = indexOf(nextColumn, nextRow);
+        if (visited[nextIndex] || blocked(nextIndex)) continue;
+        visited[nextIndex] = 1;
+        cameFrom[nextIndex] = currentIndex;
+        queue.push(nextIndex);
+        if (tracking) pathfindingMetrics.queueWrites += 1;
+      }
     }
-    var path = [best];
-    while (key(path[0]) !== startKey && cameFrom[key(path[0])]) path.unshift(cameFrom[key(path[0])]);
-    if (path.length <= 1) return [];
-    return path.slice(1).map(center);
+    if (bestIndex === startIndex) return [];
+    var reversed = [];
+    var pathIndex = bestIndex;
+    while (pathIndex !== startIndex && pathIndex >= 0) {
+      reversed.push(pathIndex);
+      pathIndex = cameFrom[pathIndex];
+    }
+    var path = [];
+    for (var pathOffset = reversed.length - 1; pathOffset >= 0; pathOffset -= 1) path.push(pointOf(reversed[pathOffset]));
+    return path;
   }
 
   PP.core.utils = {
@@ -1434,7 +1489,9 @@
     waveBlockDistance: waveBlockDistance,
     waveArcVisible: waveArcVisible,
     waveTargetVisible: waveTargetVisible,
-    findGridPath: findGridPath
+    findGridPath: findGridPath,
+    getPathfindingMetrics: getPathfindingMetrics,
+    resetPathfindingMetrics: resetPathfindingMetrics
   };
 })(window.PingPanic);
 
@@ -2222,8 +2279,7 @@
     var dx = (direction.x * this.speed * environmentSpeed + environmentCurrent.x) * dt;
     var dy = (direction.y * this.speed * environmentSpeed + environmentCurrent.y) * dt;
     if (Math.abs(direction.x) + Math.abs(direction.y) > 0.01) this.angle = Math.atan2(direction.y, direction.x);
-    var movementObstacles = stage.walls.filter(function (wall) { return wall.blockMovement !== false; });
-    PP.core.utils.moveWithObstacles(this, dx, dy, this.radius, PP.data.config.world, movementObstacles);
+    PP.core.utils.moveWithObstacles(this, dx, dy, this.radius, PP.data.config.world, stage.movementObstacles);
     var rechargeMultiplier = stage.sonarMode === 'boosted-run' ? PP.data.config.sonar.boosted.rechargeMultiplier : 1;
     if (PP.systems.environment) rechargeMultiplier *= PP.systems.environment.rechargeMultiplier(stage, this);
     this.sonarCharge = Math.min(
@@ -2248,8 +2304,7 @@
   Player.prototype.knockBackFrom = function (source, distance, stage) {
     var direction = PP.core.utils.normalize(this.x - source.x, this.y - source.y);
     if (direction.length < 0.001) direction = { x: 0, y: 1 };
-    var movementObstacles = stage.walls.filter(function (wall) { return wall.blockMovement !== false; });
-    PP.core.utils.moveWithObstacles(this, direction.x * distance, direction.y * distance, this.radius, PP.data.config.world, movementObstacles);
+    PP.core.utils.moveWithObstacles(this, direction.x * distance, direction.y * distance, this.radius, PP.data.config.world, stage.movementObstacles);
   };
 
   PP.entities.Player = Player;
@@ -2378,8 +2433,7 @@
       this.chorusWave.radius = Math.min(rules.maxRadius, rules.maxRadius * this.chorusWave.elapsed / rules.expansionSeconds);
       var distance = PP.core.utils.distance(this.chorusWave, actors.player);
       var reachedPlayer = distance >= this.chorusWave.previousRadius && distance <= this.chorusWave.radius + actors.player.radius;
-      var chorusObstacles = stage.walls.filter(function (wall) { return wall.blockChorusWave !== false; });
-      var visiblePath = PP.core.utils.waveTargetVisible(this.chorusWave, actors.player, chorusObstacles);
+      var visiblePath = PP.core.utils.waveTargetVisible(this.chorusWave, actors.player, stage.chorusObstacles);
       if (!this.chorusWave.hit && reachedPlayer && visiblePath) {
         this.chorusWave.hit = true;
         var difficultyDamage = stage.difficultyModifiers ? stage.difficultyModifiers.enemyDamageMultiplier : 1;
@@ -2406,13 +2460,12 @@
   };
 
   Guardian.prototype.directionTo = function (point, stage) {
-    var movementObstacles = stage.walls.filter(function (wall) { return wall.blockMovement !== false; });
-    if (PP.core.utils.hasClearanceLineOfSight(this, point, movementObstacles, this.radius)) {
+    if (PP.core.utils.hasClearanceLineOfSight(this, point, stage.movementObstacles, this.radius)) {
       this.navPath = [];
       return PP.core.utils.normalize(point.x - this.x, point.y - this.y);
     }
     if (this.repathTimer <= 0 || !this.navPath.length) {
-      this.navPath = PP.core.utils.findGridPath(this, point, this.radius + 2, PP.data.config.world, movementObstacles, PP.data.config.guardian.navigation.gridSize);
+      this.navPath = PP.core.utils.findGridPath(this, point, this.radius + 2, PP.data.config.world, stage.movementObstacles, PP.data.config.guardian.navigation.gridSize);
       this.repathTimer = 0.4 + (this.id % 3) * 0.05;
     }
     while (this.navPath.length && PP.core.utils.distance(this, this.navPath[0]) < 28) this.navPath.shift();
@@ -2461,14 +2514,13 @@
       var direction = this.state === 'patrol'
         ? PP.core.utils.normalize(point.x - this.x, point.y - this.y)
         : (point ? this.directionTo(point, stage) : { x: 0, y: 0 });
-      var movementObstacles = stage.walls.filter(function (wall) { return wall.blockMovement !== false; });
       PP.core.utils.moveWithObstacles(
         this,
         (direction.x * speed + environmentCurrent.x) * dt,
         (direction.y * speed + environmentCurrent.y) * dt,
         this.radius,
         PP.data.config.world,
-        movementObstacles
+        stage.movementObstacles
       );
     }
     if (this.state === 'search') {
@@ -2510,6 +2562,12 @@
     guardianDetected: 90,
     guardianHit: 100
   };
+
+  function recordEnemyWork(stage, key, amount) {
+    if (PP.data.config.development.gmToolsEnabled && stage.enemyWorkMetrics) {
+      stage.enemyWorkMetrics[key] += amount || 1;
+    }
+  }
 
   function Rival(x, y, preset) {
     this.x = x;
@@ -2650,13 +2708,12 @@
     return true;
   };
   Rival.prototype.directionTo = function (target, stage) {
-    var movementObstacles = stage.walls.filter(function (wall) { return wall.blockMovement !== false; });
-    if (PP.core.utils.hasClearanceLineOfSight(this, target, movementObstacles, this.radius)) {
+    if (PP.core.utils.hasClearanceLineOfSight(this, target, stage.movementObstacles, this.radius)) {
       this.navPath = [];
       return PP.core.utils.normalize(target.x - this.x, target.y - this.y);
     }
     if (this.repathTimer <= 0 || !this.navPath.length) {
-      this.navPath = PP.core.utils.findGridPath(this, target, this.radius + 2, PP.data.config.world, movementObstacles, PP.data.config.guardian.navigation.gridSize);
+      this.navPath = PP.core.utils.findGridPath(this, target, this.radius + 2, PP.data.config.world, stage.movementObstacles, PP.data.config.guardian.navigation.gridSize);
       this.repathTimer = PP.data.config.guardian.navigation.repathSeconds;
     }
     while (this.navPath.length && PP.core.utils.distance(this, this.navPath[0]) < 28) this.navPath.shift();
@@ -2664,14 +2721,24 @@
     return PP.core.utils.normalize(point.x - this.x, point.y - this.y);
   };
 
-  Rival.prototype.knownFreeCores = function (stage) {
+  Rival.prototype.nearestKnownFreeCore = function (stage) {
     var known = this.knownCoreIds;
     var ignoredCoreId = this.ignoredCoreId;
     var ignoredCoreUntil = this.ignoredCoreUntil;
-    return stage.cores.filter(function (core) {
-      return core.owner === 'free' && core.pickupCooldown <= 0 && known.indexOf(core.id) >= 0
-        && !(core.id === ignoredCoreId && stage.elapsed < ignoredCoreUntil);
-    });
+    var nearest = null;
+    var nearestDistance = Infinity;
+    for (var coreIndex = 0; coreIndex < stage.cores.length; coreIndex += 1) {
+      var core = stage.cores[coreIndex];
+      recordEnemyWork(stage, 'knownCoreCandidates');
+      if (core.owner !== 'free' || core.pickupCooldown > 0 || known.indexOf(core.id) < 0
+        || core.id === ignoredCoreId && stage.elapsed < ignoredCoreUntil) continue;
+      var coreDistance = PP.core.utils.distance(core, this);
+      if (coreDistance < nearestDistance) {
+        nearest = core;
+        nearestDistance = coreDistance;
+      }
+    }
+    return nearest;
   };
   Rival.prototype.searchWaypoint = function (stage) {
     var margin = this.radius + 24;
@@ -2718,10 +2785,9 @@
     var currentVector = PP.systems.environment
       ? PP.systems.environment.currentVector(stage, this) : { x: 0, y: 0 };
     if (currentVector.x || currentVector.y) {
-      var currentObstacles = stage.walls.filter(function (wall) { return wall.blockMovement !== false; });
       PP.core.utils.moveWithObstacles(
         this, currentVector.x * dt, currentVector.y * dt,
-        this.radius, PP.data.config.world, currentObstacles
+        this.radius, PP.data.config.world, stage.movementObstacles
       );
       if (this.carriedCore) { this.carriedCore.x = this.x; this.carriedCore.y = this.y; }
     }
@@ -2729,14 +2795,22 @@
     if (this.forcedGuardianTarget && (this.forcedGuardianTarget.destroyed || stage.elapsed >= this.guardianAggroUntil)) {
       this.forcedGuardianTarget = null;
     }
-    var guardianThreat = stage.guardians.filter(function (guardian) {
-      return !guardian.destroyed && (guardian === self.forcedGuardianTarget
-        || (guardian.state === 'chase' && guardian.targetType === 'rival')
-        || PP.core.utils.distance(self, guardian) <= PP.data.config.visibility.radius
-        || stage.elapsed < Number(guardian.rivalRecognitionUntil || 0));
-    }).sort(function (a, b) {
-      return PP.core.utils.distance(self, a) - PP.core.utils.distance(self, b);
-    })[0];
+    var guardianThreat = null;
+    var guardianThreatDistance = Infinity;
+    for (var guardianIndex = 0; guardianIndex < stage.guardians.length; guardianIndex += 1) {
+      var guardian = stage.guardians[guardianIndex];
+      if (guardian.destroyed) continue;
+      recordEnemyWork(stage, 'guardianThreatCandidates');
+      var guardianDistance = PP.core.utils.distance(self, guardian);
+      var guardianKnown = guardian === self.forcedGuardianTarget
+        || guardian.state === 'chase' && guardian.targetType === 'rival'
+        || guardianDistance <= PP.data.config.visibility.radius
+        || stage.elapsed < Number(guardian.rivalRecognitionUntil || 0);
+      if (guardianKnown && guardianDistance < guardianThreatDistance) {
+        guardianThreat = guardian;
+        guardianThreatDistance = guardianDistance;
+      }
+    }
     var recognizingPlayer = this.isRecognizing(stage);
     var attackTarget = recognizingPlayer ? stage.player : guardianThreat;
     if (attackTarget && this.fireCooldown <= 0) {
@@ -2783,10 +2857,8 @@
       this.state = 'escape';
       target = stage.rivalExit;
     } else {
-      var available = this.knownFreeCores(stage);
-      available.sort(function (a, b) { return PP.core.utils.distance(a, self) - PP.core.utils.distance(b, self); });
       if (!this.targetCore || this.targetCore.owner !== 'free' || this.targetCore.pickupCooldown > 0
-        || this.knownCoreIds.indexOf(this.targetCore.id) < 0) this.targetCore = available[0] || null;
+        || this.knownCoreIds.indexOf(this.targetCore.id) < 0) this.targetCore = this.nearestKnownFreeCore(stage);
     }
     if (!this.carriedCore && this.targetCore && this.targetCore.owner === 'free') {
       this.state = 'seek';
@@ -2803,10 +2875,9 @@
         if (guardianThreat) threats.push({ actor: guardianThreat, weight: PP.data.config.rival.guardianAvoidanceWeight });
       }
       direction = this.blendMovement(direction, threats, !!this.carriedCore);
-      var movementObstacles = stage.walls.filter(function (wall) { return wall.blockMovement !== false; });
       var travelSpeed = PP.data.config.rival.speed * stage.difficultyModifiers.enemySpeedMultiplier
         * (PP.systems.environment ? PP.systems.environment.speedMultiplier(stage, this) : 1);
-      PP.core.utils.moveWithObstacles(this, direction.x * travelSpeed * dt, direction.y * travelSpeed * dt, this.radius, PP.data.config.world, movementObstacles);
+      PP.core.utils.moveWithObstacles(this, direction.x * travelSpeed * dt, direction.y * travelSpeed * dt, this.radius, PP.data.config.world, stage.movementObstacles);
       var targetDistance = PP.core.utils.distance(this, target);
       if (!this.carriedCore && this.targetCore && target === this.targetCore
         && targetDistance < this.radius * 0.8 && this.targetCore.pickupCooldown <= 0) {
@@ -2836,50 +2907,70 @@
 
   Rival.updateProjectiles = function (dt, stage) {
     var hits = 0;
-    stage.projectiles.forEach(function (shot) {
-      if (shot.spent) return;
+    var projectileObstacles = stage.projectileObstacles;
+    for (var shotIndex = 0; shotIndex < stage.projectiles.length; shotIndex += 1) {
+      var shot = stage.projectiles[shotIndex];
+      if (shot.spent) continue;
       var previous = { x: shot.x, y: shot.y };
       shot.x += shot.vx * dt;
       shot.y += shot.vy * dt;
       var outside = shot.x < 0 || shot.y < 100 || shot.x > PP.data.config.world.width || shot.y > PP.data.config.world.height;
-      var projectileObstacles = stage.walls.filter(function (wall) { return wall.blockProjectiles !== false; });
-      var wallHit = projectileObstacles.some(function (wall) { return PP.core.utils.sweepCircleIntersectsObb(previous, shot, shot.radius, wall); });
-      if (outside || wallHit) { shot.spent = true; return; }
-      var actorHits = stage.guardians.filter(function (guardian) { return !guardian.destroyed; }).map(function (guardian) {
-        return { type: 'guardian', actor: guardian };
-      });
-      actorHits.push({ type: 'player', actor: stage.player });
-      actorHits = actorHits.map(function (candidate) {
-        var actor = candidate.actor;
+      var wallHit = false;
+      for (var wallIndex = 0; wallIndex < projectileObstacles.length; wallIndex += 1) {
+        recordEnemyWork(stage, 'projectileWallChecks');
+        if (PP.core.utils.sweepCircleIntersectsObb(previous, shot, shot.radius, projectileObstacles[wallIndex])) {
+          wallHit = true;
+          break;
+        }
+      }
+      if (outside || wallHit) { shot.spent = true; continue; }
+      var firstHitActor = null;
+      var firstHitType = '';
+      var firstHitT = Infinity;
+      for (var actorIndex = 0; actorIndex <= stage.guardians.length; actorIndex += 1) {
+        var actor = actorIndex < stage.guardians.length ? stage.guardians[actorIndex] : stage.player;
+        var actorType = actorIndex < stage.guardians.length ? 'guardian' : 'player';
+        if (!actor || actor.destroyed) continue;
+        recordEnemyWork(stage, 'projectileActorChecks');
         var dx = shot.x - previous.x;
         var dy = shot.y - previous.y;
         var lengthSquared = dx * dx + dy * dy;
         var t = lengthSquared ? ((actor.x - previous.x) * dx + (actor.y - previous.y) * dy) / lengthSquared : 0;
         t = Math.max(0, Math.min(1, t));
-        var closest = { x: previous.x + dx * t, y: previous.y + dy * t };
-        if (PP.core.utils.distance(closest, actor) > shot.radius + actor.radius) return null;
-        candidate.t = t;
-        return candidate;
-      }).filter(Boolean).sort(function (a, b) { return a.t - b.t; });
-      if (actorHits.length) {
-        var firstHit = actorHits[0];
+        var closestX = previous.x + dx * t;
+        var closestY = previous.y + dy * t;
+        var actorDx = closestX - actor.x;
+        var actorDy = closestY - actor.y;
+        var hitRadius = shot.radius + actor.radius;
+        if (actorDx * actorDx + actorDy * actorDy > hitRadius * hitRadius || t >= firstHitT) continue;
+        firstHitActor = actor;
+        firstHitType = actorType;
+        firstHitT = t;
+      }
+      if (firstHitActor) {
         shot.spent = true;
-        if (firstHit.type === 'guardian') {
-          firstHit.actor.takeDamage(PP.data.config.rival.projectileDamage, 'rival-projectile', stage.elapsed);
+        if (firstHitType === 'guardian') {
+          firstHitActor.takeDamage(PP.data.config.rival.projectileDamage, 'rival-projectile', stage.elapsed);
         } else {
           var projectileDamage = PP.data.config.rival.projectileDamage * stage.difficultyModifiers.enemyDamageMultiplier;
           if (stage.player.damage(projectileDamage, 'rival-projectile')) hits += 1;
         }
-        return;
+        continue;
       }
-    });
-    stage.projectiles = stage.projectiles.filter(function (shot) { return !shot.spent; });
+    }
+    var activeCount = 0;
+    for (var compactIndex = 0; compactIndex < stage.projectiles.length; compactIndex += 1) {
+      if (!stage.projectiles[compactIndex].spent) {
+        stage.projectiles[activeCount] = stage.projectiles[compactIndex];
+        activeCount += 1;
+      }
+    }
+    stage.projectiles.length = activeCount;
     return hits;
   };
 
   Rival.separateFromGuardian = function (guardian, rival, stage) {
     var rules = PP.data.config.guardian.rivalSeparation;
-    var movementObstacles = stage.walls.filter(function (wall) { return wall.blockMovement !== false; });
     for (var stepIndex = 0; stepIndex < rules.maximumSteps; stepIndex += 1) {
       var distance = PP.core.utils.distance(guardian, rival);
       var overlap = guardian.radius + rival.radius + 4 - distance;
@@ -2888,9 +2979,9 @@
       if (direction.length < 0.001) direction = { x: guardian.id % 2 ? 1 : -1, y: 0, length: 1 };
       var amount = Math.min(rules.stepWorldUnits, overlap / 2);
       PP.core.utils.moveWithObstacles(guardian, -direction.x * amount, -direction.y * amount,
-        guardian.radius, PP.data.config.world, movementObstacles);
+        guardian.radius, PP.data.config.world, stage.movementObstacles);
       PP.core.utils.moveWithObstacles(rival, direction.x * amount, direction.y * amount,
-        rival.radius, PP.data.config.world, movementObstacles);
+        rival.radius, PP.data.config.world, stage.movementObstacles);
     }
     guardian.navPath = [];
     guardian.repathTimer = rules.repathCooldownSeconds;
@@ -3187,6 +3278,7 @@
         events.passageChanged = true;
       }
     });
+    if (events.passageChanged && PP.systems.refreshObstacleViews) PP.systems.refreshObstacleViews(run);
     return events;
   }
   function onSonarContact(pulse, entity, run) {
@@ -3341,6 +3433,31 @@
     return { patternId: layout.patternId, groups: groups, colliders: colliders, decorations: expanded.decorations };
   }
 
+  function refreshObstacleViews(run) {
+    if (!run || !Array.isArray(run.walls)) return run;
+    if (PP.data.config.development.gmToolsEnabled && run.enemyWorkMetrics) {
+      run.enemyWorkMetrics.obstacleViewRefreshes += 1;
+      run.enemyWorkMetrics.obstacleViewWallChecks += run.walls.length * 4;
+    }
+    var views = [
+      ['movementObstacles', 'blockMovement'],
+      ['projectileObstacles', 'blockProjectiles'],
+      ['sonarObstacles', 'blockSignals'],
+      ['chorusObstacles', 'blockChorusWave']
+    ];
+    views.forEach(function (entry) {
+      var target = Array.isArray(run[entry[0]]) ? run[entry[0]] : [];
+      target.length = 0;
+      for (var wallIndex = 0; wallIndex < run.walls.length; wallIndex += 1) {
+        var wall = run.walls[wallIndex];
+        if (wall[entry[1]] !== false) target.push(wall);
+      }
+      run[entry[0]] = target;
+    });
+    run.obstacleRevision = (Number(run.obstacleRevision) || 0) + 1;
+    return run;
+  }
+
   function createStageRun(definition, difficultyId) {
     var random = U.seededRandom(definition.seed);
     var obstacleBuild = stageObstacles(definition, random);
@@ -3380,7 +3497,7 @@
       guardians.push(guardian);
     }
     var rival = definition.rivalPreset ? new PP.entities.Rival(110, 230, definition.rivalPreset) : null;
-    return {
+    var run = {
       runToken: 'run-' + definition.id + '-' + runSequence++,
       definition: definition,
       difficultyId: selectedDifficulty,
@@ -3391,10 +3508,19 @@
       rivalExit: { x: 900, y: 1350, radius: 72 },
       rivalAnchor: { x: 110, y: 230 },
       walls: walls,
-      movementObstacles: walls.filter(function (wall) { return wall.blockMovement; }),
-      projectileObstacles: walls.filter(function (wall) { return wall.blockProjectiles; }),
-      sonarObstacles: walls.filter(function (wall) { return wall.blockSignals; }),
-      chorusObstacles: walls.filter(function (wall) { return wall.blockChorusWave; }),
+      movementObstacles: [],
+      projectileObstacles: [],
+      sonarObstacles: [],
+      chorusObstacles: [],
+      obstacleRevision: 0,
+      enemyWorkMetrics: {
+        obstacleViewRefreshes: 0,
+        obstacleViewWallChecks: 0,
+        guardianThreatCandidates: 0,
+        knownCoreCandidates: 0,
+        projectileWallChecks: 0,
+        projectileActorChecks: 0
+      },
       obstaclePatternId: obstacleBuild.patternId,
       obstacleGroups: obstacleBuild.groups,
       decorations: obstacleBuild.decorations,
@@ -3412,6 +3538,7 @@
       rewardOfferUsed: false,
       status: 'playing'
     };
+    return refreshObstacleViews(run);
   }
 
   function countCoreOwnership(run) {
@@ -3715,8 +3842,7 @@
         var point = { x: (next.x + 0.5) * step, y: (next.y + 0.5) * step };
         if (point.x < radius || point.x > PP.data.config.world.width - radius
           || point.y < 100 + radius || point.y > PP.data.config.world.height - radius) return;
-        var movementObstacles = run.walls.filter(function (wall) { return wall.blockMovement !== false; });
-        if (movementObstacles.some(function (wall) { return U.circleIntersectsObb(point, radius, wall); })) return;
+        if (run.movementObstacles.some(function (wall) { return U.circleIntersectsObb(point, radius, wall); })) return;
         seen[key] = true;
         queue.push(next);
       });
@@ -3730,7 +3856,7 @@
     var chorus = run.guardians.filter(function (guardian) { return guardian.type === 'chorus'; })[0];
     if (!chorus) return 0;
     var world = PP.data.config.world;
-    var chorusWalls = run.walls.filter(function (wall) { return wall.blockChorusWave !== false; });
+    var chorusWalls = run.chorusObstacles;
     var safeGroups = {};
     chorusWalls.forEach(function (wall) {
       var normals = [
@@ -3970,6 +4096,7 @@
   }
 
   PP.systems.createStageRun = createStageRun;
+  PP.systems.refreshObstacleViews = refreshObstacleViews;
   PP.systems.createObstacleGroup = createObstacleGroup;
   PP.systems.obstacleDataErrors = obstacleDataErrors;
   PP.systems.obstacleRunErrors = obstacleRunErrors;
@@ -5087,6 +5214,8 @@
               height: canvasBacking.height,
               pixels: canvasBacking.pixels
             },
+            pathfinding: PP.core.utils.getPathfindingMetrics(),
+            enemyWork: stage && stage.enemyWorkMetrics ? Object.assign({}, stage.enemyWorkMetrics) : null,
             renderPending: renderPending,
             gameScreenVisible: gameScreenVisible,
             accumulator: simulationClock.accumulator
@@ -5792,7 +5921,7 @@
         })).concat(stage.walls)
           .concat(stage.environment ? stage.environment.revealables : []).concat([stage.player]);
         if (stage.rival) revealables.push(stage.rival);
-        sonarObstacles = stage.walls.filter(function (wall) { return wall.blockSignals !== false; });
+        sonarObstacles = stage.sonarObstacles;
       }
       stage.sonar.update(dt, stage.elapsed, revealables, handleSonarContact, sonarObstacles, stage);
       collectPlayerCores();
@@ -6025,20 +6154,13 @@
       pulse._renderOcclusion = { signature: signature, blockDistances: distances };
       return distances;
     }
-    var renderSignalObstacles = null;
-    var renderChorusObstacles = null;
     function drawOccludedPulse(pulse, style) {
       style = style || {};
       var color = style.color || (pulse.source === 'rival' ? '#ff9a6b' : (pulse.boosted ? '#ffd369' : '#57e3d6'));
       var alpha = style.alpha === undefined ? Math.max(0, pulse.life / PP.data.config.sonar.waveSeconds) : style.alpha;
       var segments = 120;
       var sourceKind = pulse.source === 'chorus' ? 'chorus' : 'signal';
-      if (sourceKind === 'chorus' && !renderChorusObstacles) {
-        renderChorusObstacles = stage.walls.filter(function (wall) { return wall.blockChorusWave !== false; });
-      } else if (sourceKind !== 'chorus' && !renderSignalObstacles) {
-        renderSignalObstacles = stage.walls.filter(function (wall) { return wall.blockSignals !== false; });
-      }
-      var pulseObstacles = sourceKind === 'chorus' ? renderChorusObstacles : renderSignalObstacles;
+      var pulseObstacles = sourceKind === 'chorus' ? stage.chorusObstacles : stage.sonarObstacles;
       var blockDistances = pulseBlockDistances(pulse, pulseObstacles, sourceKind, segments);
       context.save();
       context.strokeStyle = color;
@@ -6254,8 +6376,6 @@
       var guardianCosmetic = equippedCosmetic('guardian');
       var rivalCosmetic = equippedCosmetic('rival');
       var playerCosmetic = equippedCosmetic('player');
-      renderSignalObstacles = null;
-      renderChorusObstacles = null;
       ctx.clearRect(0, 0, W, H);
       ctx.save();
       var damageShaking = stage.damageFeedback && stage.elapsed < stage.damageFeedback.shakeUntil;
