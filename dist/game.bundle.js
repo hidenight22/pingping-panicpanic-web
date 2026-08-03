@@ -4,7 +4,7 @@
   'use strict';
 
   var app = global.PingPanic || {};
-  app.version = '0.4.27';
+  app.version = '0.4.28';
   app.data = app.data || {};
   app.core = app.core || {};
   app.entities = app.entities || {};
@@ -196,6 +196,7 @@
       zoneCount: 5,
       stagesPerZone: 20,
       stageCount: 100,
+      expandedPilotStageIds: [1, 4, 9],
       onboardingStageIds: [1, 2, 3, 4, 5, 7, 8, 9, 21, 22, 23, 62, 67],
       rivalStageIds: [22, 25, 29, 36, 45, 56, 66, 76, 88, 98]
     },
@@ -959,18 +960,50 @@
   };
 
   var OVERRIDES = {
-    1: { guardianCount: 0, currentStrength: 0, timeLimit: 70, coreTotal: 1, requiredCores: 1, startRevealedCores: true },
+    1: {
+      world: { width: 1000, height: 2100 },
+      playerStart: { x: 500, y: 1920 },
+      relaySpot: { x: 500, y: 180 },
+      fixedCoreSpots: [{ x: 500, y: 1080 }],
+      fixedObstacleGroups: [],
+      guardianCount: 0, currentStrength: 0, timeLimit: 70,
+      coreTotal: 1, requiredCores: 1, startRevealedCores: true
+    },
     2: { guardianCount: 0, currentStrength: 0, timeLimit: 88, coreTotal: 3, requiredCores: 3 },
     3: {
       guardianCount: 0, currentStrength: 0, timeLimit: 92,
       coreTotal: 3, requiredCores: 3,
       fixedCoreSpots: [{ x: 500, y: 315 }, { x: 150, y: 280 }, { x: 840, y: 355 }]
     },
-    4: { guardianCount: 1, guardianTypes: ['pin'], currentStrength: 4, timeLimit: 98 },
+    4: {
+      world: { width: 1400, height: 2200 },
+      playerStart: { x: 700, y: 2020 },
+      relaySpot: { x: 1160, y: 180 },
+      fixedCoreSpots: [{ x: 220, y: 1800 }, { x: 1180, y: 1220 }, { x: 300, y: 420 }],
+      fixedGuardianSpots: [{ x: 720, y: 1030 }],
+      fixedObstacleGroups: [
+        { id: 'stage-4-pilot-rs-1', profileId: 'ruin-segment', x: 380, y: 1510, rotationDegrees: 90, scale: 1 },
+        { id: 'stage-4-pilot-rs-2', profileId: 'ruin-segment', x: 1050, y: 1600, rotationDegrees: 90, scale: 1 },
+        { id: 'stage-4-pilot-cq-1', profileId: 'column-square', x: 430, y: 900, rotationDegrees: 45, scale: 1 },
+        { id: 'stage-4-pilot-cq-2', profileId: 'column-square', x: 970, y: 690, rotationDegrees: 135, scale: 1 }
+      ],
+      guardianCount: 1, guardianTypes: ['pin'], currentStrength: 4, timeLimit: 98
+    },
     5: { guardianCount: 1, guardianTypes: ['pin'], fixedGuardianSpots: [{ x: 500, y: 790 }] },
     7: { guardianCount: 0, guardianTypes: [] },
     8: { guardianCount: 0, guardianTypes: [], currentStrength: 9, currentPhase: 0 },
-    9: { guardianCount: 0, guardianTypes: [] },
+    9: {
+      world: { width: 1600, height: 2400 },
+      playerStart: { x: 800, y: 2200 },
+      relaySpot: { x: 1330, y: 220 },
+      fixedCoreSpots: [{ x: 250, y: 1840 }, { x: 1350, y: 1450 }, { x: 380, y: 620 }],
+      fixedObstacleGroups: [
+        { id: 'stage-9-pilot-wp-1', profileId: 'wall-pillar', x: 360, y: 1500, rotationDegrees: 135, scale: 1 },
+        { id: 'stage-9-pilot-wp-2', profileId: 'wall-pillar', x: 1260, y: 1780, rotationDegrees: 45, scale: 1 },
+        { id: 'stage-9-pilot-cq-1', profileId: 'column-square', x: 610, y: 820, rotationDegrees: 90, scale: 1 }
+      ],
+      guardianCount: 0, guardianTypes: [], timeLimit: 120
+    },
     21: { guardianCount: 1, guardianTypes: ['hound'] },
     22: { guardianCount: 0, guardianTypes: [] },
     23: { guardianCount: 0, guardianTypes: [] },
@@ -993,7 +1026,7 @@
       x: 500, y: 760, width: 720, height: 300, rotationDegrees: 90, feather: 90,
       currentStrength: 14, currentPhase: -Math.PI / 2
     });
-    if (id === 9) mechanics.push({ type: 'variablePassage', x: 500, y: 760, width: 420, height: 72, rotationDegrees: 0, period: 4.2, openSeconds: 2.1, phase: 0 });
+    if (id === 9) mechanics.push({ type: 'variablePassage', x: 1040, y: 1120, width: 520, height: 72, rotationDegrees: 0, period: 4.2, openSeconds: 2.1, phase: 0 });
     if (id === 10) mechanics.push({
       type: 'currentBand', mode: 'boost',
       x: 500, y: 1040, width: 760, height: 240, rotationDegrees: 333, feather: 72,
@@ -3676,6 +3709,12 @@
   }
   function stageObstacles(definition, random, world) {
     var data = PP.data.obstacles;
+    if (Array.isArray(definition.fixedObstacleGroups)) {
+      var fixedGroups = definition.fixedObstacleGroups.map(createObstacleGroup);
+      var fixedColliders = [];
+      fixedGroups.forEach(function (group) { fixedColliders = fixedColliders.concat(group.colliders); });
+      return { patternId: definition.obstaclePatternId, groups: fixedGroups, colliders: fixedColliders, decorations: [] };
+    }
     var layout = data.stageLayouts[String(definition.id)] || {
       stageId: definition.id,
       patternId: definition.obstaclePatternId,
@@ -3756,6 +3795,8 @@
       guardians.push(guardian);
     }
     var rival = definition.rivalPreset ? new PP.entities.Rival(110, 230, definition.rivalPreset) : null;
+    var playerStart = definition.playerStart || { x: 500, y: 1350 };
+    var relaySpot = definition.relaySpot || { x: 500, y: 128 };
     var run = {
       runToken: 'run-' + definition.id + '-' + runSequence++,
       definition: definition,
@@ -3763,8 +3804,8 @@
       difficultyId: selectedDifficulty,
       difficultyModifiers: difficultyProfile,
       rewardProfile: difficultyProfile.rewardProfile,
-      player: new PP.entities.Player(500, 1350),
-      relay: { x: 500, y: 128, radius: 106 },
+      player: new PP.entities.Player(playerStart.x, playerStart.y),
+      relay: { x: relaySpot.x, y: relaySpot.y, radius: 106 },
       rivalExit: { x: 900, y: 1350, radius: 72 },
       rivalAnchor: { x: 110, y: 230 },
       walls: walls,
@@ -3997,6 +4038,132 @@
     });
     return errors;
   }
+  function worldBoundaryErrors(run) {
+    var errors = [];
+    var world = run.world;
+    var epsilon = 0.000001;
+    function circle(label, entity, radius, actorTop) {
+      if (!entity) return;
+      radius = Number(radius === undefined ? entity.radius : radius) || 0;
+      var minimumY = actorTop ? 100 + radius : radius;
+      if (entity.x - radius < -epsilon || entity.x + radius > world.width + epsilon
+        || entity.y < minimumY - epsilon || entity.y + radius > world.height + epsilon) {
+        errors.push(label + ' world 경계 이탈');
+      }
+    }
+    function obb(label, entity) {
+      if (!entity || !entity.aabb) { errors.push(label + ' OBB 경계 정보 누락'); return; }
+      if (entity.aabb.minX < -epsilon || entity.aabb.maxX > world.width + epsilon
+        || entity.aabb.minY < -epsilon || entity.aabb.maxY > world.height + epsilon) {
+        errors.push(label + ' world 경계 이탈');
+      }
+    }
+    circle('player', run.player, run.player.radius, true);
+    circle('player-relay', run.relay);
+    run.cores.forEach(function (core) { circle(core.id, core); });
+    run.guardians.forEach(function (guardian) { circle('guardian-' + guardian.id, guardian, guardian.radius, true); });
+    if (run.rival) {
+      circle('rival', run.rival, run.rival.radius, true);
+      circle('rival-exit', run.rivalExit);
+    }
+    run.walls.forEach(function (wall) { obb(wall.id, wall); });
+    (run.environment ? run.environment.zones : []).forEach(function (zone) {
+      if (zone.aabb) obb(zone.id, zone);
+      else circle(zone.id, zone);
+    });
+    return errors;
+  }
+  function spatialFingerprint(run) {
+    function point(entity) { return [entity.x, entity.y, entity.radius || 0]; }
+    return JSON.stringify({
+      world: [run.world.width, run.world.height],
+      player: point(run.player),
+      relay: point(run.relay),
+      cores: run.cores.map(function (core) { return [core.id].concat(point(core)); }),
+      guardians: run.guardians.map(function (guardian) { return [guardian.id, guardian.type].concat(point(guardian)); }),
+      walls: run.walls.map(function (wall) {
+        return [wall.id, wall.profileId || wall.environmentKind, wall.cx, wall.cy, wall.width, wall.height, wall.rotationDegrees];
+      }),
+      zones: (run.environment ? run.environment.zones : []).map(function (zone) {
+        return [zone.id, zone.environmentKind, zone.x || zone.cx, zone.y || zone.cy,
+          zone.radius || zone.width, zone.height || 0, zone.rotationDegrees || 0];
+      })
+    });
+  }
+  function expandedPilotErrors(stages) {
+    var errors = [];
+    var contracts = {
+      1: {
+        world: [1000, 2100], player: [500, 1920], relay: [500, 180], timeLimit: 70,
+        cores: [[500, 1080]], guardians: [], obstacles: []
+      },
+      4: {
+        world: [1400, 2200], player: [700, 2020], relay: [1160, 180], timeLimit: 98,
+        cores: [[220, 1800], [1180, 1220], [300, 420]], guardians: [[720, 1030]],
+        obstacles: [
+          ['ruin-segment', 380, 1510, 90, 1], ['ruin-segment', 1050, 1600, 90, 1],
+          ['column-square', 430, 900, 45, 1], ['column-square', 970, 690, 135, 1]
+        ]
+      },
+      9: {
+        world: [1600, 2400], player: [800, 2200], relay: [1330, 220], timeLimit: 120,
+        cores: [[250, 1840], [1350, 1450], [380, 620]], guardians: [],
+        obstacles: [
+          ['wall-pillar', 360, 1500, 135, 1], ['wall-pillar', 1260, 1780, 45, 1],
+          ['column-square', 610, 820, 90, 1]
+        ],
+        passage: [1040, 1120, 520, 72, 0, 4.2, 2.1]
+      }
+    };
+    var pilotIds = PP.data.config.campaign.expandedPilotStageIds;
+    if (pilotIds.join(',') !== '1,4,9') errors.push('확대 파일럿 ID 계약 오류');
+    stages.forEach(function (definition) {
+      var contract = contracts[definition.id];
+      if (!contract) {
+        if (definition.world || definition.playerStart || definition.relaySpot
+          || Object.prototype.hasOwnProperty.call(definition, 'fixedObstacleGroups')) {
+          errors.push('비대상 stage 공간 override 금지: ' + definition.id);
+        }
+        var legacyRun = createStageRun(definition);
+        if (legacyRun.world.width !== PP.data.config.world.width || legacyRun.world.height !== PP.data.config.world.height
+          || legacyRun.player.x !== 500 || legacyRun.player.y !== 1350
+          || legacyRun.relay.x !== 500 || legacyRun.relay.y !== 128) {
+          errors.push('비대상 stage fallback 변경: ' + definition.id);
+        }
+        return;
+      }
+      var run = createStageRun(definition);
+      function samePoint(entity, expected) { return entity.x === expected[0] && entity.y === expected[1]; }
+      if (run.world.width !== contract.world[0] || run.world.height !== contract.world[1]) errors.push('파일럿 world 오류: ' + definition.id);
+      if (!samePoint(run.player, contract.player)) errors.push('파일럿 playerStart 오류: ' + definition.id);
+      if (!samePoint(run.relay, contract.relay)) errors.push('파일럿 relaySpot 오류: ' + definition.id);
+      if (definition.timeLimit !== contract.timeLimit) errors.push('파일럿 timeLimit 오류: ' + definition.id);
+      if (run.cores.length !== contract.cores.length || run.cores.some(function (core, index) { return !samePoint(core, contract.cores[index]); })) {
+        errors.push('파일럿 core 좌표 오류: ' + definition.id);
+      }
+      if (run.guardians.length !== contract.guardians.length || run.guardians.some(function (guardian, index) { return !samePoint(guardian, contract.guardians[index]); })) {
+        errors.push('파일럿 guardian 좌표 오류: ' + definition.id);
+      }
+      var obstacleContract = (definition.fixedObstacleGroups || []).map(function (group) {
+        return [group.profileId, group.x, group.y, group.rotationDegrees, group.scale];
+      });
+      if (JSON.stringify(obstacleContract) !== JSON.stringify(contract.obstacles)) errors.push('파일럿 obstacle 좌표 오류: ' + definition.id);
+      if (contract.passage) {
+        var passage = definition.environment.filter(function (entry) { return entry.type === 'variablePassage'; })[0];
+        var passageContract = passage && [passage.x, passage.y, passage.width, passage.height,
+          passage.rotationDegrees || 0, passage.period, passage.openSeconds];
+        if (JSON.stringify(passageContract) !== JSON.stringify(contract.passage)) errors.push('파일럿 passage 좌표 오류: ' + definition.id);
+      }
+      for (var first = 0; first < run.cores.length; first += 1) {
+        if (U.distance(run.relay, run.cores[first]) < 650) errors.push('파일럿 relay-core 650 미달: ' + definition.id + '/' + run.cores[first].id);
+        for (var second = first + 1; second < run.cores.length; second += 1) {
+          if (U.distance(run.cores[first], run.cores[second]) < 600) errors.push('파일럿 core-core 600 미달: ' + definition.id);
+        }
+      }
+      if (spatialFingerprint(run) !== spatialFingerprint(createStageRun(definition))) errors.push('파일럿 공간 재현 실패: ' + definition.id);
+    });
+    return errors;
+  }
   function pointInsideObb(point, obb) {
     var local = U.toObbLocal(point, obb);
     return Math.abs(local.x) <= obb.halfExtents.x && Math.abs(local.y) <= obb.halfExtents.y;
@@ -4183,6 +4350,7 @@
 
   function validateCampaign(stages) {
     var errors = obstacleDataErrors();
+    errors = errors.concat(expandedPilotErrors(stages));
     var rivals = [];
     var zoneCounts = {};
     var intents = {};
@@ -4227,6 +4395,7 @@
         if (stage.coreTotal !== 3 || stage.requiredCores !== 3) errors.push('라이벌 스테이지 코어 3/목표 3 오류: ' + stage.id);
       }
       var run = createStageRun(stage);
+      errors = errors.concat(worldBoundaryErrors(run).map(function (message) { return stage.id + ': ' + message; }));
       if (run.cores.length !== stage.coreTotal) errors.push('코어 스폰 수 부족: ' + stage.id);
       if (run.guardians.length !== stage.guardianCount) errors.push('수호자 스폰 수 부족: ' + stage.id);
       if (!canReach(run, run.relay, run.player.radius, run.player)) errors.push('중계문 도달 불가: ' + stage.id);
@@ -4350,6 +4519,7 @@
     var capped = createAbyssDefinition(seed, 999);
     if (capped.difficultyTier !== PP.data.config.abyss.maxDifficultyTier) errors.push('무저갱 난이도 상한 실패');
     var run = createAbyssRun(seed, 0, 0, null);
+    errors = errors.concat(worldBoundaryErrors(run).map(function (message) { return '무저갱: ' + message; }));
     if (coreInvariantErrors(run).length) errors.push('무저갱 코어 불변식 실패');
     errors = errors.concat(obstacleRunErrors(run));
     if (!canReach(run, run.relay) || run.cores.some(function (core) { return !canReach(run, core); })) errors.push('무저갱 첫 구획 도달성 실패');
@@ -4365,6 +4535,9 @@
   PP.systems.stageThreeShieldErrors = stageThreeShieldErrors;
   PP.systems.earlyLearningErrors = earlyLearningErrors;
   PP.systems.obstacleQualityReport = obstacleQualityReport;
+  PP.systems.worldBoundaryErrors = worldBoundaryErrors;
+  PP.systems.spatialFingerprint = spatialFingerprint;
+  PP.systems.expandedPilotErrors = expandedPilotErrors;
   PP.systems.canReachObb = canReach;
   PP.systems.reachableShadowCount = reachableShadowCount;
   PP.systems.countCoreOwnership = countCoreOwnership;
@@ -6451,7 +6624,6 @@
       var environmentEvents = PP.systems.environment.update(stage, dt);
       if (environmentEvents.thermalHit) ui.toast(PP.core.i18n.t('toast.thermal'));
       stage.player.update(dt, input, stage);
-      camera.follow(stage.player);
       if (input.consumeSonar()) useSonar();
 
       var sonarActive = stage.sonar.pulses.length > 0;
@@ -6484,6 +6656,7 @@
       }
       updateGuardians(dt);
       processPlayerDamage();
+      camera.follow(stage.player);
 
       var invariantErrors = PP.systems.coreInvariantErrors(stage);
       if (invariantErrors.length) {
@@ -6913,6 +7086,16 @@
       context.fillRect(-guardian.radius, -guardian.radius, guardian.radius * 2, guardian.radius * 2);
       context.restore();
     }
+    function circleVisibleToCamera(entity, radius) {
+      radius = Math.max(0, Number(radius === undefined ? entity && entity.radius : radius) || 0) + 16;
+      return !!entity && entity.x + radius >= camera.x
+        && entity.x - radius <= camera.x + camera.viewport.width
+        && entity.y + radius >= camera.y
+        && entity.y - radius <= camera.y + camera.viewport.height;
+    }
+    function firstParticleCoordinate(origin, spacing, minimum) {
+      return origin + Math.max(0, Math.ceil((minimum - origin) / spacing)) * spacing;
+    }
     function render() {
       if (!stage) return;
       performanceMetrics.worldRenders += 1;
@@ -6954,7 +7137,11 @@
       ctx.save();
       ctx.globalAlpha = 0.11;
       ctx.fillStyle = zoneColor;
-      for (var y = 160; y < H; y += 130) for (var x = 70; x < W; x += 120) {
+      var firstParticleY = firstParticleCoordinate(160, 130, camera.y);
+      var lastParticleY = Math.min(H, camera.y + viewH);
+      var firstParticleX = firstParticleCoordinate(70, 120, camera.x - 16);
+      var lastParticleX = Math.min(W, camera.x + viewW + 16);
+      for (var y = firstParticleY; y < lastParticleY; y += 130) for (var x = firstParticleX; x < lastParticleX; x += 120) {
         ctx.beginPath(); ctx.arc(x + Math.sin(stage.elapsed + y) * 8, y, 3, 0, Math.PI * 2); ctx.fill();
       }
       ctx.restore();
@@ -7093,7 +7280,9 @@
           if (!drawGuardianSkinOverlay(guardianCosmetic, guardian, guardianAlpha)) drawGuardianSkinFallback(guardianCosmetic, guardian);
         }
         if (guardian.chorusWarning > 0) drawRing(guardian.x, guardian.y, 82, '#ffd369', 8, 0.8);
-        if (guardian.chorusWave) drawOccludedPulse(guardian.chorusWave, { color: '#b79cff', alpha: 0.8, lineWidth: 7 });
+        if (guardian.chorusWave && circleVisibleToCamera(guardian.chorusWave, guardian.chorusWave.radius)) {
+          drawOccludedPulse(guardian.chorusWave, { color: '#b79cff', alpha: 0.8, lineWidth: 7 });
+        }
       });
       if (stage.rival) {
         if (!drawImage('entity-rival-relay-boundary', stage.rivalExit.x, stage.rivalExit.y, 96, 180, 0, 0.72)) drawRing(stage.rivalExit.x, stage.rivalExit.y, stage.rivalExit.radius, '#ff9a6b', 6, 0.52, [15, 10]);
@@ -7110,12 +7299,13 @@
         }
       }
       stage.projectiles.forEach(function (shot) {
+        if (!circleVisibleToCamera(shot, 26)) return;
         if (!drawImage('effect-rival-projectile', shot.x, shot.y, 52, 26, Math.atan2(shot.vy, shot.vx))) {
           ctx.fillStyle = '#ff786f'; ctx.shadowBlur = 18; ctx.shadowColor = '#ff786f'; ctx.beginPath(); ctx.arc(shot.x, shot.y, shot.radius, 0, Math.PI * 2); ctx.fill();
         }
       });
       stage.sonar.pulses.forEach(function (pulse) {
-        drawOccludedPulse(pulse);
+        if (circleVisibleToCamera(pulse, pulse.radius)) drawOccludedPulse(pulse);
       });
 
       var player = stage.player;
