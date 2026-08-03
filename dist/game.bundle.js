@@ -4,7 +4,7 @@
   'use strict';
 
   var app = global.PingPanic || {};
-  app.version = '0.4.29';
+  app.version = '0.4.30';
   app.data = app.data || {};
   app.core = app.core || {};
   app.entities = app.entities || {};
@@ -471,6 +471,7 @@
       'toast.sonarLow': '공명 충전이 부족합니다.', 'toast.sonar': '소나 파동이 퍼집니다.',
       'toast.sonarBoosted': '증폭 소나 · 범위 1.5배 · 5초 탐지',
       'toast.core': '공명 코어 {current} / {required}',
+      'toast.coreDiscovered': '공명 코어 신호를 발견했습니다. ({current}/{total})',
       'toast.relayDiscovered': '중계문 신호를 확인했습니다.',
       'toast.thermal': '열수 분출에 피격됐습니다.',
       'thermal.countdown': '분출까지 {seconds}초',
@@ -626,6 +627,7 @@
       'toast.sonarLow': 'Not enough resonance charge.', 'toast.sonar': 'Sonar wave emitted.',
       'toast.sonarBoosted': 'Boosted sonar · 1.5× range · 5s reveal',
       'toast.core': 'Resonance core {current} / {required}',
+      'toast.coreDiscovered': 'Resonance core signal found. ({current}/{total})',
       'toast.relayDiscovered': 'Relay signal located.',
       'toast.thermal': 'Thermal vent hit!',
       'thermal.countdown': 'VENT IN {seconds}s',
@@ -3790,7 +3792,8 @@
     var cores = spots.slice(0, definition.coreTotal).map(function (spot, index) {
       return {
         id: 'core-' + (index + 1), x: spot.x, y: spot.y, radius: 30,
-        owner: 'free', revealedUntil: definition.startRevealedCores ? Infinity : 0, pickupCooldown: 0
+        owner: 'free', revealedUntil: definition.startRevealedCores ? Infinity : 0,
+        playerDiscovered: !!definition.startRevealedCores, pickupCooldown: 0
       };
     });
     var guardianCandidates = definition.fixedGuardianSpots && definition.fixedGuardianSpots.length
@@ -3889,6 +3892,7 @@
     if (counts.extracted > PP.data.config.coreRules.rivalMaxExtracted) errors.push('라이벌 반출 상한 위반');
     if (counts.rival > 1) errors.push('라이벌 운반 상한 위반');
     if (run.rival && Number(!!run.rival.carriedCore) !== counts.rival) errors.push('라이벌 운반 참조 불일치');
+    if (run.cores.some(function (core) { return typeof core.playerDiscovered !== 'boolean'; })) errors.push('플레이어 코어 발견 상태 오류');
     return errors;
   }
   function relayProgress(run) {
@@ -3896,6 +3900,16 @@
     return counts.player + counts.extracted;
   }
   function relayActive(run) { return relayProgress(run) >= run.definition.requiredCores; }
+  function discoverCoreForPlayer(run, core) {
+    if (!run || !core || core.owner !== 'free' || core.playerDiscovered) return false;
+    if (run.cores.indexOf(core) < 0) return false;
+    core.playerDiscovered = true;
+    return true;
+  }
+  function playerDiscoveredCoreCount(run) {
+    if (!run || !Array.isArray(run.cores)) return 0;
+    return run.cores.reduce(function (count, core) { return count + Number(core.playerDiscovered === true); }, 0);
+  }
   function relayDiscovered(run) { return !!(run && run.relay && run.relay.discovered); }
   function discoverRelay(run) {
     if (!run || !run.relay || run.relay.discovered) return false;
@@ -4589,6 +4603,8 @@
   PP.systems.coreInvariantErrors = coreInvariantErrors;
   PP.systems.relayProgress = relayProgress;
   PP.systems.relayActive = relayActive;
+  PP.systems.discoverCoreForPlayer = discoverCoreForPlayer;
+  PP.systems.playerDiscoveredCoreCount = playerDiscoveredCoreCount;
   PP.systems.relayDiscovered = relayDiscovered;
   PP.systems.discoverRelay = discoverRelay;
   PP.systems.discoverRelayByProximity = discoverRelayByProximity;
@@ -5011,6 +5027,117 @@
 (function (PP) {
   'use strict';
 
+  function ToastStack(container, announcer, options) {
+    options = options || {};
+    this.container = container;
+    this.announcer = announcer;
+    this.document = options.document || document;
+    this.schedule = options.setTimeout || function (callback, delay) { return setTimeout(callback, delay); };
+    this.cancel = options.clearTimeout || function (timer) { clearTimeout(timer); };
+    this.displayMilliseconds = options.displayMilliseconds || 2200;
+    this.leaveMilliseconds = options.leaveMilliseconds || 180;
+    this.maximumVisible = options.maximumVisible || 3;
+    this.maximumPending = options.maximumPending || 8;
+    this.visible = [];
+    this.pending = [];
+    this.byKey = Object.create(null);
+    this.nextId = 1;
+  }
+  ToastStack.prototype.displayText = function (item) {
+    return item.message + (item.count > 1 ? ' ×' + item.count : '');
+  };
+  ToastStack.prototype.updateItem = function (item) {
+    var text = this.displayText(item);
+    if (item.node) {
+      item.node.textContent = text;
+      if (this.announcer) this.announcer.textContent = text;
+    }
+  };
+  ToastStack.prototype.release = function (item) {
+    if (!item) return;
+    if (item.displayTimer !== null) this.cancel(item.displayTimer);
+    if (item.leaveTimer !== null) this.cancel(item.leaveTimer);
+    if (this.byKey[item.key] === item) delete this.byKey[item.key];
+  };
+  ToastStack.prototype.show = function (item) {
+    var self = this;
+    var node = this.document.createElement('div');
+    node.className = 'toast is-visible';
+    node.setAttribute('data-toast-id', item.id);
+    node.setAttribute('data-toast-priority', item.priority);
+    item.node = node;
+    this.visible.push(item);
+    this.container.appendChild(node);
+    this.updateItem(item);
+    item.displayTimer = this.schedule(function () { self.beginLeaving(item); }, this.displayMilliseconds);
+  };
+  ToastStack.prototype.enqueue = function (item) {
+    if (this.pending.length >= this.maximumPending) {
+      if (item.priority !== 'high') { this.release(item); return false; }
+      var normalIndex = -1;
+      for (var index = this.pending.length - 1; index >= 0; index -= 1) {
+        if (this.pending[index].priority === 'normal') { normalIndex = index; break; }
+      }
+      if (normalIndex < 0) { this.release(item); return false; }
+      this.release(this.pending.splice(normalIndex, 1)[0]);
+    }
+    if (item.priority === 'high') {
+      var insertion = 0;
+      while (insertion < this.pending.length && this.pending[insertion].priority === 'high') insertion += 1;
+      this.pending.splice(insertion, 0, item);
+    } else this.pending.push(item);
+    return true;
+  };
+  ToastStack.prototype.push = function (message, options) {
+    options = options || {};
+    message = String(message || '').trim();
+    if (!message) return false;
+    var key = String(options.dedupeKey || ('message:' + message));
+    var existing = this.byKey[key];
+    if (existing) {
+      existing.count += 1;
+      this.updateItem(existing);
+      return false;
+    }
+    var item = {
+      id: this.nextId++, key: key, message: message, count: 1,
+      priority: options.priority === 'high' ? 'high' : 'normal',
+      node: null, displayTimer: null, leaveTimer: null
+    };
+    this.byKey[key] = item;
+    if (this.visible.length < this.maximumVisible) this.show(item);
+    else if (!this.enqueue(item)) return false;
+    return true;
+  };
+  ToastStack.prototype.beginLeaving = function (item) {
+    var self = this;
+    if (this.visible.indexOf(item) < 0 || item.leaveTimer !== null) return;
+    item.displayTimer = null;
+    if (item.node) { item.node.classList.remove('is-visible'); item.node.classList.add('is-leaving'); }
+    item.leaveTimer = this.schedule(function () { self.removeVisible(item); }, this.leaveMilliseconds);
+  };
+  ToastStack.prototype.removeVisible = function (item) {
+    var index = this.visible.indexOf(item);
+    if (index < 0) return;
+    this.visible.splice(index, 1);
+    if (item.node && item.node.parentNode) item.node.parentNode.removeChild(item.node);
+    item.node = null;
+    this.release(item);
+    while (this.visible.length < this.maximumVisible && this.pending.length) this.show(this.pending.shift());
+  };
+  ToastStack.prototype.clear = function () {
+    this.visible.concat(this.pending).forEach(this.release.bind(this));
+    this.visible.length = 0;
+    this.pending.length = 0;
+    this.byKey = Object.create(null);
+    this.container.innerHTML = '';
+    if (this.announcer) this.announcer.textContent = '';
+  };
+  ToastStack.prototype.snapshot = function () {
+    function entry(item) { return { key: item.key, message: item.message, count: item.count, priority: item.priority, leaving: item.leaveTimer !== null }; }
+    return { visible: this.visible.map(entry), pending: this.pending.map(entry) };
+  };
+
   function createScreens(app, callbacks) {
     var soundIcon = '<svg class="sound-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="sound-speaker" d="M4 9h4l5-4v14l-5-4H4z"></path><path class="sound-wave" d="M16 8c1.2 1 1.8 2.3 1.8 4S17.2 15 16 16m2.5-10.5A8.3 8.3 0 0 1 21 12a8.3 8.3 0 0 1-2.5 6.5"></path><path class="sound-muted" d="m16 9 5 6m0-6-5 6"></path></svg>';
     var contestMode = !!(PP.data.config.runtime && PP.data.config.runtime.contest);
@@ -5057,7 +5184,8 @@
       '  <div class="modal-panel product-panel" data-role="product-panel" hidden><div class="product-card"><p class="eyebrow">PRODUCT</p><h2 data-role="product-title">강제 광고 제거권</h2><p data-role="product-copy"></p><strong class="product-price" data-role="product-price">결제 연결 예정</strong><p class="product-status" data-role="product-status" aria-live="polite"></p><div class="product-actions"><button data-action="product-close">닫기</button><button data-action="product-restore">구매 복원</button><button class="primary" data-action="product-purchase">구매</button></div></div></div>',
       '  <div class="modal-panel gm-panel" data-role="gm-panel" hidden><div><p class="eyebrow">DEVELOPMENT ONLY</p><h2>GM 도구</h2><p>스테이지 개방은 실제 연속 진행이나 무저갱 해금으로 처리되지 않습니다.</p><div data-role="gm-tools-host"></div><button data-action="gm-stage-select">열린 해역 테스트</button><button data-action="gm-close">닫기</button></div></div>',
       '  <aside class="global-ad-banner" data-role="global-ad-banner" data-banner-profile="toss" data-banner-position="top" data-banner-height-dp="54" data-banner-height-source="mock" data-banner-surface="simulated" aria-label="고정 배너 광고 검증 영역"><div class="banner-placeholder" data-role="banner-placeholder"><b>AD</b><span><strong data-i18n="banner.title">배너 광고 영역</strong><small data-i18n="banner.copy">개발용 표시 · 실제 광고 아님</small></span></div><div class="banner-sdk-slot" data-role="banner-sdk-slot" hidden></div></aside>',
-      '  <div class="toast" data-role="toast" aria-live="polite"></div>',
+      '  <div class="toast-stack" data-role="toast" aria-hidden="true"></div>',
+      '  <div class="visually-hidden toast-announcer" data-role="toast-announcer" aria-live="polite" aria-atomic="true"></div>',
       '</main>'
     ].join('');
 
@@ -5071,7 +5199,7 @@
       'dive-preparation-panel', 'dive-preparation-title', 'dive-preparation-target', 'dive-preparation-status', 'hand-choice-panel', 'settings-panel', 'settings-title', 'settings-language-legend', 'settings-hand-legend',
       'onboarding-panel', 'onboarding-title', 'onboarding-copy', 'onboarding-icon', 'onboarding-text', 'cosmetics-panel', 'cosmetics-balance', 'cosmetic-list',
       'purchase-panel', 'purchase-title', 'purchase-copy', 'product-panel', 'product-title', 'product-copy', 'product-price', 'product-status', 'gm-panel', 'gm-tools-host',
-      'ending-seal', 'ending-title', 'ending-copy', 'ending-next', 'global-ad-banner', 'banner-placeholder', 'banner-sdk-slot', 'toast'
+      'ending-seal', 'ending-title', 'ending-copy', 'ending-next', 'global-ad-banner', 'banner-placeholder', 'banner-sdk-slot', 'toast', 'toast-announcer'
     ].forEach(function (role) { elements[role] = app.querySelector('[data-role="' + role + '"]'); });
 
     if (contestMode) {
@@ -5170,12 +5298,14 @@
       });
     }
     function show(name) {
+      app.setAttribute('data-active-screen', name);
       app.querySelectorAll('[data-screen]').forEach(function (screen) {
         screen.classList.toggle('is-active', screen.getAttribute('data-screen') === name);
       });
     }
     function forceShow(name) {
       var activated = false;
+      app.setAttribute('data-active-screen', name);
       app.querySelectorAll('[data-screen]').forEach(function (screen) {
         var selected = screen.getAttribute('data-screen') === name;
         try {
@@ -5657,11 +5787,10 @@
     function isRemoveAdsProductOpen() { return !elements['product-panel'].hidden; }
     function showGm() { if (!contestMode) { elements['gm-panel'].hidden = false; syncTransientOverlay(); } }
     function hideGm() { elements['gm-panel'].hidden = true; syncTransientOverlay(); }
-    var toastTimer = 0;
-    function toast(message) {
-      elements.toast.textContent = message; elements.toast.classList.add('is-visible'); clearTimeout(toastTimer);
-      toastTimer = setTimeout(function () { elements.toast.classList.remove('is-visible'); }, 1500);
-    }
+    var toastStack = new ToastStack(elements.toast, elements['toast-announcer']);
+    function toast(message, options) { return toastStack.push(message, options); }
+    function clearToasts() { toastStack.clear(); }
+    function getToastState() { return toastStack.snapshot(); }
 
     return {
       elements: elements, show: show, forceShow: forceShow, renderStages: renderStages, setHud: setHud, setPaused: setPaused,
@@ -5679,10 +5808,12 @@
       showRemoveAdsProduct: showRemoveAdsProduct, hideRemoveAdsProduct: hideRemoveAdsProduct,
       renderRemoveAdsProduct: renderRemoveAdsProduct, isRemoveAdsProductOpen: isRemoveAdsProductOpen,
       showGm: showGm, hideGm: hideGm,
-      presentSimulatedAd: presentSimulatedAd, resetSimulatedAd: resetSimulatedAd, toast: toast
+      presentSimulatedAd: presentSimulatedAd, resetSimulatedAd: resetSimulatedAd,
+      toast: toast, clearToasts: clearToasts, getToastState: getToastState
     };
   }
 
+  PP.ui.ToastStack = ToastStack;
   PP.ui.createScreens = createScreens;
 })(window.PingPanic);
 
@@ -5934,6 +6065,7 @@
           visibilityHidden: visibilityHidden,
           lastFrame: lastFrame,
           currentStage: stage,
+          toastState: ui.getToastState(),
           camera: {
             x: camera.x, y: camera.y,
             worldWidth: camera.world.width, worldHeight: camera.world.height,
@@ -6439,6 +6571,7 @@
       beginCampaignStage(request.definition, request.sonarMode, request.difficultyId);
     }
     function beginCampaignStage(definition, sonarMode, difficultyId) {
+      ui.clearToasts();
       stage = PP.systems.createStageRun(definition, difficultyId);
       camera.setWorld(stage.world);
       camera.reset(stage.player);
@@ -6464,6 +6597,7 @@
     }
     function startAbyss() {
       if (!save.records[PP.data.config.campaign.stageCount]) return;
+      ui.clearToasts();
       pendingCampaignStart = null;
       ui.hideDivePreparation();
       ui.hideHandChoice();
@@ -6571,6 +6705,19 @@
       return core.owner === 'rival' || core.revealedUntil > stage.elapsed
         || PP.core.utils.distance(stage.player, core) <= PP.data.config.visibility.radius;
     }
+    function announceCoreDiscovery(core) {
+      if (!PP.systems.discoverCoreForPlayer(stage, core)) return false;
+      ui.toast(PP.core.i18n.t('toast.coreDiscovered', {
+        current: PP.systems.playerDiscoveredCoreCount(stage), total: stage.cores.length
+      }), { dedupeKey: 'core-discovered:' + core.id, priority: 'high' });
+      return true;
+    }
+    function discoverNearbyFreeCores() {
+      stage.cores.forEach(function (core) {
+        if (core.owner === 'free' && !core.playerDiscovered
+          && PP.core.utils.distance(stage.player, core) <= PP.data.config.visibility.radius) announceCoreDiscovery(core);
+      });
+    }
     function collectPlayerCores() {
       stage.cores.forEach(function (core) {
         if (core.owner !== 'free' || core.pickupCooldown > 0 || !coreVisible(core)) return;
@@ -6587,7 +6734,7 @@
     function handleSonarContact(pulse, entity) {
       if (entity === stage.relay) {
         if (pulse.source === 'player' && PP.systems.discoverRelay(stage)) {
-          ui.toast(PP.core.i18n.t('toast.relayDiscovered'));
+          ui.toast(PP.core.i18n.t('toast.relayDiscovered'), { dedupeKey: 'relay-discovered', priority: 'high' });
         }
         return;
       }
@@ -6604,6 +6751,9 @@
       } else if (entity.entityKind === 'player' && pulse.source === 'rival' && stage.rival) {
         stage.rival.recognize(stage.elapsed);
         ui.toast(PP.core.i18n.t('toast.rivalSonar'));
+      } else if (pulse.source === 'player' && entity.owner === 'free' && entity.id
+        && entity.id.indexOf('core-') === 0) {
+        announceCoreDiscovery(entity);
       } else if (stage.rival && pulse.source === 'rival' && entity.owner === 'free' && entity.id
         && entity.id.indexOf('core-') === 0) {
         stage.rival.discoverCore(entity, stage.elapsed);
@@ -6677,7 +6827,10 @@
       var environmentEvents = PP.systems.environment.update(stage, dt);
       if (environmentEvents.thermalHit) ui.toast(PP.core.i18n.t('toast.thermal'));
       stage.player.update(dt, input, stage);
-      if (PP.systems.discoverRelayByProximity(stage)) ui.toast(PP.core.i18n.t('toast.relayDiscovered'));
+      discoverNearbyFreeCores();
+      if (PP.systems.discoverRelayByProximity(stage)) {
+        ui.toast(PP.core.i18n.t('toast.relayDiscovered'), { dedupeKey: 'relay-discovered', priority: 'high' });
+      }
       if (input.consumeSonar()) useSonar();
 
       var sonarActive = stage.sonar.pulses.length > 0;
@@ -6732,6 +6885,7 @@
 
     function showResult(won, resultMessage, stars) {
       if (!stage || stage.resultShown) return;
+      ui.clearToasts();
       paused = false;
       input.reset();
       resetFrameTiming();
@@ -6799,6 +6953,7 @@
       var previous = stage;
       var score = previous.abyss.totalScore + previous.score + 1000 + previous.definition.difficultyTier * 100;
       var nextIndex = previous.abyss.segmentIndex + 1;
+      ui.clearToasts();
       stage = PP.systems.createAbyssRun(previous.abyss.seed, nextIndex, score, previous.player);
       camera.setWorld(stage.world);
       camera.reset(stage.player);
@@ -7422,6 +7577,7 @@
       visibilityHidden = actualHidden;
       bgm.setHidden(actualHidden);
       if (actualHidden) {
+        ui.clearToasts();
         audio.stopAll();
         if (activeAdFlow) {
           paused = true;
