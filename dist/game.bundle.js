@@ -4,7 +4,7 @@
   'use strict';
 
   var app = global.PingPanic || {};
-  app.version = '0.4.26';
+  app.version = '0.4.27';
   app.data = app.data || {};
   app.core = app.core || {};
   app.entities = app.entities || {};
@@ -190,6 +190,8 @@
       legacySaveKeys: ['pingping-panicpanic-save-v1']
     },
     world: { width: 1000, height: 1500 },
+    viewport: { width: 1000, height: 1500 },
+    camera: { deadZoneWidth: 360, deadZoneHeight: 540 },
     campaign: {
       zoneCount: 5,
       stagesPerZone: 20,
@@ -1658,6 +1660,98 @@
   };
 })(window.PingPanic);
 
+// ---- src/core/camera.js ----
+(function (PP) {
+  'use strict';
+
+  function positiveDimension(value, fallback) {
+    var resolved = Number(value);
+    return resolved > 0 ? resolved : fallback;
+  }
+  function copySize(source, fallback) {
+    source = source || fallback || {};
+    fallback = fallback || source;
+    return {
+      width: positiveDimension(source.width, positiveDimension(fallback.width, 1)),
+      height: positiveDimension(source.height, positiveDimension(fallback.height, 1))
+    };
+  }
+  function centeredOrClamped(position, worldSize, viewportSize) {
+    if (worldSize <= viewportSize) return (worldSize - viewportSize) / 2;
+    return PP.core.utils.clamp(position, 0, worldSize - viewportSize);
+  }
+
+  function Camera(world, viewport, options) {
+    options = options || {};
+    this.viewport = copySize(viewport, PP.data.config.viewport || PP.data.config.world);
+    this.world = copySize(world, PP.data.config.world);
+    this.deadZone = {
+      width: Math.min(this.viewport.width, positiveDimension(options.deadZoneWidth, this.viewport.width * 0.36)),
+      height: Math.min(this.viewport.height, positiveDimension(options.deadZoneHeight, this.viewport.height * 0.36))
+    };
+    this.x = 0;
+    this.y = 0;
+    this.reset();
+  }
+
+  Camera.prototype.setWorld = function (world) {
+    var resolved = copySize(world, PP.data.config.world);
+    var changed = resolved.width !== this.world.width || resolved.height !== this.world.height;
+    this.world = resolved;
+    this.x = centeredOrClamped(this.x, this.world.width, this.viewport.width);
+    this.y = centeredOrClamped(this.y, this.world.height, this.viewport.height);
+    return changed;
+  };
+  Camera.prototype.reset = function (target) {
+    var targetX = target && Number.isFinite(target.x) ? target.x : this.world.width / 2;
+    var targetY = target && Number.isFinite(target.y) ? target.y : this.world.height / 2;
+    this.x = centeredOrClamped(targetX - this.viewport.width / 2, this.world.width, this.viewport.width);
+    this.y = centeredOrClamped(targetY - this.viewport.height / 2, this.world.height, this.viewport.height);
+    return this;
+  };
+  Camera.prototype.follow = function (target) {
+    if (!target) return false;
+    var previousX = this.x;
+    var previousY = this.y;
+    if (this.world.width <= this.viewport.width) {
+      this.x = centeredOrClamped(this.x, this.world.width, this.viewport.width);
+    } else {
+      var left = (this.viewport.width - this.deadZone.width) / 2;
+      var right = left + this.deadZone.width;
+      var screenX = target.x - this.x;
+      if (screenX < left) this.x = target.x - left;
+      else if (screenX > right) this.x = target.x - right;
+      this.x = centeredOrClamped(this.x, this.world.width, this.viewport.width);
+    }
+    if (this.world.height <= this.viewport.height) {
+      this.y = centeredOrClamped(this.y, this.world.height, this.viewport.height);
+    } else {
+      var top = (this.viewport.height - this.deadZone.height) / 2;
+      var bottom = top + this.deadZone.height;
+      var screenY = target.y - this.y;
+      if (screenY < top) this.y = target.y - top;
+      else if (screenY > bottom) this.y = target.y - bottom;
+      this.y = centeredOrClamped(this.y, this.world.height, this.viewport.height);
+    }
+    return this.x !== previousX || this.y !== previousY;
+  };
+  Camera.prototype.worldToScreen = function (point) {
+    return { x: point.x - this.x, y: point.y - this.y };
+  };
+  Camera.prototype.screenToWorld = function (point) {
+    return {
+      x: PP.core.utils.clamp(point.x + this.x, 0, this.world.width),
+      y: PP.core.utils.clamp(point.y + this.y, 0, this.world.height)
+    };
+  };
+  Camera.prototype.applyWorldTransform = function (context, offset) {
+    offset = offset || { x: 0, y: 0 };
+    context.translate((Number(offset.x) || 0) - this.x, (Number(offset.y) || 0) - this.y);
+  };
+
+  PP.core.Camera = Camera;
+})(window.PingPanic);
+
 // ---- src/core/assets.js ----
 (function (PP) {
   'use strict';
@@ -2383,14 +2477,15 @@
     }
   };
   Input.prototype.measureCanvasRect = function () { return this.canvas.getBoundingClientRect(); };
-  Input.prototype.canvasPoint = function (clientX, clientY, world) {
+  Input.prototype.canvasPoint = function (clientX, clientY, camera) {
     var rect = this.pointer.active
       ? (this.pointerRect || (this.pointerRect = this.measureCanvasRect()))
       : this.measureCanvasRect();
-    return {
-      x: PP.core.utils.clamp((clientX - rect.left) / Math.max(1, rect.width) * world.width, 0, world.width),
-      y: PP.core.utils.clamp((clientY - rect.top) / Math.max(1, rect.height) * world.height, 0, world.height)
+    var screenPoint = {
+      x: PP.core.utils.clamp((clientX - rect.left) / Math.max(1, rect.width) * camera.viewport.width, 0, camera.viewport.width),
+      y: PP.core.utils.clamp((clientY - rect.top) / Math.max(1, rect.height) * camera.viewport.height, 0, camera.viewport.height)
     };
+    return camera.screenToWorld(screenPoint);
   };
   Input.prototype.reset = function () {
     this.releasePointerCapture();
@@ -2428,7 +2523,7 @@
     var dx = (direction.x * this.speed * environmentSpeed + environmentCurrent.x) * dt;
     var dy = (direction.y * this.speed * environmentSpeed + environmentCurrent.y) * dt;
     if (Math.abs(direction.x) + Math.abs(direction.y) > 0.01) this.angle = Math.atan2(direction.y, direction.x);
-    PP.core.utils.moveWithObstacles(this, dx, dy, this.radius, PP.data.config.world, stage.movementObstacles);
+    PP.core.utils.moveWithObstacles(this, dx, dy, this.radius, stage.world, stage.movementObstacles);
     var rechargeMultiplier = stage.sonarMode === 'boosted-run' ? PP.data.config.sonar.boosted.rechargeMultiplier : 1;
     if (PP.systems.environment) rechargeMultiplier *= PP.systems.environment.rechargeMultiplier(stage, this);
     this.sonarCharge = Math.min(
@@ -2453,7 +2548,7 @@
   Player.prototype.knockBackFrom = function (source, distance, stage) {
     var direction = PP.core.utils.normalize(this.x - source.x, this.y - source.y);
     if (direction.length < 0.001) direction = { x: 0, y: 1 };
-    PP.core.utils.moveWithObstacles(this, direction.x * distance, direction.y * distance, this.radius, PP.data.config.world, stage.movementObstacles);
+    PP.core.utils.moveWithObstacles(this, direction.x * distance, direction.y * distance, this.radius, stage.world, stage.movementObstacles);
   };
 
   PP.entities.Player = Player;
@@ -2614,7 +2709,7 @@
       return PP.core.utils.normalize(point.x - this.x, point.y - this.y);
     }
     if (this.repathTimer <= 0 || !this.navPath.length) {
-      this.navPath = PP.core.utils.findGridPath(this, point, this.radius + 2, PP.data.config.world, stage.movementObstacles, PP.data.config.guardian.navigation.gridSize);
+      this.navPath = PP.core.utils.findGridPath(this, point, this.radius + 2, stage.world, stage.movementObstacles, PP.data.config.guardian.navigation.gridSize);
       this.repathTimer = 0.4 + (this.id % 3) * 0.05;
     }
     while (this.navPath.length && PP.core.utils.distance(this, this.navPath[0]) < 28) this.navPath.shift();
@@ -2668,7 +2763,7 @@
         (direction.x * speed + environmentCurrent.x) * dt,
         (direction.y * speed + environmentCurrent.y) * dt,
         this.radius,
-        PP.data.config.world,
+        stage.world,
         stage.movementObstacles
       );
     }
@@ -2862,7 +2957,7 @@
       return PP.core.utils.normalize(target.x - this.x, target.y - this.y);
     }
     if (this.repathTimer <= 0 || !this.navPath.length) {
-      this.navPath = PP.core.utils.findGridPath(this, target, this.radius + 2, PP.data.config.world, stage.movementObstacles, PP.data.config.guardian.navigation.gridSize);
+      this.navPath = PP.core.utils.findGridPath(this, target, this.radius + 2, stage.world, stage.movementObstacles, PP.data.config.guardian.navigation.gridSize);
       this.repathTimer = PP.data.config.guardian.navigation.repathSeconds;
     }
     while (this.navPath.length && PP.core.utils.distance(this, this.navPath[0]) < 28) this.navPath.shift();
@@ -2893,10 +2988,10 @@
     var margin = this.radius + 24;
     var waypoints = [
       { x: margin, y: 260 },
-      { x: PP.data.config.world.width - margin, y: 360 },
-      { x: PP.data.config.world.width - margin, y: 820 },
+      { x: stage.world.width - margin, y: 360 },
+      { x: stage.world.width - margin, y: 820 },
       { x: margin, y: 920 },
-      { x: PP.data.config.world.width / 2, y: 1260 }
+      { x: stage.world.width / 2, y: 1260 }
     ];
     var point = waypoints[this.searchWaypointIndex % waypoints.length];
     if (PP.core.utils.distance(this, point) <= PP.data.config.rival.searchWaypointReachRadius) {
@@ -2936,7 +3031,7 @@
     if (currentVector.x || currentVector.y) {
       PP.core.utils.moveWithObstacles(
         this, currentVector.x * dt, currentVector.y * dt,
-        this.radius, PP.data.config.world, stage.movementObstacles
+        this.radius, stage.world, stage.movementObstacles
       );
       if (this.carriedCore) { this.carriedCore.x = this.x; this.carriedCore.y = this.y; }
     }
@@ -3026,7 +3121,7 @@
       direction = this.blendMovement(direction, threats, !!this.carriedCore);
       var travelSpeed = PP.data.config.rival.speed * stage.difficultyModifiers.enemySpeedMultiplier
         * (PP.systems.environment ? PP.systems.environment.speedMultiplier(stage, this) : 1);
-      PP.core.utils.moveWithObstacles(this, direction.x * travelSpeed * dt, direction.y * travelSpeed * dt, this.radius, PP.data.config.world, stage.movementObstacles);
+      PP.core.utils.moveWithObstacles(this, direction.x * travelSpeed * dt, direction.y * travelSpeed * dt, this.radius, stage.world, stage.movementObstacles);
       var targetDistance = PP.core.utils.distance(this, target);
       if (!this.carriedCore && this.targetCore && target === this.targetCore
         && targetDistance < this.radius * 0.8 && this.targetCore.pickupCooldown <= 0) {
@@ -3063,7 +3158,7 @@
       var previous = { x: shot.x, y: shot.y };
       shot.x += shot.vx * dt;
       shot.y += shot.vy * dt;
-      var outside = shot.x < 0 || shot.y < 100 || shot.x > PP.data.config.world.width || shot.y > PP.data.config.world.height;
+      var outside = shot.x < 0 || shot.y < 100 || shot.x > stage.world.width || shot.y > stage.world.height;
       var wallHit = false;
       for (var wallIndex = 0; wallIndex < projectileObstacles.length; wallIndex += 1) {
         recordEnemyWork(stage, 'projectileWallChecks');
@@ -3128,9 +3223,9 @@
       if (direction.length < 0.001) direction = { x: guardian.id % 2 ? 1 : -1, y: 0, length: 1 };
       var amount = Math.min(rules.stepWorldUnits, overlap / 2);
       PP.core.utils.moveWithObstacles(guardian, -direction.x * amount, -direction.y * amount,
-        guardian.radius, PP.data.config.world, stage.movementObstacles);
+        guardian.radius, stage.world, stage.movementObstacles);
       PP.core.utils.moveWithObstacles(rival, direction.x * amount, direction.y * amount,
-        rival.radius, PP.data.config.world, stage.movementObstacles);
+        rival.radius, stage.world, stage.movementObstacles);
     }
     guardian.navPath = [];
     guardian.repathTimer = rules.repathCooldownSeconds;
@@ -3499,10 +3594,17 @@
     if (Array.isArray(group.members) && group.members.length) return group.members;
     return [{ profileId: group.profileId, offsetX: 0, offsetY: 0, rotationDegrees: 0, scale: group.scale || 1 }];
   }
-  function transformPoint(point, transform) {
+  function runWorld(definition) {
+    var source = definition && definition.world ? definition.world : PP.data.config.world;
     return {
-      x: transform === 'MX' || transform === 'MXY' ? PP.data.config.world.width - point.x : point.x,
-      y: transform === 'MY' || transform === 'MXY' ? PP.data.config.world.height - point.y : point.y
+      width: Number(source.width) > 0 ? Number(source.width) : PP.data.config.world.width,
+      height: Number(source.height) > 0 ? Number(source.height) : PP.data.config.world.height
+    };
+  }
+  function transformPoint(point, transform, world) {
+    return {
+      x: transform === 'MX' || transform === 'MXY' ? world.width - point.x : point.x,
+      y: transform === 'MY' || transform === 'MXY' ? world.height - point.y : point.y
     };
   }
   function transformRotation(rotationDegrees, transform) {
@@ -3512,13 +3614,13 @@
   function variantRotation(variant) {
     return { V0: 0, V1: 45, V2: 90, V3: 135 }[variant] || 0;
   }
-  function expandObstacleLayout(layout) {
+  function expandObstacleLayout(layout, world) {
     var data = PP.data.obstacles;
     var pattern = data.patterns[layout.patternId];
     var rsIndex = 0;
     var groups = pattern.groups.map(function (source) {
       var profile = data.profiles[source.profileId];
-      var point = transformPoint(data.slots[source.slotId], layout.transform);
+      var point = transformPoint(data.slots[source.slotId], layout.transform, world);
       var scale = source.scale;
       if (profile.code === 'RS') {
         if (layout.variant === 'V1') scale = 0.85;
@@ -3572,7 +3674,7 @@
     });
     return { id: groupId, colliders: colliders };
   }
-  function stageObstacles(definition, random) {
+  function stageObstacles(definition, random, world) {
     var data = PP.data.obstacles;
     var layout = data.stageLayouts[String(definition.id)] || {
       stageId: definition.id,
@@ -3582,7 +3684,7 @@
       variant: definition.obstacleVariant || 'V0',
       designIntent: definition.obstacleDesignIntent || 'runtime-generated'
     };
-    var expanded = expandObstacleLayout(layout);
+    var expanded = expandObstacleLayout(layout, world);
     var groups = expanded.groups.map(createObstacleGroup);
     var colliders = [];
     groups.forEach(function (group) { colliders = colliders.concat(group.colliders); });
@@ -3615,8 +3717,9 @@
   }
 
   function createStageRun(definition, difficultyId) {
+    var world = runWorld(definition);
     var random = U.seededRandom(definition.seed);
-    var obstacleBuild = stageObstacles(definition, random);
+    var obstacleBuild = stageObstacles(definition, random, world);
     var environment = PP.systems.environment.create(definition);
     var walls = obstacleBuild.colliders.concat(environment.passages);
     var selectedDifficulty = PP.data.config.difficulty.profiles[difficultyId] ? difficultyId : 'normal';
@@ -3656,6 +3759,7 @@
     var run = {
       runToken: 'run-' + definition.id + '-' + runSequence++,
       definition: definition,
+      world: world,
       difficultyId: selectedDifficulty,
       difficultyModifiers: difficultyProfile,
       rewardProfile: difficultyProfile.rewardProfile,
@@ -3827,7 +3931,7 @@
       }
       previousPattern = layout.patternId;
       if (stagePattern) {
-        var expanded = expandObstacleLayout(layout);
+        var expanded = expandObstacleLayout(layout, PP.data.config.world);
         expanded.groups.forEach(function (group, index) {
           errors = errors.concat(obstacleGroupErrors(group, 'stage-' + stageId + '/group-' + (index + 1)));
         });
@@ -3978,8 +4082,9 @@
   }
   function canReach(run, target, radius, startPoint) {
     var step = 25;
-    var cols = Math.floor(PP.data.config.world.width / step);
-    var rows = Math.floor(PP.data.config.world.height / step);
+    var world = run.world;
+    var cols = Math.floor(world.width / step);
+    var rows = Math.floor(world.height / step);
     if (radius === undefined || radius === null) radius = run.player.radius;
     startPoint = startPoint || run.player;
     var start = { x: Math.floor(startPoint.x / step), y: Math.floor(startPoint.y / step) };
@@ -3996,8 +4101,8 @@
         var key = next.x + ',' + next.y;
         if (next.x < 0 || next.y < 0 || next.x >= cols || next.y >= rows || seen[key]) return;
         var point = { x: (next.x + 0.5) * step, y: (next.y + 0.5) * step };
-        if (point.x < radius || point.x > PP.data.config.world.width - radius
-          || point.y < 100 + radius || point.y > PP.data.config.world.height - radius) return;
+        if (point.x < radius || point.x > world.width - radius
+          || point.y < 100 + radius || point.y > world.height - radius) return;
         if (run.movementObstacles.some(function (wall) { return U.circleIntersectsObb(point, radius, wall); })) return;
         seen[key] = true;
         queue.push(next);
@@ -4011,7 +4116,7 @@
   function reachableShadowCount(run) {
     var chorus = run.guardians.filter(function (guardian) { return guardian.type === 'chorus'; })[0];
     if (!chorus) return 0;
-    var world = PP.data.config.world;
+    var world = run.world;
     var chorusWalls = run.chorusObstacles;
     var safeGroups = {};
     chorusWalls.forEach(function (wall) {
@@ -5547,14 +5652,16 @@
     var canvas = ui.elements.canvas;
     var context = canvas.getContext('2d');
     var backgroundGradient = null;
+    var viewport = PP.data.config.viewport;
+    var camera = new PP.core.Camera(PP.data.config.world, viewport, PP.data.config.camera);
     var canvasBacking = {
-      cssWidth: PP.data.config.world.width,
-      cssHeight: PP.data.config.world.height,
+      cssWidth: viewport.width,
+      cssHeight: viewport.height,
       devicePixelRatio: 1,
       effectivePixelRatio: 1,
-      width: Number(canvas.width) || PP.data.config.world.width,
-      height: Number(canvas.height) || PP.data.config.world.height,
-      pixels: (Number(canvas.width) || PP.data.config.world.width) * (Number(canvas.height) || PP.data.config.world.height)
+      width: Number(canvas.width) || viewport.width,
+      height: Number(canvas.height) || viewport.height,
+      pixels: (Number(canvas.width) || viewport.width) * (Number(canvas.height) || viewport.height)
     };
     function syncCanvasBackingResolution() {
       if (!canvas || !gameScreenVisible || !canvas.getBoundingClientRect) return false;
@@ -5564,7 +5671,7 @@
         rect.width,
         rect.height,
         window.devicePixelRatio,
-        PP.data.config.world,
+        viewport,
         PP.data.config.rendering.maximumDevicePixelRatio
       );
       var changed = canvas.width !== resolved.width || canvas.height !== resolved.height;
@@ -5574,8 +5681,8 @@
       canvas.height = resolved.height;
       backgroundGradient = null;
       context.setTransform(
-        resolved.width / PP.data.config.world.width, 0,
-        0, resolved.height / PP.data.config.world.height,
+        resolved.width / viewport.width, 0,
+        0, resolved.height / viewport.height,
         0, 0
       );
       performanceMetrics.canvasResizes += 1;
@@ -5607,6 +5714,11 @@
           visibilityHidden: visibilityHidden,
           lastFrame: lastFrame,
           currentStage: stage,
+          camera: {
+            x: camera.x, y: camera.y,
+            worldWidth: camera.world.width, worldHeight: camera.world.height,
+            viewportWidth: camera.viewport.width, viewportHeight: camera.viewport.height
+          },
           pendingStageId: pendingCampaignStart ? pendingCampaignStart.definition.id : 0,
           sonarHand: save.settings.sonarHand,
           bgm: bgm.state(),
@@ -6108,6 +6220,9 @@
     }
     function beginCampaignStage(definition, sonarMode, difficultyId) {
       stage = PP.systems.createStageRun(definition, difficultyId);
+      camera.setWorld(stage.world);
+      camera.reset(stage.player);
+      backgroundGradient = null;
       manualResumePending = false;
       stage.sonarMode = sonarMode === 'boosted-run' ? 'boosted-run' : 'standard';
       stage.damageFeedback = { blinkUntil: 0, shakeUntil: 0, impactUntil: 0, lastSource: '' };
@@ -6133,6 +6248,9 @@
       ui.hideDivePreparation();
       ui.hideHandChoice();
       stage = PP.systems.createAbyssRun(PP.data.config.abyss.baseSeed, 0, 0, null);
+      camera.setWorld(stage.world);
+      camera.reset(stage.player);
+      backgroundGradient = null;
       manualResumePending = false;
       stage.sonarMode = 'standard';
       stage.damageFeedback = { blinkUntil: 0, shakeUntil: 0, impactUntil: 0, lastSource: '' };
@@ -6333,6 +6451,7 @@
       var environmentEvents = PP.systems.environment.update(stage, dt);
       if (environmentEvents.thermalHit) ui.toast(PP.core.i18n.t('toast.thermal'));
       stage.player.update(dt, input, stage);
+      camera.follow(stage.player);
       if (input.consumeSonar()) useSonar();
 
       var sonarActive = stage.sonar.pulses.length > 0;
@@ -6452,6 +6571,9 @@
       var score = previous.abyss.totalScore + previous.score + 1000 + previous.definition.difficultyTier * 100;
       var nextIndex = previous.abyss.segmentIndex + 1;
       stage = PP.systems.createAbyssRun(previous.abyss.seed, nextIndex, score, previous.player);
+      camera.setWorld(stage.world);
+      camera.reset(stage.player);
+      backgroundGradient = null;
       requestWorldRender();
       stage.sonarMode = 'standard';
       stage.damageFeedback = { blinkUntil: 0, shakeUntil: 0, impactUntil: 0, lastSource: '' };
@@ -6616,8 +6738,8 @@
       var normalizedStrength = PP.core.utils.clamp(Math.abs(signedStrength) / 48, 0, 1);
       var flowSpeed = 28 + 72 * normalizedStrength;
       var flowOpacity = 0.12 + 0.16 * normalizedStrength;
-      var W = PP.data.config.world.width;
-      var H = PP.data.config.world.height;
+      var W = stage.world.width;
+      var H = stage.world.height;
       var extent = Math.sqrt(W * W + H * H);
       var chevronBudget = 18;
       var chevronsPerLane = Math.floor(chevronBudget / laneCount);
@@ -6794,22 +6916,29 @@
     function render() {
       if (!stage) return;
       performanceMetrics.worldRenders += 1;
-      var W = PP.data.config.world.width;
-      var H = PP.data.config.world.height;
+      camera.setWorld(stage.world);
+      var W = stage.world.width;
+      var H = stage.world.height;
+      var viewW = camera.viewport.width;
+      var viewH = camera.viewport.height;
       var ctx = context;
       var zoneColor = stage.mode === 'abyss' ? '#6b77a8'
         : PP.data.config.colors[Math.floor((stage.definition.id - 1) / PP.data.config.campaign.stagesPerZone)];
       var guardianCosmetic = equippedCosmetic('guardian');
       var rivalCosmetic = equippedCosmetic('rival');
       var playerCosmetic = equippedCosmetic('player');
-      ctx.clearRect(0, 0, W, H);
+      ctx.setTransform(canvasBacking.width / viewW, 0, 0, canvasBacking.height / viewH, 0, 0);
+      ctx.clearRect(0, 0, viewW, viewH);
       ctx.save();
       var damageShaking = stage.damageFeedback && stage.elapsed < stage.damageFeedback.shakeUntil;
+      var shakeOffset = { x: 0, y: 0 };
       if (damageShaking) {
         var remainingShake = (stage.damageFeedback.shakeUntil - stage.elapsed) / PP.data.config.player.damageFeedback.shakeSeconds;
         var amount = PP.data.config.player.damageFeedback.shakeWorldUnits * remainingShake;
-        ctx.translate(Math.sin(stage.elapsed * 117) * amount, Math.cos(stage.elapsed * 91) * amount * 0.72);
+        shakeOffset.x = Math.sin(stage.elapsed * 117) * amount;
+        shakeOffset.y = Math.cos(stage.elapsed * 91) * amount * 0.72;
       }
+      camera.applyWorldTransform(ctx, shakeOffset);
       var gradient = damageShaking ? null : backgroundGradient;
       if (!gradient) {
         gradient = ctx.createLinearGradient(0, 0, 0, H);
@@ -7001,18 +7130,21 @@
         ctx.fillStyle = '#c8fff8'; ctx.beginPath(); ctx.moveTo(29, 0); ctx.lineTo(9, -9); ctx.lineTo(9, 9); ctx.closePath(); ctx.fill(); ctx.restore();
       }
       if (input.pointer.active) {
-        var start = input.canvasPoint(input.pointer.startX, input.pointer.startY, PP.data.config.world);
-        var point = input.canvasPoint(input.pointer.x, input.pointer.y, PP.data.config.world);
+        var start = input.canvasPoint(input.pointer.startX, input.pointer.startY, camera);
+        var point = input.canvasPoint(input.pointer.x, input.pointer.y, camera);
         drawRing(start.x, start.y, 48, '#8ecac7', 4, 0.38); drawRing(point.x, point.y, 20, '#c8fff8', 5, 0.7);
       }
+      var impactAlpha = 0;
       if (stage.damageFeedback && stage.elapsed < stage.damageFeedback.impactUntil) {
-        var impactAlpha = (stage.damageFeedback.impactUntil - stage.elapsed) / PP.data.config.player.damageFeedback.impactSeconds;
+        impactAlpha = (stage.damageFeedback.impactUntil - stage.elapsed) / PP.data.config.player.damageFeedback.impactSeconds;
         if (!drawImage('effect-impact-fracture', player.x, player.y, 210, 210, stage.elapsed * 8, impactAlpha)) drawRing(player.x, player.y, 82 + (1 - impactAlpha) * 70, '#ff786f', 12, impactAlpha);
-        var vignette = ctx.createRadialGradient(W / 2, H / 2, W * 0.18, W / 2, H / 2, H * 0.68);
-        vignette.addColorStop(0, 'rgba(255,40,30,0)'); vignette.addColorStop(1, 'rgba(120,0,0,' + (impactAlpha * 0.56) + ')');
-        ctx.fillStyle = vignette; ctx.fillRect(0, 0, W, H);
       }
       ctx.restore();
+      if (impactAlpha > 0) {
+        var vignette = ctx.createRadialGradient(viewW / 2, viewH / 2, viewW * 0.18, viewW / 2, viewH / 2, viewH * 0.68);
+        vignette.addColorStop(0, 'rgba(255,40,30,0)'); vignette.addColorStop(1, 'rgba(120,0,0,' + (impactAlpha * 0.56) + ')');
+        ctx.fillStyle = vignette; ctx.fillRect(0, 0, viewW, viewH);
+      }
     }
 
     function frame(now) {
