@@ -4,7 +4,7 @@
   'use strict';
 
   var app = global.PingPanic || {};
-  app.version = '0.4.28';
+  app.version = '0.4.29';
   app.data = app.data || {};
   app.core = app.core || {};
   app.entities = app.entities || {};
@@ -196,8 +196,8 @@
       zoneCount: 5,
       stagesPerZone: 20,
       stageCount: 100,
-      expandedPilotStageIds: [1, 4, 9],
-      onboardingStageIds: [1, 2, 3, 4, 5, 7, 8, 9, 21, 22, 23, 62, 67],
+      expandedPilotStageIds: [16, 18, 20],
+      onboardingStageIds: [1, 2, 3, 4, 5, 7, 8, 9, 16, 21, 22, 23, 62, 67],
       rivalStageIds: [22, 25, 29, 36, 45, 56, 66, 76, 88, 98]
     },
     difficulty: {
@@ -339,6 +339,7 @@
       7: { titleKey: 'onboarding.7.title', textKey: 'onboarding.7.text' },
       8: { titleKey: 'onboarding.8.title', textKey: 'onboarding.8.text' },
       9: { titleKey: 'onboarding.9.title', textKey: 'onboarding.9.text' },
+      16: { titleKey: 'onboarding.16.title', textKey: 'onboarding.16.text' },
       21: { titleKey: 'onboarding.21.title', textKey: 'onboarding.21.text' },
       22: { titleKey: 'onboarding.22.title', textKey: 'onboarding.22.text' },
       23: { titleKey: 'onboarding.23.title', textKey: 'onboarding.23.text' },
@@ -446,6 +447,8 @@
       'onboarding.8.text': '전 맵 해류 위의 직사각 밴드는 방향을 바꾸거나 같은 방향 흐름을 가속합니다. 밴드 화살표를 보고 보정하세요.',
       'onboarding.9.title': '9 · 가변 통로',
       'onboarding.9.text': '카운터가 0이 되면 통로가 열리거나 닫힙니다. 가까이 가도 열리지 않으며, 통과 중에는 완전히 벗어날 때까지 닫히지 않습니다.',
+      'onboarding.16.title': '16 · 숨은 중계문',
+      'onboarding.16.text': '중계문도 소나로 찾거나 가까이 가면 발견할 수 있습니다.',
       'onboarding.21.title': '21 · 잠금 사냥개',
       'onboarding.21.text': '잠금 사냥개는 빠르게 추격합니다. 벽을 돌아 경로를 끊으세요.',
       'onboarding.22.title': '22 · 라이벌',
@@ -468,6 +471,7 @@
       'toast.sonarLow': '공명 충전이 부족합니다.', 'toast.sonar': '소나 파동이 퍼집니다.',
       'toast.sonarBoosted': '증폭 소나 · 범위 1.5배 · 5초 탐지',
       'toast.core': '공명 코어 {current} / {required}',
+      'toast.relayDiscovered': '중계문 신호를 확인했습니다.',
       'toast.thermal': '열수 분출에 피격됐습니다.',
       'thermal.countdown': '분출까지 {seconds}초',
       'toast.guardianDetected': '수호자에게 발각되었습니다.',
@@ -598,6 +602,8 @@
       'onboarding.8.text': 'Rectangular bands over the global current redirect or accelerate its flow. Follow the arrows inside each band.',
       'onboarding.9.title': '9 · Variable Passage',
       'onboarding.9.text': 'When the counter reaches 0, the passage opens or closes. Approaching it does not open it, and it will not close until you move clear.',
+      'onboarding.16.title': '16 · Hidden Relay',
+      'onboarding.16.text': 'You can reveal the relay with sonar or by moving close to it.',
       'onboarding.21.title': '21 · Lock Hound',
       'onboarding.21.text': 'Lock Hounds chase quickly. Turn around walls to break their path.',
       'onboarding.22.title': '22 · Rival',
@@ -620,6 +626,7 @@
       'toast.sonarLow': 'Not enough resonance charge.', 'toast.sonar': 'Sonar wave emitted.',
       'toast.sonarBoosted': 'Boosted sonar · 1.5× range · 5s reveal',
       'toast.core': 'Resonance core {current} / {required}',
+      'toast.relayDiscovered': 'Relay signal located.',
       'toast.thermal': 'Thermal vent hit!',
       'thermal.countdown': 'VENT IN {seconds}s',
       'toast.guardianDetected': 'A guardian detected you.',
@@ -960,49 +967,59 @@
   };
 
   var OVERRIDES = {
-    1: {
-      world: { width: 1000, height: 2100 },
-      playerStart: { x: 500, y: 1920 },
-      relaySpot: { x: 500, y: 180 },
-      fixedCoreSpots: [{ x: 500, y: 1080 }],
-      fixedObstacleGroups: [],
-      guardianCount: 0, currentStrength: 0, timeLimit: 70,
-      coreTotal: 1, requiredCores: 1, startRevealedCores: true
-    },
+    1: { guardianCount: 0, currentStrength: 0, timeLimit: 70, coreTotal: 1, requiredCores: 1, startRevealedCores: true },
     2: { guardianCount: 0, currentStrength: 0, timeLimit: 88, coreTotal: 3, requiredCores: 3 },
     3: {
       guardianCount: 0, currentStrength: 0, timeLimit: 92,
       coreTotal: 3, requiredCores: 3,
       fixedCoreSpots: [{ x: 500, y: 315 }, { x: 150, y: 280 }, { x: 840, y: 355 }]
     },
-    4: {
-      world: { width: 1400, height: 2200 },
-      playerStart: { x: 700, y: 2020 },
-      relaySpot: { x: 1160, y: 180 },
-      fixedCoreSpots: [{ x: 220, y: 1800 }, { x: 1180, y: 1220 }, { x: 300, y: 420 }],
-      fixedGuardianSpots: [{ x: 720, y: 1030 }],
-      fixedObstacleGroups: [
-        { id: 'stage-4-pilot-rs-1', profileId: 'ruin-segment', x: 380, y: 1510, rotationDegrees: 90, scale: 1 },
-        { id: 'stage-4-pilot-rs-2', profileId: 'ruin-segment', x: 1050, y: 1600, rotationDegrees: 90, scale: 1 },
-        { id: 'stage-4-pilot-cq-1', profileId: 'column-square', x: 430, y: 900, rotationDegrees: 45, scale: 1 },
-        { id: 'stage-4-pilot-cq-2', profileId: 'column-square', x: 970, y: 690, rotationDegrees: 135, scale: 1 }
-      ],
-      guardianCount: 1, guardianTypes: ['pin'], currentStrength: 4, timeLimit: 98
-    },
+    4: { guardianCount: 1, guardianTypes: ['pin'], currentStrength: 4, timeLimit: 98 },
     5: { guardianCount: 1, guardianTypes: ['pin'], fixedGuardianSpots: [{ x: 500, y: 790 }] },
     7: { guardianCount: 0, guardianTypes: [] },
     8: { guardianCount: 0, guardianTypes: [], currentStrength: 9, currentPhase: 0 },
-    9: {
+    9: { guardianCount: 0, guardianTypes: [], timeLimit: 120 },
+    16: {
+      world: { width: 1400, height: 2200 },
+      playerStart: { x: 700, y: 2020 },
+      relaySpot: { x: 1120, y: 260 },
+      fixedCoreSpots: [{ x: 220, y: 1740 }, { x: 1160, y: 1340 }, { x: 350, y: 520 }],
+      fixedGuardianSpots: [{ x: 360, y: 1180 }, { x: 1030, y: 900 }],
+      fixedObstacleGroups: [
+        { id: 'stage-16-pilot-rs-1', profileId: 'ruin-segment', x: 380, y: 1500, rotationDegrees: 45, scale: 0.85 },
+        { id: 'stage-16-pilot-wp-1', profileId: 'wall-pillar', x: 1040, y: 1600, rotationDegrees: 90, scale: 1 },
+        { id: 'stage-16-pilot-cq-1', profileId: 'column-square', x: 450, y: 920, rotationDegrees: 135, scale: 1 },
+        { id: 'stage-16-pilot-cq-2', profileId: 'column-square', x: 930, y: 590, rotationDegrees: 135, scale: 1 }
+      ],
+      relayHiddenUntilDiscovered: true
+    },
+    18: {
       world: { width: 1600, height: 2400 },
       playerStart: { x: 800, y: 2200 },
-      relaySpot: { x: 1330, y: 220 },
-      fixedCoreSpots: [{ x: 250, y: 1840 }, { x: 1350, y: 1450 }, { x: 380, y: 620 }],
+      relaySpot: { x: 1370, y: 300 },
+      fixedCoreSpots: [{ x: 250, y: 1880 }, { x: 1350, y: 1540 }, { x: 900, y: 760 }],
+      fixedGuardianSpots: [{ x: 430, y: 1320 }, { x: 1220, y: 1120 }],
       fixedObstacleGroups: [
-        { id: 'stage-9-pilot-wp-1', profileId: 'wall-pillar', x: 360, y: 1500, rotationDegrees: 135, scale: 1 },
-        { id: 'stage-9-pilot-wp-2', profileId: 'wall-pillar', x: 1260, y: 1780, rotationDegrees: 45, scale: 1 },
-        { id: 'stage-9-pilot-cq-1', profileId: 'column-square', x: 610, y: 820, rotationDegrees: 90, scale: 1 }
+        { id: 'stage-18-pilot-cq-1', profileId: 'column-square', x: 380, y: 1580, rotationDegrees: 0, scale: 1 },
+        { id: 'stage-18-pilot-cq-2', profileId: 'column-square', x: 1080, y: 900, rotationDegrees: 135, scale: 1 }
       ],
-      guardianCount: 0, guardianTypes: [], timeLimit: 120
+      relayHiddenUntilDiscovered: true
+    },
+    20: {
+      world: { width: 1600, height: 2400 },
+      playerStart: { x: 800, y: 2200 },
+      relaySpot: { x: 1320, y: 260 },
+      fixedCoreSpots: [{ x: 220, y: 2000 }, { x: 1380, y: 1550 }, { x: 520, y: 430 }],
+      fixedGuardianSpots: [{ x: 780, y: 1740 }, { x: 360, y: 1010 }, { x: 1220, y: 980 }],
+      fixedObstacleGroups: [
+        { id: 'stage-20-pilot-rs-1', profileId: 'ruin-segment', x: 300, y: 1800, rotationDegrees: 135, scale: 0.85 },
+        { id: 'stage-20-pilot-rs-2', profileId: 'ruin-segment', x: 1300, y: 1800, rotationDegrees: 135, scale: 0.85 },
+        { id: 'stage-20-pilot-wp-1', profileId: 'wall-pillar', x: 520, y: 1250, rotationDegrees: 45, scale: 1 },
+        { id: 'stage-20-pilot-wp-2', profileId: 'wall-pillar', x: 1120, y: 1250, rotationDegrees: 45, scale: 1 },
+        { id: 'stage-20-pilot-cq-1', profileId: 'column-square', x: 280, y: 700, rotationDegrees: 90, scale: 1 },
+        { id: 'stage-20-pilot-cq-2', profileId: 'column-square', x: 1320, y: 700, rotationDegrees: 0, scale: 1 }
+      ],
+      relayHiddenUntilDiscovered: true
     },
     21: { guardianCount: 1, guardianTypes: ['hound'] },
     22: { guardianCount: 0, guardianTypes: [] },
@@ -1026,7 +1043,7 @@
       x: 500, y: 760, width: 720, height: 300, rotationDegrees: 90, feather: 90,
       currentStrength: 14, currentPhase: -Math.PI / 2
     });
-    if (id === 9) mechanics.push({ type: 'variablePassage', x: 1040, y: 1120, width: 520, height: 72, rotationDegrees: 0, period: 4.2, openSeconds: 2.1, phase: 0 });
+    if (id === 9) mechanics.push({ type: 'variablePassage', x: 500, y: 760, width: 420, height: 72, rotationDegrees: 0, period: 4.2, openSeconds: 2.1, phase: 0 });
     if (id === 10) mechanics.push({
       type: 'currentBand', mode: 'boost',
       x: 500, y: 1040, width: 760, height: 240, rotationDegrees: 333, feather: 72,
@@ -3805,7 +3822,13 @@
       difficultyModifiers: difficultyProfile,
       rewardProfile: difficultyProfile.rewardProfile,
       player: new PP.entities.Player(playerStart.x, playerStart.y),
-      relay: { x: relaySpot.x, y: relaySpot.y, radius: 106 },
+      relay: {
+        entityKind: 'player-relay',
+        x: relaySpot.x,
+        y: relaySpot.y,
+        radius: 106,
+        discovered: definition.relayHiddenUntilDiscovered !== true
+      },
       rivalExit: { x: 900, y: 1350, radius: 72 },
       rivalAnchor: { x: 110, y: 230 },
       walls: walls,
@@ -3873,6 +3896,17 @@
     return counts.player + counts.extracted;
   }
   function relayActive(run) { return relayProgress(run) >= run.definition.requiredCores; }
+  function relayDiscovered(run) { return !!(run && run.relay && run.relay.discovered); }
+  function discoverRelay(run) {
+    if (!run || !run.relay || run.relay.discovered) return false;
+    run.relay.discovered = true;
+    return true;
+  }
+  function discoverRelayByProximity(run) {
+    if (!run || relayDiscovered(run)) return false;
+    var threshold = PP.data.config.visibility.radius + run.relay.radius;
+    return U.distance(run.player, run.relay) <= threshold && discoverRelay(run);
+  }
 
   function obstacleGroupErrors(group, label) {
     var errors = [];
@@ -4078,7 +4112,7 @@
     return JSON.stringify({
       world: [run.world.width, run.world.height],
       player: point(run.player),
-      relay: point(run.relay),
+      relay: point(run.relay).concat([run.relay.discovered]),
       cores: run.cores.map(function (core) { return [core.id].concat(point(core)); }),
       guardians: run.guardians.map(function (guardian) { return [guardian.id, guardian.type].concat(point(guardian)); }),
       walls: run.walls.map(function (wall) {
@@ -4093,42 +4127,57 @@
   function expandedPilotErrors(stages) {
     var errors = [];
     var contracts = {
-      1: {
-        world: [1000, 2100], player: [500, 1920], relay: [500, 180], timeLimit: 70,
-        cores: [[500, 1080]], guardians: [], obstacles: []
-      },
-      4: {
-        world: [1400, 2200], player: [700, 2020], relay: [1160, 180], timeLimit: 98,
-        cores: [[220, 1800], [1180, 1220], [300, 420]], guardians: [[720, 1030]],
+      16: {
+        world: [1400, 2200], player: [700, 2020], relay: [1120, 260], timeLimit: 134,
+        cores: [[220, 1740], [1160, 1340], [350, 520]], guardians: [[360, 1180], [1030, 900]],
         obstacles: [
-          ['ruin-segment', 380, 1510, 90, 1], ['ruin-segment', 1050, 1600, 90, 1],
-          ['column-square', 430, 900, 45, 1], ['column-square', 970, 690, 135, 1]
+          ['ruin-segment', 380, 1500, 45, 0.85], ['wall-pillar', 1040, 1600, 90, 1],
+          ['column-square', 450, 920, 135, 1], ['column-square', 930, 590, 135, 1]
         ]
       },
-      9: {
-        world: [1600, 2400], player: [800, 2200], relay: [1330, 220], timeLimit: 120,
-        cores: [[250, 1840], [1350, 1450], [380, 620]], guardians: [],
+      18: {
+        world: [1600, 2400], player: [800, 2200], relay: [1370, 300], timeLimit: 138,
+        cores: [[250, 1880], [1350, 1540], [900, 760]], guardians: [[430, 1320], [1220, 1120]],
+        obstacles: [['column-square', 380, 1580, 0, 1], ['column-square', 1080, 900, 135, 1]]
+      },
+      20: {
+        world: [1600, 2400], player: [800, 2200], relay: [1320, 260], timeLimit: 142,
+        cores: [[220, 2000], [1380, 1550], [520, 430]],
+        guardians: [[780, 1740], [360, 1010], [1220, 980]],
         obstacles: [
-          ['wall-pillar', 360, 1500, 135, 1], ['wall-pillar', 1260, 1780, 45, 1],
-          ['column-square', 610, 820, 90, 1]
-        ],
-        passage: [1040, 1120, 520, 72, 0, 4.2, 2.1]
+          ['ruin-segment', 300, 1800, 135, 0.85], ['ruin-segment', 1300, 1800, 135, 0.85],
+          ['wall-pillar', 520, 1250, 45, 1], ['wall-pillar', 1120, 1250, 45, 1],
+          ['column-square', 280, 700, 90, 1], ['column-square', 1320, 700, 0, 1]
+        ]
       }
     };
     var pilotIds = PP.data.config.campaign.expandedPilotStageIds;
-    if (pilotIds.join(',') !== '1,4,9') errors.push('확대 파일럿 ID 계약 오류');
+    if (pilotIds.join(',') !== '16,18,20') errors.push('확대 파일럿 ID 계약 오류');
     stages.forEach(function (definition) {
       var contract = contracts[definition.id];
       if (!contract) {
         if (definition.world || definition.playerStart || definition.relaySpot
+          || definition.relayHiddenUntilDiscovered
           || Object.prototype.hasOwnProperty.call(definition, 'fixedObstacleGroups')) {
           errors.push('비대상 stage 공간 override 금지: ' + definition.id);
         }
         var legacyRun = createStageRun(definition);
         if (legacyRun.world.width !== PP.data.config.world.width || legacyRun.world.height !== PP.data.config.world.height
           || legacyRun.player.x !== 500 || legacyRun.player.y !== 1350
-          || legacyRun.relay.x !== 500 || legacyRun.relay.y !== 128) {
+          || legacyRun.relay.x !== 500 || legacyRun.relay.y !== 128 || !relayDiscovered(legacyRun)) {
           errors.push('비대상 stage fallback 변경: ' + definition.id);
+        }
+        if ([1, 4, 9].indexOf(definition.id) >= 0
+          && (definition.fixedCoreSpots || definition.fixedGuardianSpots)) {
+          errors.push('M4.28 파일럿 고정 spawn 원복 실패: ' + definition.id);
+        }
+        if (definition.id === 9) {
+          var restoredPassage = definition.environment.filter(function (entry) { return entry.type === 'variablePassage'; })[0];
+          var restoredContract = restoredPassage && [restoredPassage.x, restoredPassage.y, restoredPassage.width,
+            restoredPassage.height, restoredPassage.rotationDegrees || 0, restoredPassage.period, restoredPassage.openSeconds];
+          if (JSON.stringify(restoredContract) !== JSON.stringify([500, 760, 420, 72, 0, 4.2, 2.1])) {
+            errors.push('STAGE 9 variablePassage 원복 실패');
+          }
         }
         return;
       }
@@ -4137,6 +4186,7 @@
       if (run.world.width !== contract.world[0] || run.world.height !== contract.world[1]) errors.push('파일럿 world 오류: ' + definition.id);
       if (!samePoint(run.player, contract.player)) errors.push('파일럿 playerStart 오류: ' + definition.id);
       if (!samePoint(run.relay, contract.relay)) errors.push('파일럿 relaySpot 오류: ' + definition.id);
+      if (!definition.relayHiddenUntilDiscovered || relayDiscovered(run)) errors.push('파일럿 relay 시작 은닉 오류: ' + definition.id);
       if (definition.timeLimit !== contract.timeLimit) errors.push('파일럿 timeLimit 오류: ' + definition.id);
       if (run.cores.length !== contract.cores.length || run.cores.some(function (core, index) { return !samePoint(core, contract.cores[index]); })) {
         errors.push('파일럿 core 좌표 오류: ' + definition.id);
@@ -4148,12 +4198,6 @@
         return [group.profileId, group.x, group.y, group.rotationDegrees, group.scale];
       });
       if (JSON.stringify(obstacleContract) !== JSON.stringify(contract.obstacles)) errors.push('파일럿 obstacle 좌표 오류: ' + definition.id);
-      if (contract.passage) {
-        var passage = definition.environment.filter(function (entry) { return entry.type === 'variablePassage'; })[0];
-        var passageContract = passage && [passage.x, passage.y, passage.width, passage.height,
-          passage.rotationDegrees || 0, passage.period, passage.openSeconds];
-        if (JSON.stringify(passageContract) !== JSON.stringify(contract.passage)) errors.push('파일럿 passage 좌표 오류: ' + definition.id);
-      }
       for (var first = 0; first < run.cores.length; first += 1) {
         if (U.distance(run.relay, run.cores[first]) < 650) errors.push('파일럿 relay-core 650 미달: ' + definition.id + '/' + run.cores[first].id);
         for (var second = first + 1; second < run.cores.length; second += 1) {
@@ -4545,6 +4589,9 @@
   PP.systems.coreInvariantErrors = coreInvariantErrors;
   PP.systems.relayProgress = relayProgress;
   PP.systems.relayActive = relayActive;
+  PP.systems.relayDiscovered = relayDiscovered;
+  PP.systems.discoverRelay = discoverRelay;
+  PP.systems.discoverRelayByProximity = discoverRelayByProximity;
   PP.systems.validateCampaign = validateCampaign;
   PP.systems.createAbyssDefinition = createAbyssDefinition;
   PP.systems.createAbyssRun = createAbyssRun;
@@ -6538,6 +6585,12 @@
       });
     }
     function handleSonarContact(pulse, entity) {
+      if (entity === stage.relay) {
+        if (pulse.source === 'player' && PP.systems.discoverRelay(stage)) {
+          ui.toast(PP.core.i18n.t('toast.relayDiscovered'));
+        }
+        return;
+      }
       var actors = { player: stage.player, rival: stage.rival };
       var environmentEvent = PP.systems.environment.onSonarContact(pulse, entity, stage);
       if (!environmentEvent && entity.entityKind === 'guardian') {
@@ -6624,6 +6677,7 @@
       var environmentEvents = PP.systems.environment.update(stage, dt);
       if (environmentEvents.thermalHit) ui.toast(PP.core.i18n.t('toast.thermal'));
       stage.player.update(dt, input, stage);
+      if (PP.systems.discoverRelayByProximity(stage)) ui.toast(PP.core.i18n.t('toast.relayDiscovered'));
       if (input.consumeSonar()) useSonar();
 
       var sonarActive = stage.sonar.pulses.length > 0;
@@ -6641,6 +6695,7 @@
         for (revealIndex = 0; revealIndex < environmentRevealables.length; revealIndex += 1) revealables.push(environmentRevealables[revealIndex]);
         revealables.push(stage.player);
         if (stage.rival) revealables.push(stage.rival);
+        if (!PP.systems.relayDiscovered(stage)) revealables.push(stage.relay);
       }
       stage.sonar.update(dt, stage.elapsed, revealables, handleSonarContact, sonarObstacles, stage);
       collectPlayerCores();
@@ -6665,7 +6720,8 @@
         finish(false, PP.core.i18n.t('toast.stageInvalid'), true);
         return;
       }
-      if (PP.systems.relayActive(stage) && PP.core.utils.distance(stage.player, stage.relay) < stage.player.radius + stage.relay.radius) {
+      if (PP.systems.relayActive(stage) && PP.systems.relayDiscovered(stage)
+        && PP.core.utils.distance(stage.player, stage.relay) < stage.player.radius + stage.relay.radius) {
         if (stage.mode === 'abyss') advanceAbyssSegment();
         else finish(true, PP.core.i18n.t('toast.stageClear'));
       } else if (stage.player.power <= 0) {
@@ -7250,11 +7306,13 @@
       }
 
       var relayActive = PP.systems.relayActive(stage);
-      if (!drawImage('entity-player-relay-gate', stage.relay.x, stage.relay.y, stage.relay.radius * 2, stage.relay.radius * 2, 0, relayActive ? 1 : 0.55)) {
-        drawRing(stage.relay.x, stage.relay.y, stage.relay.radius + (relayActive ? Math.sin(stage.elapsed * 4) * 5 : 0), relayActive ? '#57e3d6' : '#31545b', 8, relayActive ? 1 : 0.55);
+      if (PP.systems.relayDiscovered(stage)) {
+        if (!drawImage('entity-player-relay-gate', stage.relay.x, stage.relay.y, stage.relay.radius * 2, stage.relay.radius * 2, 0, relayActive ? 1 : 0.55)) {
+          drawRing(stage.relay.x, stage.relay.y, stage.relay.radius + (relayActive ? Math.sin(stage.elapsed * 4) * 5 : 0), relayActive ? '#57e3d6' : '#31545b', 8, relayActive ? 1 : 0.55);
+        }
+        ctx.fillStyle = relayActive ? '#c8fff8' : '#638085'; ctx.font = '800 18px sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText(PP.core.i18n.t(relayActive ? 'hud.return' : 'hud.relay'), stage.relay.x, stage.relay.y + 6);
       }
-      ctx.fillStyle = relayActive ? '#c8fff8' : '#638085'; ctx.font = '800 18px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText(PP.core.i18n.t(relayActive ? 'hud.return' : 'hud.relay'), stage.relay.x, stage.relay.y + 6);
 
       stage.cores.forEach(function (core) {
         if (core.owner === 'player' || core.owner === 'extracted' || !coreVisible(core)) return;
