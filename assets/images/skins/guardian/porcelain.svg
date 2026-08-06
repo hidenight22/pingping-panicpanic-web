@@ -1,15 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176 176" width="176" height="176" role="img" aria-labelledby="title desc">
-  <title id="title">백자 수호자 공통 내부 하이라이트</title>
-  <desc id="desc">기본 수호자 외곽 골격을 넘지 않는 네 장 백자판과 중앙 금계선 overlay</desc>
-  <g clip-path="url(#guardian-interior-safe)">
-    <g fill="#dce8e4" stroke="#809899" stroke-width="4" stroke-linejoin="round">
-      <path d="M58 59l22-10 8 23-16 13-20-8z"/>
-      <path d="M118 59L96 49l-8 23 16 13 20-8z"/>
-      <path d="M58 117l22 10 8-23-16-13-20 8z"/>
-      <path d="M118 117l-22 10-8-23 16-13 20 8z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 528 176" width="528" height="176" role="img" aria-labelledby="title desc">
+  <title id="title">백자 수호자 3종 외형</title>
+  <desc id="desc">비대칭 첨두 십자가 핀, 가는 육각 마름모 사냥개, 꽃잎형 원환 합창자</desc>
+  <g stroke-linejoin="round" stroke-linecap="round">
+    <g transform="translate(0 0)">
+      <path d="M77 10h23l5 48 42-8 17 25-43 18 13 42-26 24-19-42-35 20-24-21 36-29-19-38 25-19z" fill="#dbe9e6" stroke="#66868a" stroke-width="6"/>
+      <path d="M80 32l8 38 31-8-18 27 13 29-27-15-24 18 12-31-19-25 30 8z" fill="#f5fffd" stroke="#d49a49" stroke-width="4"/>
+      <path d="M88 65l17 23-17 23-17-23z" fill="#ffdae6" stroke="#c85e89" stroke-width="5"/>
+      <path d="M49 116l19-12M106 57l18-5M101 119l8 18" fill="none" stroke="#d96d97" stroke-width="4"/>
     </g>
-    <path d="M88 55l9 18-9 15 10 17-10 16" fill="none" stroke="#d86f99" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M88 76l12 12-12 12-12-12z" fill="#ffe6ee" stroke="#c86c8d" stroke-width="4"/>
+    <g transform="translate(176 0)">
+      <path d="M8 88l46-45 35-17 37 19 42 43-44 22-30 39-39-30z" fill="#dce9e6" stroke="#66868a" stroke-width="6"/>
+      <path d="M27 87l44-24 18-19 21 22 38 21-40 11-20 31-22-27z" fill="#f7fffe" stroke="#d49a49" stroke-width="4"/>
+      <path d="M88 64l23 24-23 24-23-24z" fill="#ffdae6" stroke="#c85e89" stroke-width="5"/>
+      <path d="M36 88h24M116 88h27M88 44v19M88 113v18" stroke="#d96d97" stroke-width="4"/>
+    </g>
+    <g transform="translate(352 0)">
+      <path d="M88 10l17 13 22-2 9 20 20 11-4 23 14 18-14 18 3 23-22 10-10 21-23-4-18 14-18-14-23 3-10-21-21-10 4-23L2 91l14-18-3-23 22-10 10-21 23 4z" fill="#dce9e6" stroke="#66868a" stroke-width="6"/>
+      <circle cx="88" cy="88" r="55" fill="#f7fffe" stroke="#d49a49" stroke-width="5"/>
+      <circle cx="88" cy="88" r="31" fill="#b9d6d3" stroke="#c85e89" stroke-width="5"/>
+      <path d="M88 33v20M143 88h-20M88 143v-20M33 88h20M49 49l14 14M127 49l-14 14M127 127l-14-14M49 127l14-14" stroke="#d96d97" stroke-width="5"/>
+      <circle cx="88" cy="88" r="10" fill="#ffdae6" stroke="#c85e89" stroke-width="4"/>
+    </g>
   </g>
-  <defs><clipPath id="guardian-interior-safe"><path d="M88 54l34 34-34 34-34-34z"/></clipPath></defs>
 </svg>
