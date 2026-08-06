@@ -4,7 +4,7 @@
   'use strict';
 
   var app = global.PingPanic || {};
-  app.version = '0.4.30';
+  app.version = '0.7.5';
   app.data = app.data || {};
   app.core = app.core || {};
   app.entities = app.entities || {};
@@ -205,16 +205,16 @@
       order: ['normal', 'hard', 'extreme'],
       profiles: {
         normal: {
-          id: 'normal', powerDrainMultiplier: 1, enemySpeedMultiplier: 1,
-          enemyDamageMultiplier: 1, rewardProfile: 'campaign-normal-v1'
+          id: 'normal', powerDrainMultiplier: 1.5, enemySpeedMultiplier: 1,
+          enemyDamageMultiplier: 1.2, thermalDamageMultiplier: 2, rewardProfile: 'campaign-normal-v1'
         },
         hard: {
-          id: 'hard', powerDrainMultiplier: 1.5, enemySpeedMultiplier: 1.25,
-          enemyDamageMultiplier: 1.5, rewardProfile: 'campaign-hard-v1'
+          id: 'hard', powerDrainMultiplier: 1.8, enemySpeedMultiplier: 1.25,
+          enemyDamageMultiplier: 1.5, thermalDamageMultiplier: 3, rewardProfile: 'campaign-hard-v1'
         },
         extreme: {
-          id: 'extreme', powerDrainMultiplier: 2, enemySpeedMultiplier: 1.5,
-          enemyDamageMultiplier: 2, rewardProfile: 'campaign-extreme-v1'
+          id: 'extreme', powerDrainMultiplier: 2.2, enemySpeedMultiplier: 1.5,
+          enemyDamageMultiplier: 2, thermalDamageMultiplier: 5, rewardProfile: 'campaign-extreme-v1'
         }
       },
       rewards: {
@@ -293,10 +293,14 @@
       radius: 570,
       waveSeconds: 1.25,
       revealSeconds: 3.3,
-      boosted: { radiusMultiplier: 1.5, revealSeconds: 5, rechargeMultiplier: 1.5 }
+      boosted: { radiusMultiplier: 1.5, revealSeconds: 5, rechargeMultiplier: 1.5 },
+      covert: { radiusMultiplier: 0.8, waveSeconds: 1, revealSeconds: 3.3 }
     },
     environment: {
-      thermal: { damage: 9, hitCooldownSeconds: 0.9, enemySpeedMultiplier: 1.12 },
+      thermal: {
+        damage: 9, waitSeconds: 5, activeSeconds: 3,
+        hitCooldownSeconds: 0.9, enemySpeedMultiplier: 1.12
+      },
       absorption: { rechargeMultiplier: 0.35, movementMultiplier: 0.82 },
       currentBand: { defaultFeather: 72, maximumFeather: 120, maximumBoostMultiplier: 2 },
       variablePassage: { safetyPadding: 8 }
@@ -321,35 +325,50 @@
       }
     },
     cosmetics: [
-      { id: 'prism', category: 'player', name: '프리즘 회수 드론', assetId: 'skin-player-prism', color: '#75d4ff', price: 1000 },
-      { id: 'archive', category: 'player', name: '기록보관 회수 드론', assetId: 'skin-player-archive', color: '#b79cff', price: 2400 },
-      { id: 'ember', category: 'player', name: '적열 회수 드론', assetId: 'skin-player-ember', color: '#ff876f', price: 4200 },
-      { id: 'porcelain', category: 'guardian', name: '백자 수호자', assetId: 'skin-guardian-porcelain', color: '#effffc', price: 1600 },
-      { id: 'reef', category: 'guardian', name: '산호초 수호자', assetId: 'skin-guardian-reef', color: '#8ff0a4', price: 3200 },
-      { id: 'obsidian', category: 'guardian', name: '흑요석 수호자', assetId: 'skin-guardian-obsidian', color: '#8daeb1', price: 5200 },
-      { id: 'cobalt', category: 'rival', name: '코발트 라이벌', assetId: 'skin-rival-cobalt', color: '#75d4ff', price: 2800 },
-      { id: 'scarlet', category: 'rival', name: '스칼렛 라이벌', assetId: 'skin-rival-scarlet', color: '#ff876f', price: 4800 }
+      { id: 'prism', category: 'player', name: '프리즘 회수 드론', assetId: 'skin-player-prism', color: '#75d4ff', price: 4000 },
+      { id: 'archive', category: 'player', name: '기록 보관 회수 드론', assetId: 'skin-player-archive', color: '#b79cff', price: 4000 },
+      { id: 'ember', category: 'player', name: '적열 회수 드론', assetId: 'skin-player-ember', color: '#ff876f', price: 4000 },
+      { id: 'porcelain', category: 'guardian', name: '백자 수호자', assetId: 'skin-guardian-porcelain', color: '#effffc', price: 10000 },
+      { id: 'reef', category: 'guardian', name: '산호초 수호자', assetId: 'skin-guardian-reef', color: '#8ff0a4', price: 16000 },
+      { id: 'obsidian', category: 'guardian', name: '흑요석 수호자', assetId: 'skin-guardian-obsidian', color: '#8daeb1', price: 22000 },
+      { id: 'cobalt', category: 'rival', name: '코발트 라이벌', assetId: 'skin-rival-cobalt', color: '#75d4ff', price: 13000 },
+      { id: 'scarlet', category: 'rival', name: '스칼렛 라이벌', assetId: 'skin-rival-scarlet', color: '#ff876f', price: 17000 }
     ],
     onboarding: {
       1: { titleKey: 'onboarding.1.title', textKey: 'onboarding.1.text', icon: 'drag' },
       2: { titleKey: 'onboarding.2.title', textKey: 'onboarding.2.text', icon: 'sonar' },
       3: { titleKey: 'onboarding.3.title', textKey: 'onboarding.3.text', icon: 'wall' },
-      4: { titleKey: 'onboarding.4.title', textKey: 'onboarding.4.text' },
+      4: { titleKey: 'onboarding.4.title', textKey: 'onboarding.4.text', icon: 'guardian-pin' },
       5: { titleKey: 'onboarding.5.title', textKey: 'onboarding.5.text' },
       7: { titleKey: 'onboarding.7.title', textKey: 'onboarding.7.text' },
-      8: { titleKey: 'onboarding.8.title', textKey: 'onboarding.8.text' },
+      8: { titleKey: 'onboarding.8.title', textKey: 'onboarding.8.text', icon: 'current-arrow' },
       9: { titleKey: 'onboarding.9.title', textKey: 'onboarding.9.text' },
-      16: { titleKey: 'onboarding.16.title', textKey: 'onboarding.16.text' },
-      21: { titleKey: 'onboarding.21.title', textKey: 'onboarding.21.text' },
-      22: { titleKey: 'onboarding.22.title', textKey: 'onboarding.22.text' },
-      23: { titleKey: 'onboarding.23.title', textKey: 'onboarding.23.text' },
-      62: { titleKey: 'onboarding.62.title', textKey: 'onboarding.62.text' },
+      16: { titleKey: 'onboarding.16.title', textKey: 'onboarding.16.text', icon: 'relay' },
+      21: { titleKey: 'onboarding.21.title', textKey: 'onboarding.21.text', icon: 'guardian-hound' },
+      22: { titleKey: 'onboarding.22.title', textKey: 'onboarding.22.text', icon: 'rival' },
+      23: { titleKey: 'onboarding.23.title', textKey: 'onboarding.23.text', icon: 'core' },
+      62: { titleKey: 'onboarding.62.title', textKey: 'onboarding.62.text', icon: 'guardian-chorus' },
       67: { titleKey: 'onboarding.67.title', textKey: 'onboarding.67.text' }
     },
     abyss: {
-      baseSeed: 880031,
-      difficultyStepSegments: 3,
-      maxDifficultyTier: 10
+      contentVersion: 'abyss-v4',
+      validationSeed: 880031,
+      excludedTemplateStageIds: [1, 2, 3],
+      templateUnlockStartStage: 20,
+      templateUnlockPerSegment: 2,
+      powerRecoveryPercentagePoints: 35,
+      guardianGrowthSegments: 10,
+      guardianMinimum: 3,
+      guardianCaps: { small: 5, medium: 8, large: 10 },
+      speedCap: 1.75,
+      score: { segmentBase: 10000, directCoreUnit: 100, survivalSecondUnit: 1, survivalSecondsCap: 9999 },
+      difficultyAnchors: [
+        { segment: 1, powerDrainMultiplier: 1.5, enemyDamageMultiplier: 1.2, enemySpeedMultiplier: 1, thermalDamageMultiplier: 2 },
+        { segment: 26, powerDrainMultiplier: 1.8, enemyDamageMultiplier: 1.5, enemySpeedMultiplier: 1.25, thermalDamageMultiplier: 3 },
+        { segment: 51, powerDrainMultiplier: 2.2, enemyDamageMultiplier: 2, enemySpeedMultiplier: 1.5, thermalDamageMultiplier: 5 },
+        { segment: 76, powerDrainMultiplier: 2.6, enemyDamageMultiplier: 2.5, enemySpeedMultiplier: 1.65, thermalDamageMultiplier: 7 },
+        { segment: 101, powerDrainMultiplier: 3, enemyDamageMultiplier: 3, enemySpeedMultiplier: 1.75, thermalDamageMultiplier: 9 }
+      ]
     },
     runtime: {
       profile: 'development',
@@ -380,42 +399,45 @@
       'language.ko': '한국어', 'language.en': 'English',
       'sound.on': '소리 끄기', 'sound.off': '소리 켜기',
       'hub.first': '첫 잠수 시작', 'hub.next': '다음 탐사 · STAGE {stage}',
-      'hub.abyss': '무저갱 시작', 'hub.difficultyReplay': '{difficulty} 다시 도전',
+      'hub.abyss': '무저갱 시작',
       'hub.stageSelect': '해역 선택', 'hub.cosmetics': '외형',
       'hub.tagline': '보려면 쏘고, 쏘면 들킵니다.',
       'hub.progress': '캠페인 진행', 'hub.removeAds': '강제 광고 제거권',
       'hub.removeAdsOwned': '강제 광고 제거됨', 'hub.complete': '캠페인 완료', 'hub.nextDive': '다음 잠수',
-      'hub.completeMeta': '100 스테이지 회수 완료', 'hub.nextMeta': '{zone} · STAGE {stage}',
+      'hub.completeMeta': '100개 스테이지 탐사 완료', 'hub.nextMeta': '{zone} · STAGE {stage}',
       'hub.abyssBest': '무저갱 최고 구획 {segment} · {score}점',
       'select.title': '해역 선택',
       'select.zone': '해역 {zone}', 'select.locked': '잠금', 'select.stageAria': '스테이지 {stage} · {state}',
       'select.zoneStarsAria': '획득 {stars}/60',
       'onboarding.start': '시작', 'onboarding.confirm': '확인',
       'guide.core': '공명 코어', 'guide.relay': '중계문',
-      'difficulty.normal': '노말', 'difficulty.hard': '하드', 'difficulty.extreme': '익스트림',
-      'difficulty.locked': '{difficulty} · 이전 난이도 100 클리어 후 해금',
+      'difficulty.normal': '노멀', 'difficulty.hard': '하드', 'difficulty.extreme': '익스트림',
+      'difficulty.locked': '{difficulty} · 이전 난이도의 100개 스테이지를 모두 클리어하면 열립니다.',
       'settings.title': '설정', 'settings.language': '언어', 'settings.hand': '소나 버튼 위치',
       'settings.currentLanguage': '언어 · 한국어',
       'settings.close': '닫기', 'hand.left': '왼쪽', 'hand.right': '오른쪽',
       'settings.open': '설정 열기', 'settings.handCopy': '소나 버튼을 표시할 위치를 선택하세요.',
       'handChoice.title': '소나 버튼 위치',
       'handChoice.copy': '선택한 쪽에 소나 버튼을, 반대쪽에 이동 가이드를 배치합니다. 일시정지에서 언제든 바꿀 수 있습니다.',
-      'pause.title': '일시정지', 'pause.copy': '신호와 시간도 멈췄습니다.',
-      'pause.resume': '계속하기', 'pause.restart': '다시하기', 'pause.quit': '해역으로',
+      'pause.title': '일시정지', 'pause.copy': '탐사와 모든 신호가 일시 정지되었습니다.',
+      'pause.resume': '계속하기', 'pause.restart': '다시 하기', 'pause.quit': '해역으로',
       'pause.abyssEnd': '무저갱 종료',
-      'hud.core': '코어', 'hud.drag': '끌어서 이동', 'hud.move': '플레이 화면을 끌어 이동',
-      'hud.boosted': '이번 도전 · 모든 소나 증폭',
+      'hud.core': '코어', 'hud.drag': '이동 영역', 'hud.move': '이 영역이나 플레이 화면을 끌어 이동',
+      'hud.boosted': '이번 잠수 · 증폭 소나 장비', 'hud.covert': '이번 잠수 · 은폐 소나 장비',
       'hud.powerAria': '잔여 동력 {power}퍼센트',
       'prep.title': '잠수 준비', 'prep.copy': '사용할 소나 장비를 선택하세요.',
       'prep.target': '{difficulty} · {stage}',
-      'prep.normal': '일반 소나 장비', 'prep.boosted': '증폭 소나 장비', 'prep.cancel': '취소',
-      'prep.contest': '준비가 끝나면 일반 소나로 잠수를 시작하세요.',
+      'prep.normal': '일반 소나 장비', 'prep.boosted': '증폭 소나 장비', 'prep.covert': '은폐 소나 장비', 'prep.cancel': '취소',
+      'prep.contest': '일반 소나를 선택하면 바로 잠수를 시작합니다.',
       'prep.adCancelled': '광고가 취소되었습니다. 일반 소나로 시작할 수 있습니다.',
       'prep.adNoReward': '보상이 확인되지 않았습니다. 일반 소나로 시작하거나 다시 시도하세요.',
-      'result.next': '다음 스테이지', 'result.retry': '다시 하기', 'result.select': '해역 선택',
+      'result.next': '다음 스테이지', 'result.retry': '다시 하기', 'result.select': '해역 선택', 'result.main': '메인 화면',
       'result.win': '회수 완료', 'result.fail': '회수 실패',
       'result.score': '점수', 'result.stars': '별', 'result.credits': '공명 크레딧',
       'result.hits': '피격', 'result.power': '동력', 'result.time': '시간', 'result.sonars': '소나',
+      'result.abyssSegments': '돌파 구획', 'result.abyssCores': '회수량',
+      'result.abyssSurvival': '생존 시간', 'result.abyssScore': '총점',
+      'result.abyssSegmentsValue': '{count} 구획', 'result.abyssCoresValue': '{count}개',
       'stars.summary': '별 조건 · 클리어 / 동력 20% 초과 / 라이벌 코어 반출 없음',
       'stars.clearKept': '★ 클리어',
       'stars.powerKept': '★ 동력 20% 초과', 'stars.powerLost': '☆ 동력 20% 이하',
@@ -429,36 +451,36 @@
       'zone.red-channel': '적색 수로', 'zone.silent-trench': '무음 해구', 'zone.resonance-heart': '공명 심장부',
       'rival.destroyed': '파괴', 'rival.extracted': '반출', 'rival.retreat': '도주',
       'rival.corePickup': '코어 회수', 'rival.relayMove': '중계문 이동',
-      'rival.coreMove': '코어 이동', 'rival.search': '탐색', 'rival.combat': '교전',
-      'rival.sonar': '소나 발사', 'rival.guardianDetected': '수호자 발각', 'rival.guardianHit': '수호자 피격',
-      'onboarding.1.title': '1 · 끌어서 회수',
-      'onboarding.1.text': '{core}를 모은 뒤 {relay}으로 귀환하세요.',
-      'onboarding.2.title': '2 · 소나로 세 코어 찾기',
-      'onboarding.2.text': '소나는 보이지 않는 사물과 코어 3개를 잠시 보여 줍니다. 세 코어를 찾아 회수하세요.',
-      'onboarding.3.title': '3 · 벽 뒤의 신호',
-      'onboarding.3.text': '벽은 이동과 소나를 막습니다. 위치를 바꿔 다시 쏘세요.',
-      'onboarding.4.title': '4 · 수호자',
-      'onboarding.4.text': '소나가 닿거나 가까이 가면 수호자에게 발각됩니다. 벽 뒤로 이동하세요.',
-      'onboarding.5.title': '5 · 열수 분출',
-      'onboarding.5.text': '열수는 예고 뒤 분출해 플레이어와 수호자에게 피해를 줍니다. 5번 맞은 수호자는 파괴됩니다.',
-      'onboarding.7.title': '7 · 공명 흡수 구역',
-      'onboarding.7.text': '흡수 구역 안에서는 소나가 짧아지고 충전이 느려집니다. 구역 밖에서 쏘세요.',
-      'onboarding.8.title': '8 · 전역·구역 해류',
-      'onboarding.8.text': '전 맵 해류 위의 직사각 밴드는 방향을 바꾸거나 같은 방향 흐름을 가속합니다. 밴드 화살표를 보고 보정하세요.',
-      'onboarding.9.title': '9 · 가변 통로',
-      'onboarding.9.text': '카운터가 0이 되면 통로가 열리거나 닫힙니다. 가까이 가도 열리지 않으며, 통과 중에는 완전히 벗어날 때까지 닫히지 않습니다.',
-      'onboarding.16.title': '16 · 숨은 중계문',
-      'onboarding.16.text': '중계문도 소나로 찾거나 가까이 가면 발견할 수 있습니다.',
-      'onboarding.21.title': '21 · 잠금 사냥개',
-      'onboarding.21.text': '잠금 사냥개는 빠르게 추격합니다. 벽을 돌아 경로를 끊으세요.',
-      'onboarding.22.title': '22 · 라이벌',
-      'onboarding.22.text': '라이벌이 코어를 반출하면 별 1개를 잃습니다. 먼저 회수하거나 충돌해 저지하세요.',
-      'onboarding.23.title': '23 · 미끼 파형',
-      'onboarding.23.text': '소나 뒤 코어처럼 보이는 신호가 있을 수 있습니다. 가까이 가면 가짜는 조용히 사라집니다.',
-      'onboarding.62.title': '62 · 합창 감시자',
-      'onboarding.62.text': '합창 감시자는 예고 뒤 원형 파동을 쏩니다. 벽 뒤 안전 음영으로 피하세요.',
-      'onboarding.67.title': '67 · 신호 잔향',
-      'onboarding.67.text': '청록 신호 증폭 구역을 지난 소나는 더 멀리 퍼지고 더 오래 보여 주지만 위험 신호도 커집니다.',
+      'rival.coreMove': '코어로 이동', 'rival.search': '탐색', 'rival.combat': '교전',
+      'rival.sonar': '소나 발사', 'rival.guardianDetected': '수호자에게 발각', 'rival.guardianHit': '수호자에게 피격',
+      'onboarding.1.title': '1 · 이동하고 귀환하기',
+      'onboarding.1.text': '플레이 화면이나 이동 영역을 끌어 드론을 움직이세요. {core}를 회수한 뒤 {relay}으로 이동하면 탐사를 완료합니다.',
+      'onboarding.2.title': '2 · 소나로 숨은 신호 찾기',
+      'onboarding.2.text': '보이지 않는 공명 코어는 소나 파동이 닿으면 잠시 드러납니다. 소나를 쏘아 코어 3개를 찾으세요.',
+      'onboarding.3.title': '3 · 장애물 너머 탐색',
+      'onboarding.3.text': '장애물은 드론의 이동과 소나 파동을 막습니다. 경로를 돌아 다른 방향에서 소나를 쏘세요.',
+      'onboarding.4.title': '4 · 수호자에게 들키지 않기',
+      'onboarding.4.text': '수호자는 드론이 가까이 가거나 소나 파동에 닿으면 추격을 시작합니다. 장애물을 사이에 두고 거리를 벌리세요.',
+      'onboarding.5.title': '5 · 열수구 피하기',
+      'onboarding.5.text': '열수구는 5초 동안 잠잠한 뒤 3초 동안 분출합니다. 분출은 드론과 수호자 모두에게 피해를 줍니다.',
+      'onboarding.7.title': '7 · 흡수 구역 벗어나기',
+      'onboarding.7.text': '공명 흡수 구역 안에서는 소나 범위가 줄고 충전이 느려집니다. 구역 밖에서 소나를 쏘세요.',
+      'onboarding.8.title': '8 · 해류 읽기',
+      'onboarding.8.text': '화살표는 해류의 방향과 세기를 나타냅니다. 구역마다 방향이나 속도가 달라질 수 있으니 이동 방향을 보정하세요.',
+      'onboarding.9.title': '9 · 개폐 통로 통과하기',
+      'onboarding.9.text': '표시된 시간이 0이 되면 통로가 열리거나 닫힙니다. 통과 중인 드론이 완전히 빠져나갈 때까지는 닫히지 않습니다.',
+      'onboarding.16.title': '16 · 숨은 중계문 찾기',
+      'onboarding.16.text': '숨은 중계문은 소나 파동을 맞히거나 가까이 가면 드러나며, 한 번 찾으면 계속 표시됩니다.',
+      'onboarding.21.title': '21 · 잠금 사냥개 따돌리기',
+      'onboarding.21.text': '잠금 사냥개는 빠른 속도로 추격합니다. 장애물을 돌아 이동하며 거리를 벌리세요.',
+      'onboarding.22.title': '22 · 라이벌의 반출 막기',
+      'onboarding.22.text': '라이벌이 공명 코어를 반출하면 해당 코어는 되찾을 수 없고 별 1개를 잃습니다. 먼저 회수하거나 라이벌과 충돌해 저지하세요.',
+      'onboarding.23.title': '23 · 미끼 신호 구별하기',
+      'onboarding.23.text': '소나에 닿은 미끼는 공명 코어처럼 보이지만, 가시거리 안에 들어가면 사라집니다.',
+      'onboarding.62.title': '62 · 합창 파동 피하기',
+      'onboarding.62.text': '합창 감시자는 예고 후 원형 파동을 발사합니다. 파동은 장애물을 통과하지 못하므로 벽 뒤에서 피하세요.',
+      'onboarding.67.title': '67 · 신호 증폭 활용하기',
+      'onboarding.67.text': '청록색 증폭 구역을 지난 소나는 범위와 탐지 시간이 늘어납니다. 더 많은 수호자에게 신호가 닿을 수 있으니 주의하세요.',
       'hud.stage': '{zone} · STAGE {stage}', 'hud.abyss': '무저갱 · 구획 {segment}',
       'hud.rival': '라이벌 · {broadcast}', 'hud.relay': '중계문', 'hud.return': '귀환',
       'hud.rivalRelay': '라이벌 중계문',
@@ -466,12 +488,18 @@
       'unit.count': '{value}회', 'unit.seconds': '{value}초',
       'toast.hand': '소나 버튼 위치: {hand}',
       'toast.language': '언어가 변경되었습니다.',
-      'toast.difficulty': '{difficulty}을 선택했습니다.',
+      'toast.difficulty': '{difficulty} 난이도를 선택했습니다.',
       'toast.objective': '코어를 회수하고 중계문으로 귀환하세요.',
-      'toast.sonarLow': '공명 충전이 부족합니다.', 'toast.sonar': '소나 파동이 퍼집니다.',
+      'toast.sonarLow': '공명 충전이 부족합니다.',
       'toast.sonarBoosted': '증폭 소나 · 범위 1.5배 · 5초 탐지',
+      'toast.sonarCovert': '은폐 소나 · 수호자에게 발각되지 않음 · 범위 0.8배',
+      'toast.gmHard': 'GM · 노멀 100개 스테이지 클리어 · 하드 개방',
+      'toast.gmExtreme': 'GM · 하드 100개 스테이지 클리어 · 익스트림 개방',
+      'toast.gmAbyss': 'GM · 무저갱 메뉴 개방',
+      'toast.gmCosmetics': 'GM · 모든 외형 무료 개방',
+      'toast.gmReset': 'GM · 신규 사용자 상태로 초기화',
       'toast.core': '공명 코어 {current} / {required}',
-      'toast.coreDiscovered': '공명 코어 신호를 발견했습니다. ({current}/{total})',
+      'toast.coreDiscovered': '공명 코어 신호를 발견했습니다.',
       'toast.relayDiscovered': '중계문 신호를 확인했습니다.',
       'toast.thermal': '열수 분출에 피격됐습니다.',
       'thermal.countdown': '분출까지 {seconds}초',
@@ -482,15 +510,13 @@
       'toast.chorusWarning': '합창 감시자가 원형 파동을 준비합니다.',
       'toast.chorusHit': '합창 파동 피격!', 'toast.guardianHit': '수호자 충돌! 동력 {damage} 감소',
       'toast.guardianDrop': '수호자가 라이벌의 코어를 떨어뜨렸습니다.',
-      'toast.rivalExtracted': '라이벌이 코어 1개를 반출했습니다.', 'toast.rivalShotHit': '라이벌 직선탄 피격!',
-      'toast.stageInvalid': '코어 상태 오류로 판을 안전 종료했습니다.',
+      'toast.rivalExtracted': '라이벌이 코어 1개를 반출했습니다.', 'toast.rivalShotHit': '라이벌 투사체에 피격되었습니다.',
+      'toast.stageInvalid': '코어 상태 오류로 탐사를 종료했습니다.',
       'toast.stageClear': '공명 코어를 중계망에 연결했습니다.', 'toast.powerEmpty': '잔여 동력이 모두 소진됐습니다.',
       'toast.credits': ' 신규 별 {stars}개로 공명 크레딧 {credits}을 획득했습니다.',
-      'toast.record': ' 최고 기록을 갱신했습니다.',
       'toast.abyssStart': '무저갱 구획 1 · 중간 저장 없이 연속 탐사합니다.',
-      'toast.abyssSegment': '무저갱 구획 {segment} · 난이도 {tier}',
-      'toast.abyssResult': '{message} 완료 구획 {segment} · {score}점',
-      'toast.recovery': '동력 35 복구. 계속하기를 눌러 재개하세요.',
+      'toast.abyssSegment': '무저갱 구획 {segment} · 동력 35 회복 · 소나 충전 100%',
+      'toast.recovery': '동력이 35로 복구되었습니다. 계속하기를 눌러 재개하세요.',
       'toast.noReward': '보상 미지급: {status}',
       'toast.abyssStopped': '탐사를 종료했습니다.', 'toast.ownedOnly': '보유한 외형만 장착할 수 있습니다.',
       'toast.contentError': '콘텐츠 데이터 오류: 개발자 콘솔을 확인하세요.',
@@ -505,13 +531,18 @@
       'result.doubleNone': '추가 보상이 지급되지 않았습니다.',
       'ad.emergency': '긴급 동력 복구 광고입니다. 확인 뒤 일시정지 상태로 복귀합니다.',
       'ad.boosted': '이번 도전 전체에 적용할 증폭 소나 광고입니다. 보상 확인 뒤에만 잠수를 시작합니다.',
+      'ad.covert': '이번 도전 전체에 적용할 은폐 소나 광고입니다. 보상 확인 뒤에만 잠수를 시작합니다.',
       'ad.double': '신규 별 크레딧 2배 광고입니다. 확인 후 결과로 복귀합니다.',
       'ad.interstitial': '자동 전면 광고입니다. 확인 후 결과로 복귀합니다.',
       'cosmetic.category.player': '플레이어 외형 3종', 'cosmetic.category.guardian': '수호자 3종', 'cosmetic.category.rival': '라이벌 2종',
       'cosmetic.base': '기본 외형', 'cosmetic.equipped': '장착 중', 'cosmetic.owned': '보유 · 장착 가능',
       'cosmetic.locked': '잠금 · {price} 크레딧', 'cosmetic.aria': '{name} · {state} · 잔액 {balance}',
-      'cosmetic.purchaseTitle': '{name} 구매', 'cosmetic.purchaseCopy': '{price} 크레딧을 사용합니다. 현재 잔액 {balance} 크레딧',
-      'cosmetic.prism': '프리즘 회수 드론', 'cosmetic.archive': '기록보관 회수 드론', 'cosmetic.ember': '적열 회수 드론',
+      'cosmetic.purchaseTitle': '{name} 구매', 'cosmetic.price': '가격', 'currency.credit': '크레딧',
+      'cosmetic.milestoneTitle': '전용 BGM 외형 구매 가능',
+      'cosmetic.milestoneCopy': '플레이어 드론 외형에는 각각 전용 BGM이 포함됩니다.',
+      'cosmetic.milestoneLater': '나중에', 'cosmetic.milestoneOpen': '외형 보기',
+      'cosmetic.attentionAria': '구매 가능한 외형이 있습니다',
+      'cosmetic.prism': '프리즘 회수 드론', 'cosmetic.archive': '기록 보관 회수 드론', 'cosmetic.ember': '적열 회수 드론',
       'cosmetic.porcelain': '백자 수호자', 'cosmetic.reef': '산호초 수호자', 'cosmetic.obsidian': '흑요석 수호자',
       'cosmetic.cobalt': '코발트 라이벌', 'cosmetic.scarlet': '스칼렛 라이벌',
       'product.description': '고정 배너와 자동 전면 광고를 제거합니다. 선택형 보상 광고는 유지됩니다.',
@@ -525,8 +556,8 @@
       'product.statusError': '소유권을 확인하지 못했습니다. 다시 시도해 주세요.',
       'cosmetic.title': '외형 모듈', 'cosmetic.wallet': '크레딧 지갑', 'cosmetic.copy': '모든 외형은 능력에 영향을 주지 않습니다. 플레이어 외형 3종에는 각각 전용 BGM이 포함됩니다.',
       'common.close': '닫기', 'common.back': '메인으로', 'common.cancel': '취소', 'common.confirm': '확인', 'common.buy': '구매 확인',
-      'ad.title': '광고 출력 예정', 'ad.default': '실제 SDK 연결 전 UX 확인 화면입니다.',
-      'banner.title': '배너 광고 영역', 'banner.copy': '개발용 표시 · 실제 광고 아님', 'cosmetic.playerBgm': '전용 BGM 포함',
+      'ad.title': '광고 출력 예정', 'ad.default': '실제 광고 SDK 연동 전 확인용 화면입니다.',
+      'banner.title': '배너 광고 영역', 'banner.copy': '개발용 표시 · 실제 광고가 아닙니다.', 'cosmetic.playerBgm': '전용 BGM 포함',
       'aria.sonar': '소나 발사', 'aria.settings': '설정 열기', 'aria.pause': '일시정지',
       'aria.canvas': '심해 회수 구역', 'aria.zoneTabs': '해역 전환',
       'aria.banner': '고정 배너 광고 검증 영역'
@@ -535,12 +566,12 @@
       'language.ko': '한국어', 'language.en': 'English',
       'sound.on': 'Turn sound off', 'sound.off': 'Turn sound on',
       'hub.first': 'Start First Dive', 'hub.next': 'Next Dive · STAGE {stage}',
-      'hub.abyss': 'Enter the Abyss', 'hub.difficultyReplay': 'Replay {difficulty}',
+      'hub.abyss': 'Enter the Abyss',
       'hub.stageSelect': 'Zones', 'hub.cosmetics': 'Skins',
       'hub.tagline': 'Ping to see. Panic when they hear it.',
       'hub.progress': 'Campaign progress', 'hub.removeAds': 'Remove Forced Ads',
       'hub.removeAdsOwned': 'Forced Ads Removed', 'hub.complete': 'CAMPAIGN COMPLETE', 'hub.nextDive': 'NEXT DIVE',
-      'hub.completeMeta': 'All 100 stages recovered', 'hub.nextMeta': '{zone} · STAGE {stage}',
+      'hub.completeMeta': 'All 100 stages complete', 'hub.nextMeta': '{zone} · STAGE {stage}',
       'hub.abyssBest': 'Abyss best segment {segment} · {score} pts',
       'select.title': 'Zones',
       'select.zone': 'Zone {zone}', 'select.locked': 'Locked', 'select.stageAria': 'Stage {stage} · {state}',
@@ -555,22 +586,25 @@
       'settings.open': 'Open settings', 'settings.handCopy': 'Choose the sonar button position.',
       'handChoice.title': 'Sonar button position',
       'handChoice.copy': 'The sonar button appears on the selected side and the movement guide on the opposite side. Change it anytime while paused.',
-      'pause.title': 'Paused', 'pause.copy': 'Signals and time are stopped.',
+      'pause.title': 'Paused', 'pause.copy': 'The dive and all signals are paused.',
       'pause.resume': 'Resume', 'pause.restart': 'Restart', 'pause.quit': 'Zones',
       'pause.abyssEnd': 'End Abyss Run',
-      'hud.core': 'CORE', 'hud.drag': 'Drag to move', 'hud.move': 'Drag the play area to move',
-      'hud.boosted': 'This attempt · All sonar boosted',
+      'hud.core': 'CORE', 'hud.drag': 'MOVEMENT AREA', 'hud.move': 'Drag here or the play area to move',
+      'hud.boosted': 'This dive · Boosted sonar equipped', 'hud.covert': 'This dive · Covert sonar equipped',
       'hud.powerAria': '{power}% power remaining',
       'prep.title': 'Dive Preparation', 'prep.copy': 'Choose your sonar equipment.',
       'prep.target': '{difficulty} · {stage}',
-      'prep.normal': 'Standard Sonar', 'prep.boosted': 'Boosted Sonar', 'prep.cancel': 'Cancel',
-      'prep.contest': 'Start the dive with standard sonar when ready.',
+      'prep.normal': 'Standard Sonar', 'prep.boosted': 'Boosted Sonar', 'prep.covert': 'Covert Sonar', 'prep.cancel': 'Cancel',
+      'prep.contest': 'Choose Standard Sonar to begin the dive immediately.',
       'prep.adCancelled': 'The ad was cancelled. You can start with standard sonar.',
       'prep.adNoReward': 'Reward not confirmed. Start with standard sonar or try again.',
-      'result.next': 'Next Stage', 'result.retry': 'Retry', 'result.select': 'Zones',
+      'result.next': 'Next Stage', 'result.retry': 'Retry', 'result.select': 'Zones', 'result.main': 'Main Menu',
       'result.win': 'Recovery Complete', 'result.fail': 'Recovery Failed',
       'result.score': 'Score', 'result.stars': 'Stars', 'result.credits': 'Resonance Credits',
       'result.hits': 'Hits', 'result.power': 'Power', 'result.time': 'Time', 'result.sonars': 'Sonar',
+      'result.abyssSegments': 'Segments Cleared', 'result.abyssCores': 'Cores Recovered',
+      'result.abyssSurvival': 'Survival Time', 'result.abyssScore': 'Total Score',
+      'result.abyssSegmentsValue': '{count}', 'result.abyssCoresValue': '{count}',
       'stars.summary': 'Stars · Clear / Above 20% power / No core extracted by rival',
       'stars.clearKept': '★ Cleared',
       'stars.powerKept': '★ Above 20% power', 'stars.powerLost': '☆ 20% power or less',
@@ -587,34 +621,34 @@
       'rival.corePickup': 'Recovering Core', 'rival.relayMove': 'Moving to Relay',
       'rival.coreMove': 'Moving to Core', 'rival.search': 'Searching', 'rival.combat': 'Engaging',
       'rival.sonar': 'Firing Sonar', 'rival.guardianDetected': 'Guardian Alert', 'rival.guardianHit': 'Hit by Guardian',
-      'onboarding.1.title': '1 · Drag and Recover',
-      'onboarding.1.text': 'Collect the {core}, then return to the {relay}.',
-      'onboarding.2.title': '2 · Find Three Cores',
-      'onboarding.2.text': 'Sonar briefly reveals unseen objects and three cores. Find and recover all three.',
-      'onboarding.3.title': '3 · Signals Behind Walls',
-      'onboarding.3.text': 'Walls block movement and sonar. Change position and fire again.',
-      'onboarding.4.title': '4 · Guardians',
-      'onboarding.4.text': 'A guardian detects you when sonar touches it or you get close. Move behind a wall.',
-      'onboarding.5.title': '5 · Thermal Vents',
-      'onboarding.5.text': 'Thermal vents erupt after a warning and damage players and guardians. Five hits destroy a guardian.',
-      'onboarding.7.title': '7 · Resonance Sink',
-      'onboarding.7.text': 'Sonar is shorter and recharges slower inside a sink zone. Fire from outside.',
-      'onboarding.8.title': '8 · Global and Band Currents',
-      'onboarding.8.text': 'Rectangular bands over the global current redirect or accelerate its flow. Follow the arrows inside each band.',
-      'onboarding.9.title': '9 · Variable Passage',
-      'onboarding.9.text': 'When the counter reaches 0, the passage opens or closes. Approaching it does not open it, and it will not close until you move clear.',
-      'onboarding.16.title': '16 · Hidden Relay',
-      'onboarding.16.text': 'You can reveal the relay with sonar or by moving close to it.',
-      'onboarding.21.title': '21 · Lock Hound',
-      'onboarding.21.text': 'Lock Hounds chase quickly. Turn around walls to break their path.',
-      'onboarding.22.title': '22 · Rival',
-      'onboarding.22.text': 'You lose one star if the rival extracts a core. Recover first or stop it by collision.',
-      'onboarding.23.title': '23 · Decoy Wave',
-      'onboarding.23.text': 'A signal may look like a core after sonar. A fake silently disappears when you approach.',
-      'onboarding.62.title': '62 · Chorus Watcher',
-      'onboarding.62.text': 'The Chorus Watcher fires a circular wave after warning. Hide in a safe shadow behind a wall.',
-      'onboarding.67.title': '67 · Signal Echo',
-      'onboarding.67.text': 'Sonar crossing a cyan amplification zone travels farther and reveals longer, but also spreads more danger.',
+      'onboarding.1.title': '1 · Move, Recover, Return',
+      'onboarding.1.text': 'Drag the play area or movement area to move the drone. Recover every {core}, then enter the {relay} to complete the dive.',
+      'onboarding.2.title': '2 · Reveal Hidden Signals',
+      'onboarding.2.text': 'Hidden resonance cores briefly appear when touched by a sonar wave. Fire sonar and find all three cores.',
+      'onboarding.3.title': '3 · Search Around Obstacles',
+      'onboarding.3.text': 'Obstacles block both the drone and sonar waves. Move around them and fire from another angle.',
+      'onboarding.4.title': '4 · Avoid Guardian Detection',
+      'onboarding.4.text': 'Guardians begin chasing when the drone gets close or a sonar wave touches them. Put obstacles between you and gain distance.',
+      'onboarding.5.title': '5 · Avoid Thermal Vents',
+      'onboarding.5.text': 'Thermal vents stay dormant for 5 seconds, then erupt for 3 seconds. Eruptions damage both the drone and guardians.',
+      'onboarding.7.title': '7 · Escape the Sink Zone',
+      'onboarding.7.text': 'Sonar range and recharge speed are reduced inside a resonance sink. Fire sonar from outside the zone.',
+      'onboarding.8.title': '8 · Read the Current',
+      'onboarding.8.text': 'Arrows show the direction and strength of the current. Direction or speed can change by area, so adjust your movement.',
+      'onboarding.9.title': '9 · Cross the Timed Passage',
+      'onboarding.9.text': 'The passage opens or closes when its timer reaches 0. It will wait until the drone is fully clear before closing.',
+      'onboarding.16.title': '16 · Find the Hidden Relay',
+      'onboarding.16.text': 'A hidden relay appears when hit by sonar or approached closely. Once found, it stays visible.',
+      'onboarding.21.title': '21 · Evade the Lock Hound',
+      'onboarding.21.text': 'Lock Hounds chase at high speed. Move around obstacles and gain distance.',
+      'onboarding.22.title': '22 · Stop the Rival Extraction',
+      'onboarding.22.text': 'A core extracted by the rival cannot be recovered and costs one star. Recover it first or collide with the rival to stop it.',
+      'onboarding.23.title': '23 · Identify Decoy Signals',
+      'onboarding.23.text': 'A sonar-hit decoy looks like a resonance core, but disappears when it enters your visibility range.',
+      'onboarding.62.title': '62 · Evade the Chorus Wave',
+      'onboarding.62.text': 'The Chorus Watcher fires a circular wave after warning. The wave cannot pass through obstacles, so take cover behind a wall.',
+      'onboarding.67.title': '67 · Use Signal Amplification',
+      'onboarding.67.text': 'Sonar crossing a cyan amplification zone gains range and reveal time. Take care: it can alert more guardians.',
       'hud.stage': '{zone} · {stage}', 'hud.abyss': 'ABYSS · SEGMENT {segment}',
       'hud.rival': 'RIVAL · {broadcast}', 'hud.relay': 'Relay', 'hud.return': 'Return',
       'hud.rivalRelay': 'Rival Relay',
@@ -624,10 +658,16 @@
       'toast.language': 'Language changed.',
       'toast.difficulty': '{difficulty} selected.',
       'toast.objective': 'Recover the cores and return to the relay.',
-      'toast.sonarLow': 'Not enough resonance charge.', 'toast.sonar': 'Sonar wave emitted.',
+      'toast.sonarLow': 'Not enough resonance charge.',
       'toast.sonarBoosted': 'Boosted sonar · 1.5× range · 5s reveal',
+      'toast.sonarCovert': 'Covert sonar · Does not alert guardians · 0.8× range',
+      'toast.gmHard': 'GM · 100 Normal stages cleared · Hard unlocked',
+      'toast.gmExtreme': 'GM · 100 Hard stages cleared · Extreme unlocked',
+      'toast.gmAbyss': 'GM · Abyss menu unlocked',
+      'toast.gmCosmetics': 'GM · All skins unlocked for free',
+      'toast.gmReset': 'GM · Reset to a new-player state',
       'toast.core': 'Resonance core {current} / {required}',
-      'toast.coreDiscovered': 'Resonance core signal found. ({current}/{total})',
+      'toast.coreDiscovered': 'Resonance core signal found.',
       'toast.relayDiscovered': 'Relay signal located.',
       'toast.thermal': 'Thermal vent hit!',
       'thermal.countdown': 'VENT IN {seconds}s',
@@ -642,11 +682,9 @@
       'toast.stageInvalid': 'The run ended safely after a core state error.',
       'toast.stageClear': 'Resonance cores connected to the relay.', 'toast.powerEmpty': 'All remaining power was depleted.',
       'toast.credits': ' Earned {credits} resonance credits from {stars} new stars.',
-      'toast.record': ' New best record.',
       'toast.abyssStart': 'Abyss segment 1 · Continuous run without checkpoints.',
-      'toast.abyssSegment': 'Abyss segment {segment} · Tier {tier}',
-      'toast.abyssResult': '{message} Completed segments: {segment} · {score} pts',
-      'toast.recovery': 'Power restored to 35. Press Continue to resume.',
+      'toast.abyssSegment': 'Abyss segment {segment} · Power +35 · Sonar 100%',
+      'toast.recovery': 'Power restored to 35. Press Resume to continue.',
       'toast.noReward': 'Reward not granted: {status}',
       'toast.abyssStopped': 'Exploration ended.', 'toast.ownedOnly': 'Only owned skins can be equipped.',
       'toast.contentError': 'Content data error. Check the developer console.',
@@ -661,12 +699,17 @@
       'result.doubleNone': 'No additional reward was granted.',
       'ad.emergency': 'Emergency power recovery ad. Returns to the game paused after confirmation.',
       'ad.boosted': 'Boosted sonar ad for the full attempt. The dive starts only after reward confirmation.',
+      'ad.covert': 'Covert sonar ad for the full attempt. The dive starts only after reward confirmation.',
       'ad.double': 'Double new-star credit ad. Returns to results after confirmation.',
       'ad.interstitial': 'Interstitial ad. Returns to results after confirmation.',
       'cosmetic.category.player': 'Player drone skins · 3', 'cosmetic.category.guardian': '3 Guardian Skins', 'cosmetic.category.rival': '2 Rival Skins',
       'cosmetic.base': 'Base Skin', 'cosmetic.equipped': 'Equipped', 'cosmetic.owned': 'Owned · Ready to equip',
       'cosmetic.locked': 'Locked · {price} credits', 'cosmetic.aria': '{name} · {state} · Balance {balance}',
-      'cosmetic.purchaseTitle': 'Buy {name}', 'cosmetic.purchaseCopy': 'Spend {price} credits. Current balance: {balance}',
+      'cosmetic.purchaseTitle': 'Buy {name}', 'cosmetic.price': 'Price', 'currency.credit': 'Credits',
+      'cosmetic.milestoneTitle': 'BGM Skin Available',
+      'cosmetic.milestoneCopy': 'Each player drone skin includes its own BGM.',
+      'cosmetic.milestoneLater': 'Later', 'cosmetic.milestoneOpen': 'View Skins',
+      'cosmetic.attentionAria': 'A skin is available to purchase',
       'cosmetic.prism': 'Prism Recovery Drone', 'cosmetic.archive': 'Archive Recovery Drone', 'cosmetic.ember': 'Ember Recovery Drone',
       'cosmetic.porcelain': 'Porcelain Guardian', 'cosmetic.reef': 'Reef Guardian', 'cosmetic.obsidian': 'Obsidian Guardian',
       'cosmetic.cobalt': 'Cobalt Rival', 'cosmetic.scarlet': 'Scarlet Rival',
@@ -937,16 +980,16 @@
         '강한 횡해류 진입', '해류 속 근접 회수', '사냥개와 긴 직선로', '벽 뒤 안전 충전',
         '해류 속 라이벌 직선탄', '반대 해류 귀환', '연속 코어 경로', '최소 소나 항해',
         '복수 사냥개 수색', '급류와 사냥개 엄폐', '수호자 충돌선 우회', '코어 반출 후 합산 귀환',
-        '긴 추격의 마지막 위치', '급류 속 동력 보존', '핀·사냥개 혼합', '밸브 통로 라이벌 반출 차단',
+        '긴 추격의 마지막 위치', '급류 속 동력 보존', '핀·사냥개 혼합', '시간 통로에서 라이벌 반출 차단',
         '충전 제한과 장거리 파동', '해류 방향 전환', '역해류 코어 회수', '동력수로 종합'
       ]
     },
     {
       id: 'silent-trench', name: '무음 기록해구',
       intents: [
-        '합창 감시자 소개', '원형파동 예고 확인', '벽으로 합창 취소', '파동 사이 코어 회수',
+        '합창 감시자 소개', '원형 파동 예고 확인', '벽으로 합창 파동 차폐', '파동 사이 코어 회수',
         '합창과 사냥개 표적 분리', '라이벌 신호와 합창 표적 전환', '두 수호자 수색 교대', '좁은 안전 지대',
-        '소나 접촉 순서 제어', '합창·사냥개 추격 분리', '직선탄과 원형파동 구분', '운반 코어 충돌 회수',
+        '소나 접촉 순서 제어', '합창·사냥개 추격 분리', '직선탄과 원형 파동 구분', '운반 코어 충돌 회수',
         '복수 벽 시야 차단', '장거리 마지막 위치 수색', '합창 파동 단회 피격', '라이벌 탄과 합창 파동 종합',
         '세 수호자 순차 조합', '무신호 근접 회수', '합창 파동 감점 관리', '기록해구 종합'
       ]
@@ -968,19 +1011,65 @@
     56: 'carrier', 66: 'probe', 76: 'carrier', 88: 'probe', 98: 'carrier'
   };
 
+  // Design v3 workbook/build-workbook.mjs single-source rows.
+  var MAP_DIMENSIONS = [
+    [[1000,1500],[1000,1500],[1000,1500],[1000,1500],[1800,1500],[1200,2100],[1000,1500],[1800,1500],[1200,2100],[1800,1500],[1800,1500],[1400,2600],[2200,1600],[1400,2600],[1200,2100],[1400,2200],[2200,1600],[1600,2400],[1400,2600],[1600,2400]],
+    [[1000,1500],[1000,1500],[1000,1500],[1200,2100],[1800,1500],[1200,2100],[2200,1600],[1400,2600],[1800,1500],[2200,1600],[1200,2100],[2200,1600],[1400,2600],[1600,2400],[1800,1500],[2200,1600],[1400,2600],[1400,2200],[2200,1600],[1600,2400]],
+    [[1000,1500],[1800,1500],[1200,2100],[1000,1500],[1800,1500],[1200,2100],[2200,1600],[1400,2600],[1400,2200],[2200,1600],[1200,2100],[1600,2400],[2200,1600],[1400,2600],[2200,1600],[2200,1600],[1400,2600],[1400,2600],[1400,2600],[1600,2400]],
+    [[1000,1500],[1000,1500],[1800,1500],[1200,2100],[2200,1600],[1800,1500],[1000,1500],[2200,1600],[1400,2200],[2200,1600],[1200,2100],[1400,2600],[2200,1600],[1400,2600],[1600,2400],[2200,1600],[1400,2600],[1200,2100],[1400,2600],[1600,2400]],
+    [[1600,2400],[2200,1600],[1400,2600],[1400,2200],[1800,1500],[1400,2600],[1800,1500],[2200,1600],[1400,2600],[1600,2400],[2200,1600],[1400,2600],[1400,2600],[1400,2600],[1600,2400],[1600,2400],[1400,2600],[2200,1600],[1200,2100],[1600,2400]]
+  ];
+  var GUARDIAN_COUNTS = [
+    [0,0,0,1,2,2,1,2,2,2,2,4,3,4,3,3,4,4,4,4],
+    [2,2,2,3,3,3,4,5,3,4,3,4,5,5,3,4,5,4,5,5],
+    [3,4,4,3,4,4,5,6,5,5,4,6,5,6,5,5,6,6,6,6],
+    [3,3,5,5,6,5,4,6,6,6,5,7,6,7,7,6,7,5,7,8],
+    [6,6,7,6,5,7,5,6,7,8,6,7,7,8,8,8,7,7,6,8]
+  ];
+  var OBSTACLE_BANDS = [
+    ['0@0','0@0','1-2@0.006-0.012','2-3@0.010-0.020','1-2@0.006-0.014','2-3@0.010-0.018','1-2@0.006-0.014','2-3@0.010-0.020','2-3@0.010-0.020','3-5@0.018-0.032','2-3@0.010-0.020','5-7@0.030-0.048','3-5@0.018-0.032','5-7@0.030-0.048','2-3@0.010-0.020','4-5@0.015-0.025','5-7@0.028-0.045','2-3@0.005-0.012','4-5@0.018-0.032','6-8@0.022-0.035'],
+    ['2-3@0.008-0.018','3-4@0.014-0.024','1-2@0.006-0.014','4-5@0.018-0.030','2-3@0.008-0.018','4-5@0.018-0.030','2-3@0.008-0.018','6-8@0.030-0.048','3-4@0.014-0.025','4-5@0.018-0.030','2-3@0.008-0.018','6-8@0.030-0.048','4-5@0.018-0.030','6-8@0.030-0.048','2-3@0.008-0.018','4-5@0.018-0.030','6-8@0.030-0.048','2-3@0.008-0.018','4-5@0.018-0.030','6-8@0.030-0.048'],
+    ['2-3@0.008-0.018','4-5@0.018-0.030','5-7@0.030-0.045','3-5@0.018-0.030','3-4@0.014-0.025','4-5@0.018-0.030','2-3@0.008-0.018','6-8@0.030-0.048','2-3@0.008-0.018','4-5@0.018-0.030','2-3@0.008-0.018','6-8@0.030-0.048','4-5@0.018-0.030','6-8@0.030-0.048','2-3@0.008-0.018','4-5@0.018-0.030','6-8@0.030-0.048','2-3@0.008-0.018','4-5@0.018-0.030','6-8@0.030-0.048'],
+    ['2-3@0.008-0.018','3-4@0.014-0.025','5-7@0.030-0.045','4-5@0.018-0.030','2-3@0.008-0.018','4-5@0.018-0.030','2-3@0.008-0.018','3-4@0.014-0.025','2-3@0.008-0.018','4-5@0.018-0.030','2-3@0.008-0.018','6-8@0.030-0.048','4-5@0.018-0.030','6-8@0.030-0.048','1-2@0.006-0.014','4-5@0.018-0.030','6-8@0.030-0.048','2-3@0.008-0.018','4-5@0.018-0.030','6-8@0.030-0.048'],
+    ['2-3@0.008-0.018','4-5@0.018-0.030','6-8@0.030-0.048','4-5@0.018-0.030','2-3@0.008-0.018','4-5@0.018-0.030','2-3@0.008-0.018','6-8@0.030-0.048','2-3@0.008-0.018','4-5@0.018-0.030','2-3@0.008-0.018','6-8@0.030-0.048','6-8@0.030-0.048','6-8@0.030-0.048','2-3@0.008-0.018','4-5@0.018-0.030','6-8@0.030-0.048','3-4@0.014-0.025','4-5@0.018-0.030','6-8@0.030-0.048']
+  ];
+  var HIDDEN_RELAY_IDS = [16,18,20,26,27,30,31,32,33,35,37,38,39,40,43,46,47,48,49,50,52,53,54,55,57,59,60,64,65,68,69,70,72,73,74,77,78,79,80,82,83,84,86,87,89,90,91,92,93,94,95,96,99,100];
+  var PROPOSED_MECHANICS = {
+    5:['thermalVent'],6:['thermalVent'],7:['absorptionZone'],8:['currentBandOverride'],9:['variablePassage'],10:['currentBandBoost'],14:['absorptionZone'],23:['decoyWave'],33:['decoyWave'],
+    41:['currentBandOverride'],42:['thermalVent'],44:['variablePassage'],47:['variablePassage'],48:['currentBandBoost'],52:['thermalVent'],53:['currentBandOverride'],56:['variablePassage'],57:['absorptionZone'],
+    61:['absorptionZone'],67:['signalEcho'],68:['absorptionZone'],72:['absorptionZone'],73:['signalEcho'],76:['currentBandBoost'],78:['absorptionZone'],80:['signalEcho'],
+    81:['thermalVent','absorptionZone'],82:['variablePassage'],83:['decoyWave','currentBandBoost'],84:['absorptionZone','signalEcho'],85:['thermalVent','variablePassage'],
+    86:['decoyWave','absorptionZone'],87:['currentBandOverride','variablePassage'],88:['thermalVent','signalEcho'],89:['absorptionZone','decoyWave','variablePassage'],90:['thermalVent','currentBandBoost','signalEcho'],
+    91:['variablePassage','absorptionZone'],92:['thermalVent','decoyWave'],93:['currentBandOverride','absorptionZone','signalEcho'],94:['thermalVent','variablePassage','decoyWave'],95:['thermalVent','absorptionZone','currentBandBoost'],
+    96:['variablePassage','signalEcho','decoyWave'],97:['thermalVent','absorptionZone','variablePassage'],98:['thermalVent','decoyWave','signalEcho'],99:['absorptionZone','variablePassage','currentBandOverride','decoyWave'],
+    100:['thermalVent','absorptionZone','variablePassage','decoyWave','signalEcho','currentBandOverride']
+  };
+
+  function parseObstacleBand(token) {
+    var parts = token.split('@');
+    var counts = parts[0].split('-').map(Number);
+    var occupancy = parts[1].split('-').map(Number);
+    return Object.freeze({
+      token: token,
+      minimumCount: counts[0], maximumCount: counts[counts.length - 1],
+      targetCount: Math.round((counts[0] + counts[counts.length - 1]) / 2),
+      minimumOccupancy: occupancy[0], maximumOccupancy: occupancy[occupancy.length - 1],
+      targetOccupancy: (occupancy[0] + occupancy[occupancy.length - 1]) / 2
+    });
+  }
+
   var OVERRIDES = {
     1: { guardianCount: 0, currentStrength: 0, timeLimit: 70, coreTotal: 1, requiredCores: 1, startRevealedCores: true },
     2: { guardianCount: 0, currentStrength: 0, timeLimit: 88, coreTotal: 3, requiredCores: 3 },
     3: {
       guardianCount: 0, currentStrength: 0, timeLimit: 92,
       coreTotal: 3, requiredCores: 3,
-      fixedCoreSpots: [{ x: 500, y: 315 }, { x: 150, y: 280 }, { x: 840, y: 355 }]
+      fixedCoreSpots: [{ x: 150, y: 280 }, { x: 500, y: 820 }, { x: 850, y: 300 }]
     },
     4: { guardianCount: 1, guardianTypes: ['pin'], currentStrength: 4, timeLimit: 98 },
-    5: { guardianCount: 1, guardianTypes: ['pin'], fixedGuardianSpots: [{ x: 500, y: 790 }] },
-    7: { guardianCount: 0, guardianTypes: [] },
-    8: { guardianCount: 0, guardianTypes: [], currentStrength: 9, currentPhase: 0 },
-    9: { guardianCount: 0, guardianTypes: [], timeLimit: 120 },
+    5: { fixedGuardianSpots: [{ x: 500, y: 790 }] },
+    8: { currentStrength: 9, currentPhase: 0 },
+    9: { timeLimit: 120 },
     16: {
       world: { width: 1400, height: 2200 },
       playerStart: { x: 700, y: 2020 },
@@ -993,6 +1082,7 @@
         { id: 'stage-16-pilot-cq-1', profileId: 'column-square', x: 450, y: 920, rotationDegrees: 135, scale: 1 },
         { id: 'stage-16-pilot-cq-2', profileId: 'column-square', x: 930, y: 590, rotationDegrees: 135, scale: 1 }
       ],
+      obstacleCount: 4,
       relayHiddenUntilDiscovered: true
     },
     18: {
@@ -1005,6 +1095,7 @@
         { id: 'stage-18-pilot-cq-1', profileId: 'column-square', x: 380, y: 1580, rotationDegrees: 0, scale: 1 },
         { id: 'stage-18-pilot-cq-2', profileId: 'column-square', x: 1080, y: 900, rotationDegrees: 135, scale: 1 }
       ],
+      obstacleCount: 2,
       relayHiddenUntilDiscovered: true
     },
     20: {
@@ -1021,24 +1112,22 @@
         { id: 'stage-20-pilot-cq-1', profileId: 'column-square', x: 280, y: 700, rotationDegrees: 90, scale: 1 },
         { id: 'stage-20-pilot-cq-2', profileId: 'column-square', x: 1320, y: 700, rotationDegrees: 0, scale: 1 }
       ],
+      obstacleCount: 6,
       relayHiddenUntilDiscovered: true
     },
-    21: { guardianCount: 1, guardianTypes: ['hound'] },
-    22: { guardianCount: 0, guardianTypes: [] },
-    23: { guardianCount: 0, guardianTypes: [] },
-    44: { guardianCount: 0, guardianTypes: [] },
+    21: { fixedCoreSpots: [{ x: 200, y: 140 }, { x: 600, y: 140 }, { x: 700, y: 780 }] },
+    22: { fixedCoreSpots: [{ x: 100, y: 140 }, { x: 500, y: 140 }, { x: 100, y: 500 }] },
     41: { currentStrength: 30, currentPhase: 0 },
     48: { currentStrength: 38, currentPhase: Math.PI },
     53: { currentStrength: 38, currentPhase: 0 },
-    62: { guardianCount: 1, guardianTypes: ['chorus'] },
-    67: { guardianCount: 1, guardianTypes: ['pin'] },
-    100: { timeLimit: 190, guardianCount: 3, guardianTypes: ['pin', 'hound', 'chorus'], currentStrength: 48 }
+    62: { fixedCoreSpots: [{ x: 100, y: 140 }, { x: 500, y: 140 }, { x: 880, y: 1080 }] },
+    100: { timeLimit: 190, currentStrength: 48 }
   };
 
   function environmentForStage(id) {
     var mechanics = [];
-    if (id === 5) mechanics.push({ type: 'thermalVent', x: 500, y: 790, radius: 210, period: 3.2, activeSeconds: 1.9, phase: 0 });
-    if (id === 6) mechanics.push({ type: 'thermalVent', x: 500, y: 790, radius: 160, period: 3.2, activeSeconds: 1.7, phase: 0.8 });
+    if (id === 5) mechanics.push({ type: 'thermalVent', x: 500, y: 790, radius: 210, period: 8, activeSeconds: 3, phase: 0 });
+    if (id === 6) mechanics.push({ type: 'thermalVent', x: 500, y: 790, radius: 160, period: 8, activeSeconds: 3, phase: 0.8 });
     if (id === 7) mechanics.push({ type: 'absorptionZone', x: 450, y: 650, radius: 230, strength: 0.45 });
     if (id === 8) mechanics.push({
       type: 'currentBand', mode: 'override',
@@ -1077,7 +1166,7 @@
       mechanics.push({ type: 'decoyWave', x: 300, y: 520, radius: 34 });
     }
     if ([42, 52, 57].indexOf(id) >= 0) {
-      mechanics.push({ type: 'thermalVent', x: 500, y: 760, radius: 175, period: 3, activeSeconds: 1.65, phase: id % 3 });
+      mechanics.push({ type: 'thermalVent', x: 500, y: 760, radius: 175, period: 8, activeSeconds: 3, phase: id % 3 });
     }
     if ([44, 47, 58].indexOf(id) >= 0) {
       mechanics.push({
@@ -1112,7 +1201,7 @@
         type: 'thermalVent',
         x: id === 98 ? 740 : (id === 99 ? 260 : 500),
         y: id === 97 || id === 100 ? 750 : 590,
-        radius: 145, period: 2.8, activeSeconds: 1.55, phase: id % 2
+        radius: 145, period: 8, activeSeconds: 3, phase: id % 2
       });
       mechanics.push({
         type: 'absorptionZone',
@@ -1125,10 +1214,48 @@
   }
 
   function guardianRoster(zoneIndex, order, count) {
-    var unlocked = zoneIndex === 0 ? ['pin'] : (zoneIndex < 3 ? ['pin', 'hound'] : ['pin', 'hound', 'chorus']);
+    if (!count) return [];
+    if (zoneIndex === 0) return Array(count).fill('pin');
+    if (zoneIndex === 1 && order === 0) return Array(count).fill('hound');
+    if (zoneIndex === 3 && order === 0) return Array(count).fill('pin');
+    if (zoneIndex === 3 && order === 1) return Array(count).fill('chorus');
+    var cycles = [
+      ['pin'],
+      ['pin', 'hound', 'pin', 'hound', 'pin'],
+      ['hound', 'pin', 'hound', 'pin', 'pin', 'hound'],
+      ['pin', 'hound', 'chorus', 'pin', 'hound', 'chorus', 'pin', 'hound'],
+      ['hound', 'pin', 'chorus', 'pin', 'hound', 'pin', 'chorus', 'hound']
+    ];
     var result = [];
-    for (var i = 0; i < count; i += 1) result.push(unlocked[(order + i + zoneIndex) % unlocked.length]);
+    for (var i = 0; i < count; i += 1) result.push(cycles[zoneIndex][(order + i) % cycles[zoneIndex].length]);
     return result;
+  }
+
+  function v3Environment(id, world) {
+    var mechanics = PROPOSED_MECHANICS[id] || [];
+    var positions = [
+      { x: 0.24, y: 0.34 }, { x: 0.76, y: 0.52 }, { x: 0.50, y: 0.62 },
+      { x: 0.22, y: 0.70 }, { x: 0.78, y: 0.25 }, { x: 0.50, y: 0.43 }
+    ];
+    return mechanics.map(function (mechanic, index) {
+      var point = positions[index % positions.length];
+      var x = Math.round(world.width * point.x);
+      var y = Math.round(world.height * point.y);
+      if (mechanic === 'thermalVent') return { type: 'thermalVent', x: x, y: y, radius: 175, period: 8, activeSeconds: 3, phase: (id + index) % 3 };
+      if (mechanic === 'absorptionZone') return { type: 'absorptionZone', x: x, y: y, radius: 185, strength: 0.45 };
+      if (mechanic === 'variablePassage') return {
+        type: 'variablePassage', x: x, y: y, width: 380, height: 72,
+        rotationDegrees: index % 2 ? 90 : 0, period: 4, openSeconds: 2, phase: (id + index) % 2
+      };
+      if (mechanic === 'decoyWave') return { type: 'decoyWave', x: x, y: y, radius: 34 };
+      if (mechanic === 'signalEcho') return { type: 'signalEcho', x: x, y: y, radius: 185, radiusMultiplier: 1.2, revealMultiplier: 1.35 };
+      return {
+        type: 'currentBand', mode: mechanic === 'currentBandBoost' ? 'boost' : 'override',
+        x: x, y: y, width: Math.min(720, Math.round(world.width * 0.46)), height: Math.min(260, Math.round(world.height * 0.16)),
+        rotationDegrees: mechanic === 'currentBandBoost' ? 0 : 90, feather: 80,
+        currentStrength: 36, currentPhase: -Math.PI / 2, boostMultiplier: 1.55
+      };
+    });
   }
 
   function makeStage(index) {
@@ -1139,11 +1266,18 @@
     var rivalPreset = RIVAL_PRESETS[id] || null;
     var obstacleLayout = PP.data.obstacles.stageLayouts[String(id)];
     var obstaclePattern = PP.data.obstacles.patterns[obstacleLayout.patternId];
-    var guardianCount = id < 4 ? 0 : Math.min(3, 1 + Math.floor((order + zoneIndex * 3) / 9));
+    var guardianCount = GUARDIAN_COUNTS[zoneIndex][order];
+    var dimensions = MAP_DIMENSIONS[zoneIndex][order];
+    var world = { width: dimensions[0], height: dimensions[1] };
+    var obstacleBand = parseObstacleBand(OBSTACLE_BANDS[zoneIndex][order]);
+    var expandedMap = world.width * world.height > 1500000;
+    var diagonal = Math.sqrt(world.width * world.width + world.height * world.height);
+    var relayRoute = [0, 5, 10, 15].indexOf(order) >= 0 ? 'return-near'
+      : ([1, 6, 11, 16].indexOf(order) >= 0 ? 'center-cross' : 'far-continuous');
     var layoutVariant = (order * 2 + zoneIndex) % 7;
     var base = {
-      schemaVersion: 2,
-      contentVersion: '100-stage-v1',
+      schemaVersion: 3,
+      contentVersion: '100-stage-v3',
       id: id,
       zoneId: zone.id,
       zoneName: zone.name,
@@ -1154,27 +1288,45 @@
       mapPreset: zone.id + '-layout-' + (layoutVariant + 1),
       layoutVariant: layoutVariant,
       obstaclePatternId: obstacleLayout.patternId,
-      obstacleDensity: obstacleLayout.density,
+      obstacleDensity: obstacleBand.maximumCount <= 3 ? 'sparse' : (obstacleBand.maximumCount <= 5 ? 'standard' : 'dense'),
       obstacleTransform: obstacleLayout.transform,
       obstacleVariant: obstacleLayout.variant,
       obstacleDesignIntent: obstacleLayout.designIntent,
       corePattern: (order * 3 + zoneIndex * 2) % 8,
       seed: 7300 + id * 97 + zoneIndex * 1009,
       seedPolicy: 'fixed',
+      world: world,
+      mapDimensions: Object.freeze(dimensions.slice()),
+      playerStart: { x: Math.round(world.width * 0.5), y: world.height - 150 },
+      relaySpot: relayRoute === 'return-near'
+        ? { x: Math.round(world.width * 0.18), y: world.height - 210 }
+        : (relayRoute === 'center-cross'
+          ? { x: Math.round(world.width * 0.5), y: Math.round(world.height * 0.5) }
+          : { x: Math.round(world.width * 0.82), y: Math.round(world.height * 0.12) }),
+      relayRoute: relayRoute,
+      coreMinimumSpacing: expandedMap ? Math.max(600, Math.round(diagonal * 0.23 / 10) * 10) : 360,
+      coreAnchorMinimumDistance: id <= 3 ? 0 : (expandedMap
+        ? Math.max(420, Math.min(600, Math.round(diagonal * 0.18 / 10) * 10)) : 360),
       timeLimit: 104 + zoneIndex * 13 + order * 2,
       coreTotal: rivalPreset ? 3 : 3,
       requiredCores: 3,
       startRevealedCores: false,
       guardianCount: guardianCount,
+      guardianCounts: guardianCount,
       guardianTypes: guardianRoster(zoneIndex, order, guardianCount),
-      obstacleCount: obstaclePattern.groups.length,
+      obstacleCount: obstacleBand.targetCount,
+      obstacleBand: obstacleBand,
+      obstacleBands: obstacleBand,
       currentStrength: (zoneIndex === 2 || zoneIndex === 4 ? 22 : 5) + zoneIndex * 4 + (order % 5) * 4,
       currentPhase: ((order * 37 + zoneIndex * 53) % 360) * Math.PI / 180,
       sonarCost: 26 + Math.min(8, zoneIndex * 2 + Math.floor(order / 8)),
       sonarRechargePerSecond: Math.max(8, 13 - zoneIndex - Math.floor(order / 10)),
       rivalPreset: rivalPreset,
       rivalBulletSpeed: PP.data.config.rival.projectileSpeed,
-      environment: environmentForStage(id),
+      proposedMechanics: Object.freeze((PROPOSED_MECHANICS[id] || []).slice()),
+      environment: v3Environment(id, world),
+      hiddenRelay: HIDDEN_RELAY_IDS.indexOf(id) >= 0,
+      relayHiddenUntilDiscovered: HIDDEN_RELAY_IDS.indexOf(id) >= 0,
       onboardingStageId: PP.data.config.campaign.onboardingStageIds.indexOf(id) >= 0 ? id : 0
     };
     var override = OVERRIDES[id] || {};
@@ -1185,6 +1337,13 @@
   PP.data.zones = Object.freeze(ZONES.map(function (zone) {
     return Object.freeze({ id: zone.id, name: zone.name });
   }));
+  PP.data.stageBalanceV3 = Object.freeze({
+    mapDimensions: MAP_DIMENSIONS,
+    guardianCounts: GUARDIAN_COUNTS,
+    proposedMechanics: PROPOSED_MECHANICS,
+    hiddenRelay: Object.freeze(HIDDEN_RELAY_IDS.slice()),
+    obstacleBands: OBSTACLE_BANDS
+  });
   PP.data.stages = Object.freeze(Array.from({ length: 100 }, function (_, index) { return makeStage(index); }));
 })(window.PingPanic);
 
@@ -1808,9 +1967,9 @@
 (function (PP) {
   'use strict';
 
-  var embedded = (typeof ({"version":1,"imageBasePath":"assets/images/","images":[{"id":"title-key-art","path":"title-key-art.jpg","category":"brand","format":"jpg","purpose":"타이틀 화면용 수몰 문명·회수 드론 키 아트","intrinsicSize":[1024,1536],"displaySpace":"screen","recommendedFit":"cover","preloadGroup":"title-only","source":"Graphic/echo-diver/source/title-key-art-ai.png"},{"id":"bg-zone-01-sunken-relay","path":"backgrounds/zone-01-sunken-relay.svg","category":"background","format":"svg","purpose":"해역 1 침강 중계기지 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-02-ghost-garden","path":"backgrounds/zone-02-ghost-garden.svg","category":"background","format":"svg","purpose":"해역 2 유령 배양정원 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-03-thermal-conduit","path":"backgrounds/zone-03-thermal-conduit.svg","category":"background","format":"svg","purpose":"해역 3 적열 동력수로 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-04-silent-archive","path":"backgrounds/zone-04-silent-archive.svg","category":"background","format":"svg","purpose":"해역 4 무음 기록해구 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-05-resonance-heart","path":"backgrounds/zone-05-resonance-heart.svg","category":"background","format":"svg","purpose":"해역 5 공명의 심장 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"entity-player-recovery-drone","path":"entities/player-recovery-drone.svg","category":"entity","format":"svg","purpose":"중앙이 빈 링형 무인 회수 드론","intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"entity-resonance-core","path":"entities/resonance-core.svg","category":"entity","format":"svg","purpose":"바닥·플레이어·라이벌 소유 상태에 공통 사용하는 공명 코어","intrinsicSize":[72,72],"displaySpace":"world","recommendedWorldSize":[64,64],"minimumCssAt320":[18,18],"anchor":"center"},{"id":"entity-player-relay-gate","path":"entities/player-relay-gate.svg","category":"entity","format":"svg","purpose":"출발·귀환·코어 업로드 중계문","intrinsicSize":[240,240],"displaySpace":"world","recommendedWorldSize":[220,220],"minimumCssAt320":[68,68],"anchor":"center"},{"id":"entity-rival-probe-drone","path":"entities/rival-probe-drone.svg","category":"entity","format":"svg","purpose":"라이벌 탐색·교전용 탐침형 외형","intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[120,120],"minimumCssAt320":[38,38],"anchor":"center"},{"id":"entity-rival-carrier-drone","path":"entities/rival-carrier-drone.svg","category":"entity","format":"svg","purpose":"외부 코어 소켓을 포함한 라이벌 운반형 외형","intrinsicSize":[144,144],"displaySpace":"world","recommendedWorldSize":[132,132],"minimumCssAt320":[42,42],"anchor":"center"},{"id":"entity-rival-relay-boundary","path":"entities/rival-relay-boundary.svg","category":"entity","format":"svg","purpose":"라이벌 코어 영구 반출용 화면 가장자리 회수 경계","intrinsicSize":[160,256],"displaySpace":"world","recommendedWorldSize":[96,180],"anchor":"right-center"},{"id":"entity-guardian-gate-pin","path":"entities/guardian-gate-pin.svg","category":"entity","format":"svg","purpose":"십자가 외곽 골격의 문지기 핀 수호자","intrinsicSize":[160,160],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"entity-guardian-lock-hound","path":"entities/guardian-lock-hound.svg","category":"entity","format":"svg","purpose":"길쭉한 마름모 외곽 골격의 잠금 사냥개 수호자","intrinsicSize":[160,160],"displaySpace":"world","recommendedWorldSize":[128,128],"minimumCssAt320":[40,40],"anchor":"center"},{"id":"entity-guardian-chorus-watcher","path":"entities/guardian-chorus-watcher.svg","category":"entity","format":"svg","purpose":"원형 외곽 골격의 합창 감시자 수호자","intrinsicSize":[176,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"effect-sonar-wave-player","path":"effects/sonar-wave-player.svg","category":"effect","format":"svg","purpose":"플레이어 중심 청록 문양 조각 소나 파동","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale square to current pulse diameter","anchor":"center"},{"id":"effect-sonar-wave-rival","path":"effects/sonar-wave-rival.svg","category":"effect","format":"svg","purpose":"라이벌 중심 호박 점선 공명 파동","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale square to current pulse diameter","anchor":"center"},{"id":"effect-guardian-chorus-wave","path":"effects/guardian-chorus-wave.svg","category":"effect","format":"svg","purpose":"합창 감시자의 삼각 경고편 원형 공격 파동","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale square to current attack-wave diameter","anchor":"center"},{"id":"effect-rival-projectile","path":"effects/rival-projectile.svg","category":"effect","format":"svg","purpose":"진행 방향이 고정된 라이벌 직선탄","intrinsicSize":[64,32],"displaySpace":"world","recommendedWorldSize":[52,26],"anchor":"center"},{"id":"effect-impact-fracture","path":"effects/impact-fracture.svg","category":"effect","format":"svg","purpose":"전체 화면 섬광을 대체하는 개체 중심 피격 균열","intrinsicSize":[96,96],"displaySpace":"world","recommendedWorldSize":[84,84],"anchor":"center"},{"id":"terrain-wall-pillar","path":"terrain/wall-pillar.svg","category":"terrain","format":"svg","purpose":"회전·반전·길이 조절하는 직선 벽 모듈","intrinsicSize":[96,256],"displaySpace":"world","runtimeSizing":"stretch along long axis only","anchor":"center"},{"id":"terrain-obstacle-foundation-square","path":"terrain/obstacle-foundation-square.svg","category":"terrain","format":"svg","purpose":"OBB 중앙 대형 정사각형과 소형 정사각 기둥에 공용하는 solid 기반","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale to cached OBB width and height","anchor":"center"},{"id":"terrain-obstacle-ruin-segment","path":"terrain/obstacle-ruin-segment.svg","category":"terrain","format":"svg","purpose":"0/45/90/135도 OBB 건물 폐허 solid 세그먼트","intrinsicSize":[256,128],"displaySpace":"world","runtimeSizing":"scale uniformly to 0.85, 1, or 1.15 profile size","anchor":"center"},{"id":"terrain-wall-broken-arch","path":"terrain/wall-broken-arch.svg","category":"terrain","format":"svg","purpose":"통로 랜드마크용 부서진 반원 아치","intrinsicSize":[320,220],"displaySpace":"world","recommendedWorldSize":[280,193],"anchor":"bottom-center"},{"id":"terrain-obstacle-ruin-cluster","path":"terrain/obstacle-ruin-cluster.svg","category":"terrain","format":"svg","purpose":"회전·반전하는 각진 유적 잔해 장애물","intrinsicSize":[256,192],"displaySpace":"world","recommendedWorldSize":[220,165],"anchor":"bottom-center"},{"id":"terrain-hazard-current","path":"terrain/hazard-current.svg","category":"terrain","format":"svg","purpose":"해류 방향과 흐름 구간 표식","intrinsicSize":[256,128],"displaySpace":"world","recommendedWorldSize":[240,120],"anchor":"center"},{"id":"terrain-hazard-thermal-vent","path":"terrain/hazard-thermal-vent.svg","category":"terrain","format":"svg","purpose":"적열 동력수로의 열수 분출 위험","source":"Graphic/echo-diver/source/terrain-hazard-thermal-vent.svg","intrinsicSize":[192,256],"displaySpace":"world","recommendedWorldSize":[144,192],"anchor":"bottom-center"},{"id":"terrain-hazard-resonance-sink","path":"terrain/hazard-resonance-sink.svg","category":"terrain","format":"svg","purpose":"공명 충전을 흡수하는 위험 구역","source":"Graphic/echo-diver/source/terrain-hazard-resonance-sink.svg","intrinsicSize":[192,192],"displaySpace":"world","recommendedWorldSize":[168,168],"anchor":"center"},{"id":"terrain-gimmick-variable-passage","path":"terrain/gimmick-variable-passage.svg","category":"terrain","format":"svg","purpose":"상하 이동 쐐기와 점선 통행축으로 가변 폭을 알리는 비충돌 통로 표식","source":"Graphic/echo-diver/source/terrain-gimmick-variable-passage.svg","intrinsicSize":[256,128],"displaySpace":"world","recommendedWorldSize":[240,120],"minimumCssAt320":[76,38],"visualRole":"stateful-passage-overlay","collisionSilhouette":false,"anchor":"center"},{"id":"ui-marker-player-direction","path":"ui/marker-player-direction.svg","category":"ui","format":"svg","purpose":"화면 밖 플레이어 진행 방향 또는 위치 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-core","path":"ui/marker-core.svg","category":"ui","format":"svg","purpose":"소나 공개 뒤 화면 밖 공명 코어 방향 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-guardian-alert","path":"ui/marker-guardian-alert.svg","category":"ui","format":"svg","purpose":"수호자 추적·공격 방향 위험 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-rival-status","path":"ui/marker-rival-status.svg","category":"ui","format":"svg","purpose":"라이벌 상태 방송과 방향 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-relay-exit","path":"ui/marker-relay-exit.svg","category":"ui","format":"svg","purpose":"활성 중계문 귀환 방향 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-campaign-ending-seal","path":"ui/campaign-ending-seal.svg","category":"ui","format":"svg","purpose":"100스테이지 완료 후 간단 엔딩과 완료 카드에 재사용하는 5해역 공명망 복구 인장","source":"Graphic/echo-diver/source/ui-campaign-ending-seal.svg","intrinsicSize":[256,256],"displaySpace":"css","minimumCssSize":[160,160],"recommendedCssSize":[220,220],"maximumCssSize":[280,280],"languageNeutral":true},{"id":"ui-icon-settings","path":"ui/icon-settings.svg","category":"ui","format":"svg","purpose":"설정 진입용 언어 중립 기어 아이콘","source":"Graphic/echo-diver/source/ui-icon-settings.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[24,24]},{"id":"ui-guide-drag","path":"ui/guide-drag.svg","category":"ui","format":"svg","purpose":"드래그 이동 온보딩 아이콘","source":"Graphic/echo-diver/source/ui-guide-drag.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[20,20]},{"id":"ui-guide-sonar","path":"ui/guide-sonar.svg","category":"ui","format":"svg","purpose":"소나 발사 온보딩 아이콘","source":"Graphic/echo-diver/source/ui-guide-sonar.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[20,20]},{"id":"ui-guide-wall","path":"ui/guide-wall.svg","category":"ui","format":"svg","purpose":"장애물 차폐 온보딩 아이콘","source":"Graphic/echo-diver/source/ui-guide-wall.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[20,20]},{"id":"terrain-obstacle-cyan-reef-slab","path":"terrain/obstacle-cyan-reef-slab.svg","category":"terrain","format":"svg","purpose":"320px에서도 충돌 경계가 보이는 불투명 청록 암초 판","intrinsicSize":[256,192],"displaySpace":"world","recommendedWorldSize":[220,165],"anchor":"bottom-center","silhouette":"opaque","edgeColor":"#57e3d6"},{"id":"terrain-obstacle-cyan-reef-spire","path":"terrain/obstacle-cyan-reef-spire.svg","category":"terrain","format":"svg","purpose":"세로 통로에서 충돌 경계가 보이는 불투명 청록 암초 첨탑","intrinsicSize":[192,256],"displaySpace":"world","recommendedWorldSize":[144,192],"anchor":"bottom-center","silhouette":"opaque","edgeColor":"#57e3d6"},{"id":"skin-player-prism","path":"skins/player/prism.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 프리즘 플레이어 외형","collectionSet":"resonance-collection-01","skinTarget":"player","baseEntityId":"entity-player-recovery-drone","abilityNeutral":true,"intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"skin-player-archive","path":"skins/player/archive.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 기록고 플레이어 외형","collectionSet":"resonance-collection-01","skinTarget":"player","baseEntityId":"entity-player-recovery-drone","abilityNeutral":true,"intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"skin-player-ember","path":"skins/player/ember.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 적열 플레이어 외형","collectionSet":"resonance-collection-01","skinTarget":"player","baseEntityId":"entity-player-recovery-drone","abilityNeutral":true,"intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"skin-guardian-porcelain","path":"skins/guardian/porcelain.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 백자 수호자 공통 하이라이트","collectionSet":"resonance-collection-01","skinTarget":"guardian-interior","baseEntityIds":["entity-guardian-gate-pin","entity-guardian-lock-hound","entity-guardian-chorus-watcher"],"composition":"guardian-type-interior-clip-v1","abilityNeutral":true,"intrinsicSize":[176,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"skin-guardian-reef","path":"skins/guardian/reef.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 암초 수호자 공통 하이라이트","collectionSet":"resonance-collection-01","skinTarget":"guardian-interior","baseEntityIds":["entity-guardian-gate-pin","entity-guardian-lock-hound","entity-guardian-chorus-watcher"],"composition":"guardian-type-interior-clip-v1","abilityNeutral":true,"intrinsicSize":[176,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"skin-guardian-obsidian","path":"skins/guardian/obsidian.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 흑요석 수호자 공통 하이라이트","collectionSet":"resonance-collection-01","skinTarget":"guardian-interior","baseEntityIds":["entity-guardian-gate-pin","entity-guardian-lock-hound","entity-guardian-chorus-watcher"],"composition":"guardian-type-interior-clip-v1","abilityNeutral":true,"intrinsicSize":[176,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"skin-rival-cobalt","path":"skins/rival/cobalt.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 코발트 라이벌 탐침 외형","collectionSet":"resonance-collection-01","skinTarget":"rival","baseEntityIds":["entity-rival-probe-drone","entity-rival-carrier-drone"],"abilityNeutral":true,"intrinsicSize":[144,144],"displaySpace":"world","recommendedWorldSize":[132,132],"minimumCssAt320":[42,42],"anchor":"center"},{"id":"skin-rival-scarlet","path":"skins/rival/scarlet.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 진홍 라이벌 무장 운반 외형","collectionSet":"resonance-collection-01","skinTarget":"rival","baseEntityIds":["entity-rival-probe-drone","entity-rival-carrier-drone"],"abilityNeutral":true,"intrinsicSize":[144,144],"displaySpace":"world","recommendedWorldSize":[132,132],"minimumCssAt320":[42,42],"anchor":"center"},{"id":"ui-resonance-credit","path":"ui/resonance-credit.svg","category":"ui","format":"svg","purpose":"캠페인 별 성취로 획득하고 무료 수집 외형 해금에 사용하는 공명 크레딧","economyRole":"free-achievement-currency","source":"Graphic/echo-diver/master/resonance-credit-review.svg","intrinsicSize":[64,64],"displaySpace":"css","minimumCssSize":[18,18],"recommendedCssSize":[20,20],"maximumCssSize":[24,24]}],"audio":[{"id":"bgm-player-base","src":"assets/audio/Base.mp3","volume":0.16,"loop":true},{"id":"bgm-player-prism","src":"assets/audio/Skin1.mp3","volume":0.16,"loop":true},{"id":"bgm-player-archive","src":"assets/audio/Skin2.mp3","volume":0.16,"loop":true},{"id":"bgm-player-ember","src":"assets/audio/Skin3.mp3","volume":0.16,"loop":true},{"id":"ui","src":"assets/audio/ui.wav","volume":0.32},{"id":"sonar","src":"assets/audio/sonar.wav","volume":0.48},{"id":"core","src":"assets/audio/core.wav","volume":0.45},{"id":"guardian-alert","src":"assets/audio/guardian-alert.wav","volume":0.5},{"id":"rival-shot","src":"assets/audio/rival-shot.wav","volume":0.42},{"id":"extract","src":"assets/audio/extract.wav","volume":0.48},{"id":"hit","src":"assets/audio/hit.wav","volume":0.52},{"id":"win","src":"assets/audio/win.wav","volume":0.5},{"id":"fail","src":"assets/audio/fail.wav","volume":0.5}]}) === 'undefined')
+  var embedded = (typeof ({"version":1,"imageBasePath":"assets/images/","images":[{"id":"title-key-art","path":"title-key-art.jpg","category":"brand","format":"jpg","purpose":"타이틀 화면용 수몰 문명·회수 드론 키 아트","intrinsicSize":[1024,1536],"displaySpace":"screen","recommendedFit":"cover","preloadGroup":"title-only","source":"Graphic/echo-diver/source/title-key-art-ai.png"},{"id":"bg-zone-01-sunken-relay","path":"backgrounds/zone-01-sunken-relay.svg","category":"background","format":"svg","purpose":"해역 1 침강 중계기지 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-02-ghost-garden","path":"backgrounds/zone-02-ghost-garden.svg","category":"background","format":"svg","purpose":"해역 2 유령 배양정원 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-03-thermal-conduit","path":"backgrounds/zone-03-thermal-conduit.svg","category":"background","format":"svg","purpose":"해역 3 적열 동력수로 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-04-silent-archive","path":"backgrounds/zone-04-silent-archive.svg","category":"background","format":"svg","purpose":"해역 4 무음 기록해구 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-05-resonance-heart","path":"backgrounds/zone-05-resonance-heart.svg","category":"background","format":"svg","purpose":"해역 5 공명의 심장 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"entity-player-recovery-drone","path":"entities/player-recovery-drone.svg","category":"entity","format":"svg","purpose":"중앙이 빈 링형 무인 회수 드론","intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"entity-resonance-core","path":"entities/resonance-core.svg","category":"entity","format":"svg","purpose":"바닥·플레이어·라이벌 소유 상태에 공통 사용하는 공명 코어","intrinsicSize":[72,72],"displaySpace":"world","recommendedWorldSize":[64,64],"minimumCssAt320":[18,18],"anchor":"center"},{"id":"entity-player-relay-gate","path":"entities/player-relay-gate.svg","category":"entity","format":"svg","purpose":"출발·귀환·코어 업로드 중계문","intrinsicSize":[240,240],"displaySpace":"world","recommendedWorldSize":[220,220],"minimumCssAt320":[68,68],"anchor":"center"},{"id":"entity-rival-probe-drone","path":"entities/rival-probe-drone.svg","category":"entity","format":"svg","purpose":"라이벌 탐색·교전용 탐침형 외형","intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[120,120],"minimumCssAt320":[38,38],"anchor":"center"},{"id":"entity-rival-carrier-drone","path":"entities/rival-carrier-drone.svg","category":"entity","format":"svg","purpose":"외부 코어 소켓을 포함한 라이벌 운반형 외형","intrinsicSize":[144,144],"displaySpace":"world","recommendedWorldSize":[132,132],"minimumCssAt320":[42,42],"anchor":"center"},{"id":"entity-rival-relay-boundary","path":"entities/rival-relay-boundary.svg","category":"entity","format":"svg","purpose":"라이벌 코어 영구 반출용 화면 가장자리 회수 경계","intrinsicSize":[160,256],"displaySpace":"world","recommendedWorldSize":[96,180],"anchor":"right-center"},{"id":"entity-guardian-gate-pin","path":"entities/guardian-gate-pin.svg","category":"entity","format":"svg","purpose":"십자가 외곽 골격의 문지기 핀 수호자","intrinsicSize":[160,160],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"entity-guardian-lock-hound","path":"entities/guardian-lock-hound.svg","category":"entity","format":"svg","purpose":"길쭉한 마름모 외곽 골격의 잠금 사냥개 수호자","intrinsicSize":[160,160],"displaySpace":"world","recommendedWorldSize":[128,128],"minimumCssAt320":[40,40],"anchor":"center"},{"id":"entity-guardian-chorus-watcher","path":"entities/guardian-chorus-watcher.svg","category":"entity","format":"svg","purpose":"원형 외곽 골격의 합창 감시자 수호자","intrinsicSize":[176,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"effect-sonar-wave-player","path":"effects/sonar-wave-player.svg","category":"effect","format":"svg","purpose":"플레이어 중심 청록 문양 조각 소나 파동","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale square to current pulse diameter","anchor":"center"},{"id":"effect-sonar-wave-rival","path":"effects/sonar-wave-rival.svg","category":"effect","format":"svg","purpose":"라이벌 중심 호박 점선 공명 파동","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale square to current pulse diameter","anchor":"center"},{"id":"effect-guardian-chorus-wave","path":"effects/guardian-chorus-wave.svg","category":"effect","format":"svg","purpose":"합창 감시자의 삼각 경고편 원형 공격 파동","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale square to current attack-wave diameter","anchor":"center"},{"id":"effect-rival-projectile","path":"effects/rival-projectile.svg","category":"effect","format":"svg","purpose":"진행 방향이 고정된 라이벌 직선탄","intrinsicSize":[64,32],"displaySpace":"world","recommendedWorldSize":[52,26],"anchor":"center"},{"id":"effect-impact-fracture","path":"effects/impact-fracture.svg","category":"effect","format":"svg","purpose":"전체 화면 섬광을 대체하는 개체 중심 피격 균열","intrinsicSize":[96,96],"displaySpace":"world","recommendedWorldSize":[84,84],"anchor":"center"},{"id":"terrain-wall-pillar","path":"terrain/wall-pillar.svg","category":"terrain","format":"svg","purpose":"회전·반전·길이 조절하는 직선 벽 모듈","intrinsicSize":[96,256],"displaySpace":"world","runtimeSizing":"stretch along long axis only","anchor":"center"},{"id":"terrain-obstacle-foundation-square","path":"terrain/obstacle-foundation-square.svg","category":"terrain","format":"svg","purpose":"OBB 중앙 대형 정사각형과 소형 정사각 기둥에 공용하는 solid 기반","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale to cached OBB width and height","anchor":"center"},{"id":"terrain-obstacle-ruin-segment","path":"terrain/obstacle-ruin-segment.svg","category":"terrain","format":"svg","purpose":"0/45/90/135도 OBB 건물 폐허 solid 세그먼트","intrinsicSize":[256,128],"displaySpace":"world","runtimeSizing":"scale uniformly to 0.85, 1, or 1.15 profile size","anchor":"center"},{"id":"terrain-wall-broken-arch","path":"terrain/wall-broken-arch.svg","category":"terrain","format":"svg","purpose":"통로 랜드마크용 부서진 반원 아치","intrinsicSize":[320,220],"displaySpace":"world","recommendedWorldSize":[280,193],"anchor":"bottom-center"},{"id":"terrain-obstacle-ruin-cluster","path":"terrain/obstacle-ruin-cluster.svg","category":"terrain","format":"svg","purpose":"회전·반전하는 각진 유적 잔해 장애물","intrinsicSize":[256,192],"displaySpace":"world","recommendedWorldSize":[220,165],"anchor":"bottom-center"},{"id":"terrain-hazard-current","path":"terrain/hazard-current.svg","category":"terrain","format":"svg","purpose":"해류 방향과 흐름 구간 표식","intrinsicSize":[256,128],"displaySpace":"world","recommendedWorldSize":[240,120],"anchor":"center"},{"id":"terrain-hazard-thermal-vent","path":"terrain/hazard-thermal-vent.svg","category":"terrain","format":"svg","purpose":"적열 동력수로의 열수 분출 위험","source":"Graphic/echo-diver/source/terrain-hazard-thermal-vent.svg","intrinsicSize":[192,256],"displaySpace":"world","recommendedWorldSize":[144,192],"anchor":"bottom-center"},{"id":"terrain-hazard-resonance-sink","path":"terrain/hazard-resonance-sink.svg","category":"terrain","format":"svg","purpose":"공명 충전을 흡수하는 위험 구역","source":"Graphic/echo-diver/source/terrain-hazard-resonance-sink.svg","intrinsicSize":[192,192],"displaySpace":"world","recommendedWorldSize":[168,168],"anchor":"center"},{"id":"terrain-gimmick-variable-passage","path":"terrain/gimmick-variable-passage.svg","category":"terrain","format":"svg","purpose":"상하 이동 쐐기와 점선 통행축으로 가변 폭을 알리는 비충돌 통로 표식","source":"Graphic/echo-diver/source/terrain-gimmick-variable-passage.svg","intrinsicSize":[256,128],"displaySpace":"world","recommendedWorldSize":[240,120],"minimumCssAt320":[76,38],"visualRole":"stateful-passage-overlay","collisionSilhouette":false,"anchor":"center"},{"id":"ui-marker-player-direction","path":"ui/marker-player-direction.svg","category":"ui","format":"svg","purpose":"화면 밖 플레이어 진행 방향 또는 위치 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-core","path":"ui/marker-core.svg","category":"ui","format":"svg","purpose":"소나 공개 뒤 화면 밖 공명 코어 방향 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-guardian-alert","path":"ui/marker-guardian-alert.svg","category":"ui","format":"svg","purpose":"수호자 추적·공격 방향 위험 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-rival-status","path":"ui/marker-rival-status.svg","category":"ui","format":"svg","purpose":"라이벌 상태 방송과 방향 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-relay-exit","path":"ui/marker-relay-exit.svg","category":"ui","format":"svg","purpose":"활성 중계문 귀환 방향 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-campaign-ending-seal","path":"ui/campaign-ending-seal.svg","category":"ui","format":"svg","purpose":"100스테이지 완료 후 간단 엔딩과 완료 카드에 재사용하는 5해역 공명망 복구 인장","source":"Graphic/echo-diver/source/ui-campaign-ending-seal.svg","intrinsicSize":[256,256],"displaySpace":"css","minimumCssSize":[160,160],"recommendedCssSize":[220,220],"maximumCssSize":[280,280],"languageNeutral":true},{"id":"ui-icon-settings","path":"ui/icon-settings.svg","category":"ui","format":"svg","purpose":"설정 진입용 언어 중립 기어 아이콘","source":"Graphic/echo-diver/source/ui-icon-settings.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[24,24]},{"id":"ui-guide-drag","path":"ui/guide-drag.svg","category":"ui","format":"svg","purpose":"드래그 이동 온보딩 아이콘","source":"Graphic/echo-diver/source/ui-guide-drag.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[20,20]},{"id":"ui-guide-sonar","path":"ui/guide-sonar.svg","category":"ui","format":"svg","purpose":"소나 발사 온보딩 아이콘","source":"Graphic/echo-diver/source/ui-guide-sonar.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[20,20]},{"id":"ui-guide-wall","path":"ui/guide-wall.svg","category":"ui","format":"svg","purpose":"장애물 차폐 온보딩 아이콘","source":"Graphic/echo-diver/source/ui-guide-wall.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[20,20]},{"id":"terrain-obstacle-cyan-reef-slab","path":"terrain/obstacle-cyan-reef-slab.svg","category":"terrain","format":"svg","purpose":"320px에서도 충돌 경계가 보이는 불투명 청록 암초 판","intrinsicSize":[256,192],"displaySpace":"world","recommendedWorldSize":[220,165],"anchor":"bottom-center","silhouette":"opaque","edgeColor":"#57e3d6"},{"id":"terrain-obstacle-cyan-reef-spire","path":"terrain/obstacle-cyan-reef-spire.svg","category":"terrain","format":"svg","purpose":"세로 통로에서 충돌 경계가 보이는 불투명 청록 암초 첨탑","intrinsicSize":[192,256],"displaySpace":"world","recommendedWorldSize":[144,192],"anchor":"bottom-center","silhouette":"opaque","edgeColor":"#57e3d6"},{"id":"skin-player-prism","path":"skins/player/prism.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 프리즘 플레이어 외형","collectionSet":"resonance-collection-01","skinTarget":"player","baseEntityId":"entity-player-recovery-drone","abilityNeutral":true,"intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"skin-player-archive","path":"skins/player/archive.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 기록고 플레이어 외형","collectionSet":"resonance-collection-01","skinTarget":"player","baseEntityId":"entity-player-recovery-drone","abilityNeutral":true,"intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"skin-player-ember","path":"skins/player/ember.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 적열 플레이어 외형","collectionSet":"resonance-collection-01","skinTarget":"player","baseEntityId":"entity-player-recovery-drone","abilityNeutral":true,"intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"skin-guardian-porcelain","path":"skins/guardian/porcelain.svg","category":"skin","format":"svg","purpose":"백자 장식으로 변형한 핀·사냥개·합창자 3종 전용 실루엣 스프라이트","collectionSet":"resonance-collection-01","skinTarget":"guardian-variants","baseEntityIds":["entity-guardian-gate-pin","entity-guardian-lock-hound","entity-guardian-chorus-watcher"],"composition":"guardian-type-sprite-v2","abilityNeutral":true,"intrinsicSize":[528,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"skin-guardian-reef","path":"skins/guardian/reef.svg","category":"skin","format":"svg","purpose":"산호 장식으로 변형한 핀·사냥개·합창자 3종 전용 실루엣 스프라이트","collectionSet":"resonance-collection-01","skinTarget":"guardian-variants","baseEntityIds":["entity-guardian-gate-pin","entity-guardian-lock-hound","entity-guardian-chorus-watcher"],"composition":"guardian-type-sprite-v2","abilityNeutral":true,"intrinsicSize":[528,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"skin-guardian-obsidian","path":"skins/guardian/obsidian.svg","category":"skin","format":"svg","purpose":"흑요석 장식으로 변형한 핀·사냥개·합창자 3종 전용 실루엣 스프라이트","collectionSet":"resonance-collection-01","skinTarget":"guardian-variants","baseEntityIds":["entity-guardian-gate-pin","entity-guardian-lock-hound","entity-guardian-chorus-watcher"],"composition":"guardian-type-sprite-v2","abilityNeutral":true,"intrinsicSize":[528,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"skin-rival-cobalt","path":"skins/rival/cobalt.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 코발트 라이벌 탐침 외형","collectionSet":"resonance-collection-01","skinTarget":"rival","baseEntityIds":["entity-rival-probe-drone","entity-rival-carrier-drone"],"abilityNeutral":true,"intrinsicSize":[144,144],"displaySpace":"world","recommendedWorldSize":[132,132],"minimumCssAt320":[42,42],"anchor":"center"},{"id":"skin-rival-scarlet","path":"skins/rival/scarlet.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 진홍 라이벌 무장 운반 외형","collectionSet":"resonance-collection-01","skinTarget":"rival","baseEntityIds":["entity-rival-probe-drone","entity-rival-carrier-drone"],"abilityNeutral":true,"intrinsicSize":[144,144],"displaySpace":"world","recommendedWorldSize":[132,132],"minimumCssAt320":[42,42],"anchor":"center"},{"id":"ui-resonance-credit","path":"ui/resonance-credit.svg","category":"ui","format":"svg","purpose":"캠페인 별 성취로 획득하고 무료 수집 외형 해금에 사용하는 공명 크레딧","economyRole":"free-achievement-currency","source":"Graphic/echo-diver/master/resonance-credit-review.svg","intrinsicSize":[64,64],"displaySpace":"css","minimumCssSize":[18,18],"recommendedCssSize":[20,20],"maximumCssSize":[24,24]}],"audio":[{"id":"bgm-player-base","src":"assets/audio/Base.mp3","volume":0.16,"loop":true},{"id":"bgm-player-prism","src":"assets/audio/Skin1.mp3","volume":0.16,"loop":true},{"id":"bgm-player-archive","src":"assets/audio/Skin2.mp3","volume":0.16,"loop":true},{"id":"bgm-player-ember","src":"assets/audio/Skin3.mp3","volume":0.16,"loop":true},{"id":"ui","src":"assets/audio/ui.wav","volume":0.32},{"id":"sonar","src":"assets/audio/sonar.wav","volume":0.48},{"id":"core","src":"assets/audio/core.wav","volume":0.45},{"id":"guardian-alert","src":"assets/audio/guardian-alert.wav","volume":0.5},{"id":"rival-shot","src":"assets/audio/rival-shot.wav","volume":0.42},{"id":"extract","src":"assets/audio/extract.wav","volume":0.48},{"id":"hit","src":"assets/audio/hit.wav","volume":0.52},{"id":"win","src":"assets/audio/win.wav","volume":0.5},{"id":"fail","src":"assets/audio/fail.wav","volume":0.5}]}) === 'undefined')
     ? { version: 1, imageBasePath: 'assets/images/', images: [], audio: [] }
-    : ({"version":1,"imageBasePath":"assets/images/","images":[{"id":"title-key-art","path":"title-key-art.jpg","category":"brand","format":"jpg","purpose":"타이틀 화면용 수몰 문명·회수 드론 키 아트","intrinsicSize":[1024,1536],"displaySpace":"screen","recommendedFit":"cover","preloadGroup":"title-only","source":"Graphic/echo-diver/source/title-key-art-ai.png"},{"id":"bg-zone-01-sunken-relay","path":"backgrounds/zone-01-sunken-relay.svg","category":"background","format":"svg","purpose":"해역 1 침강 중계기지 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-02-ghost-garden","path":"backgrounds/zone-02-ghost-garden.svg","category":"background","format":"svg","purpose":"해역 2 유령 배양정원 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-03-thermal-conduit","path":"backgrounds/zone-03-thermal-conduit.svg","category":"background","format":"svg","purpose":"해역 3 적열 동력수로 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-04-silent-archive","path":"backgrounds/zone-04-silent-archive.svg","category":"background","format":"svg","purpose":"해역 4 무음 기록해구 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-05-resonance-heart","path":"backgrounds/zone-05-resonance-heart.svg","category":"background","format":"svg","purpose":"해역 5 공명의 심장 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"entity-player-recovery-drone","path":"entities/player-recovery-drone.svg","category":"entity","format":"svg","purpose":"중앙이 빈 링형 무인 회수 드론","intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"entity-resonance-core","path":"entities/resonance-core.svg","category":"entity","format":"svg","purpose":"바닥·플레이어·라이벌 소유 상태에 공통 사용하는 공명 코어","intrinsicSize":[72,72],"displaySpace":"world","recommendedWorldSize":[64,64],"minimumCssAt320":[18,18],"anchor":"center"},{"id":"entity-player-relay-gate","path":"entities/player-relay-gate.svg","category":"entity","format":"svg","purpose":"출발·귀환·코어 업로드 중계문","intrinsicSize":[240,240],"displaySpace":"world","recommendedWorldSize":[220,220],"minimumCssAt320":[68,68],"anchor":"center"},{"id":"entity-rival-probe-drone","path":"entities/rival-probe-drone.svg","category":"entity","format":"svg","purpose":"라이벌 탐색·교전용 탐침형 외형","intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[120,120],"minimumCssAt320":[38,38],"anchor":"center"},{"id":"entity-rival-carrier-drone","path":"entities/rival-carrier-drone.svg","category":"entity","format":"svg","purpose":"외부 코어 소켓을 포함한 라이벌 운반형 외형","intrinsicSize":[144,144],"displaySpace":"world","recommendedWorldSize":[132,132],"minimumCssAt320":[42,42],"anchor":"center"},{"id":"entity-rival-relay-boundary","path":"entities/rival-relay-boundary.svg","category":"entity","format":"svg","purpose":"라이벌 코어 영구 반출용 화면 가장자리 회수 경계","intrinsicSize":[160,256],"displaySpace":"world","recommendedWorldSize":[96,180],"anchor":"right-center"},{"id":"entity-guardian-gate-pin","path":"entities/guardian-gate-pin.svg","category":"entity","format":"svg","purpose":"십자가 외곽 골격의 문지기 핀 수호자","intrinsicSize":[160,160],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"entity-guardian-lock-hound","path":"entities/guardian-lock-hound.svg","category":"entity","format":"svg","purpose":"길쭉한 마름모 외곽 골격의 잠금 사냥개 수호자","intrinsicSize":[160,160],"displaySpace":"world","recommendedWorldSize":[128,128],"minimumCssAt320":[40,40],"anchor":"center"},{"id":"entity-guardian-chorus-watcher","path":"entities/guardian-chorus-watcher.svg","category":"entity","format":"svg","purpose":"원형 외곽 골격의 합창 감시자 수호자","intrinsicSize":[176,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"effect-sonar-wave-player","path":"effects/sonar-wave-player.svg","category":"effect","format":"svg","purpose":"플레이어 중심 청록 문양 조각 소나 파동","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale square to current pulse diameter","anchor":"center"},{"id":"effect-sonar-wave-rival","path":"effects/sonar-wave-rival.svg","category":"effect","format":"svg","purpose":"라이벌 중심 호박 점선 공명 파동","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale square to current pulse diameter","anchor":"center"},{"id":"effect-guardian-chorus-wave","path":"effects/guardian-chorus-wave.svg","category":"effect","format":"svg","purpose":"합창 감시자의 삼각 경고편 원형 공격 파동","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale square to current attack-wave diameter","anchor":"center"},{"id":"effect-rival-projectile","path":"effects/rival-projectile.svg","category":"effect","format":"svg","purpose":"진행 방향이 고정된 라이벌 직선탄","intrinsicSize":[64,32],"displaySpace":"world","recommendedWorldSize":[52,26],"anchor":"center"},{"id":"effect-impact-fracture","path":"effects/impact-fracture.svg","category":"effect","format":"svg","purpose":"전체 화면 섬광을 대체하는 개체 중심 피격 균열","intrinsicSize":[96,96],"displaySpace":"world","recommendedWorldSize":[84,84],"anchor":"center"},{"id":"terrain-wall-pillar","path":"terrain/wall-pillar.svg","category":"terrain","format":"svg","purpose":"회전·반전·길이 조절하는 직선 벽 모듈","intrinsicSize":[96,256],"displaySpace":"world","runtimeSizing":"stretch along long axis only","anchor":"center"},{"id":"terrain-obstacle-foundation-square","path":"terrain/obstacle-foundation-square.svg","category":"terrain","format":"svg","purpose":"OBB 중앙 대형 정사각형과 소형 정사각 기둥에 공용하는 solid 기반","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale to cached OBB width and height","anchor":"center"},{"id":"terrain-obstacle-ruin-segment","path":"terrain/obstacle-ruin-segment.svg","category":"terrain","format":"svg","purpose":"0/45/90/135도 OBB 건물 폐허 solid 세그먼트","intrinsicSize":[256,128],"displaySpace":"world","runtimeSizing":"scale uniformly to 0.85, 1, or 1.15 profile size","anchor":"center"},{"id":"terrain-wall-broken-arch","path":"terrain/wall-broken-arch.svg","category":"terrain","format":"svg","purpose":"통로 랜드마크용 부서진 반원 아치","intrinsicSize":[320,220],"displaySpace":"world","recommendedWorldSize":[280,193],"anchor":"bottom-center"},{"id":"terrain-obstacle-ruin-cluster","path":"terrain/obstacle-ruin-cluster.svg","category":"terrain","format":"svg","purpose":"회전·반전하는 각진 유적 잔해 장애물","intrinsicSize":[256,192],"displaySpace":"world","recommendedWorldSize":[220,165],"anchor":"bottom-center"},{"id":"terrain-hazard-current","path":"terrain/hazard-current.svg","category":"terrain","format":"svg","purpose":"해류 방향과 흐름 구간 표식","intrinsicSize":[256,128],"displaySpace":"world","recommendedWorldSize":[240,120],"anchor":"center"},{"id":"terrain-hazard-thermal-vent","path":"terrain/hazard-thermal-vent.svg","category":"terrain","format":"svg","purpose":"적열 동력수로의 열수 분출 위험","source":"Graphic/echo-diver/source/terrain-hazard-thermal-vent.svg","intrinsicSize":[192,256],"displaySpace":"world","recommendedWorldSize":[144,192],"anchor":"bottom-center"},{"id":"terrain-hazard-resonance-sink","path":"terrain/hazard-resonance-sink.svg","category":"terrain","format":"svg","purpose":"공명 충전을 흡수하는 위험 구역","source":"Graphic/echo-diver/source/terrain-hazard-resonance-sink.svg","intrinsicSize":[192,192],"displaySpace":"world","recommendedWorldSize":[168,168],"anchor":"center"},{"id":"terrain-gimmick-variable-passage","path":"terrain/gimmick-variable-passage.svg","category":"terrain","format":"svg","purpose":"상하 이동 쐐기와 점선 통행축으로 가변 폭을 알리는 비충돌 통로 표식","source":"Graphic/echo-diver/source/terrain-gimmick-variable-passage.svg","intrinsicSize":[256,128],"displaySpace":"world","recommendedWorldSize":[240,120],"minimumCssAt320":[76,38],"visualRole":"stateful-passage-overlay","collisionSilhouette":false,"anchor":"center"},{"id":"ui-marker-player-direction","path":"ui/marker-player-direction.svg","category":"ui","format":"svg","purpose":"화면 밖 플레이어 진행 방향 또는 위치 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-core","path":"ui/marker-core.svg","category":"ui","format":"svg","purpose":"소나 공개 뒤 화면 밖 공명 코어 방향 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-guardian-alert","path":"ui/marker-guardian-alert.svg","category":"ui","format":"svg","purpose":"수호자 추적·공격 방향 위험 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-rival-status","path":"ui/marker-rival-status.svg","category":"ui","format":"svg","purpose":"라이벌 상태 방송과 방향 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-relay-exit","path":"ui/marker-relay-exit.svg","category":"ui","format":"svg","purpose":"활성 중계문 귀환 방향 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-campaign-ending-seal","path":"ui/campaign-ending-seal.svg","category":"ui","format":"svg","purpose":"100스테이지 완료 후 간단 엔딩과 완료 카드에 재사용하는 5해역 공명망 복구 인장","source":"Graphic/echo-diver/source/ui-campaign-ending-seal.svg","intrinsicSize":[256,256],"displaySpace":"css","minimumCssSize":[160,160],"recommendedCssSize":[220,220],"maximumCssSize":[280,280],"languageNeutral":true},{"id":"ui-icon-settings","path":"ui/icon-settings.svg","category":"ui","format":"svg","purpose":"설정 진입용 언어 중립 기어 아이콘","source":"Graphic/echo-diver/source/ui-icon-settings.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[24,24]},{"id":"ui-guide-drag","path":"ui/guide-drag.svg","category":"ui","format":"svg","purpose":"드래그 이동 온보딩 아이콘","source":"Graphic/echo-diver/source/ui-guide-drag.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[20,20]},{"id":"ui-guide-sonar","path":"ui/guide-sonar.svg","category":"ui","format":"svg","purpose":"소나 발사 온보딩 아이콘","source":"Graphic/echo-diver/source/ui-guide-sonar.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[20,20]},{"id":"ui-guide-wall","path":"ui/guide-wall.svg","category":"ui","format":"svg","purpose":"장애물 차폐 온보딩 아이콘","source":"Graphic/echo-diver/source/ui-guide-wall.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[20,20]},{"id":"terrain-obstacle-cyan-reef-slab","path":"terrain/obstacle-cyan-reef-slab.svg","category":"terrain","format":"svg","purpose":"320px에서도 충돌 경계가 보이는 불투명 청록 암초 판","intrinsicSize":[256,192],"displaySpace":"world","recommendedWorldSize":[220,165],"anchor":"bottom-center","silhouette":"opaque","edgeColor":"#57e3d6"},{"id":"terrain-obstacle-cyan-reef-spire","path":"terrain/obstacle-cyan-reef-spire.svg","category":"terrain","format":"svg","purpose":"세로 통로에서 충돌 경계가 보이는 불투명 청록 암초 첨탑","intrinsicSize":[192,256],"displaySpace":"world","recommendedWorldSize":[144,192],"anchor":"bottom-center","silhouette":"opaque","edgeColor":"#57e3d6"},{"id":"skin-player-prism","path":"skins/player/prism.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 프리즘 플레이어 외형","collectionSet":"resonance-collection-01","skinTarget":"player","baseEntityId":"entity-player-recovery-drone","abilityNeutral":true,"intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"skin-player-archive","path":"skins/player/archive.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 기록고 플레이어 외형","collectionSet":"resonance-collection-01","skinTarget":"player","baseEntityId":"entity-player-recovery-drone","abilityNeutral":true,"intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"skin-player-ember","path":"skins/player/ember.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 적열 플레이어 외형","collectionSet":"resonance-collection-01","skinTarget":"player","baseEntityId":"entity-player-recovery-drone","abilityNeutral":true,"intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"skin-guardian-porcelain","path":"skins/guardian/porcelain.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 백자 수호자 공통 하이라이트","collectionSet":"resonance-collection-01","skinTarget":"guardian-interior","baseEntityIds":["entity-guardian-gate-pin","entity-guardian-lock-hound","entity-guardian-chorus-watcher"],"composition":"guardian-type-interior-clip-v1","abilityNeutral":true,"intrinsicSize":[176,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"skin-guardian-reef","path":"skins/guardian/reef.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 암초 수호자 공통 하이라이트","collectionSet":"resonance-collection-01","skinTarget":"guardian-interior","baseEntityIds":["entity-guardian-gate-pin","entity-guardian-lock-hound","entity-guardian-chorus-watcher"],"composition":"guardian-type-interior-clip-v1","abilityNeutral":true,"intrinsicSize":[176,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"skin-guardian-obsidian","path":"skins/guardian/obsidian.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 흑요석 수호자 공통 하이라이트","collectionSet":"resonance-collection-01","skinTarget":"guardian-interior","baseEntityIds":["entity-guardian-gate-pin","entity-guardian-lock-hound","entity-guardian-chorus-watcher"],"composition":"guardian-type-interior-clip-v1","abilityNeutral":true,"intrinsicSize":[176,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"skin-rival-cobalt","path":"skins/rival/cobalt.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 코발트 라이벌 탐침 외형","collectionSet":"resonance-collection-01","skinTarget":"rival","baseEntityIds":["entity-rival-probe-drone","entity-rival-carrier-drone"],"abilityNeutral":true,"intrinsicSize":[144,144],"displaySpace":"world","recommendedWorldSize":[132,132],"minimumCssAt320":[42,42],"anchor":"center"},{"id":"skin-rival-scarlet","path":"skins/rival/scarlet.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 진홍 라이벌 무장 운반 외형","collectionSet":"resonance-collection-01","skinTarget":"rival","baseEntityIds":["entity-rival-probe-drone","entity-rival-carrier-drone"],"abilityNeutral":true,"intrinsicSize":[144,144],"displaySpace":"world","recommendedWorldSize":[132,132],"minimumCssAt320":[42,42],"anchor":"center"},{"id":"ui-resonance-credit","path":"ui/resonance-credit.svg","category":"ui","format":"svg","purpose":"캠페인 별 성취로 획득하고 무료 수집 외형 해금에 사용하는 공명 크레딧","economyRole":"free-achievement-currency","source":"Graphic/echo-diver/master/resonance-credit-review.svg","intrinsicSize":[64,64],"displaySpace":"css","minimumCssSize":[18,18],"recommendedCssSize":[20,20],"maximumCssSize":[24,24]}],"audio":[{"id":"bgm-player-base","src":"assets/audio/Base.mp3","volume":0.16,"loop":true},{"id":"bgm-player-prism","src":"assets/audio/Skin1.mp3","volume":0.16,"loop":true},{"id":"bgm-player-archive","src":"assets/audio/Skin2.mp3","volume":0.16,"loop":true},{"id":"bgm-player-ember","src":"assets/audio/Skin3.mp3","volume":0.16,"loop":true},{"id":"ui","src":"assets/audio/ui.wav","volume":0.32},{"id":"sonar","src":"assets/audio/sonar.wav","volume":0.48},{"id":"core","src":"assets/audio/core.wav","volume":0.45},{"id":"guardian-alert","src":"assets/audio/guardian-alert.wav","volume":0.5},{"id":"rival-shot","src":"assets/audio/rival-shot.wav","volume":0.42},{"id":"extract","src":"assets/audio/extract.wav","volume":0.48},{"id":"hit","src":"assets/audio/hit.wav","volume":0.52},{"id":"win","src":"assets/audio/win.wav","volume":0.5},{"id":"fail","src":"assets/audio/fail.wav","volume":0.5}]});
+    : ({"version":1,"imageBasePath":"assets/images/","images":[{"id":"title-key-art","path":"title-key-art.jpg","category":"brand","format":"jpg","purpose":"타이틀 화면용 수몰 문명·회수 드론 키 아트","intrinsicSize":[1024,1536],"displaySpace":"screen","recommendedFit":"cover","preloadGroup":"title-only","source":"Graphic/echo-diver/source/title-key-art-ai.png"},{"id":"bg-zone-01-sunken-relay","path":"backgrounds/zone-01-sunken-relay.svg","category":"background","format":"svg","purpose":"해역 1 침강 중계기지 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-02-ghost-garden","path":"backgrounds/zone-02-ghost-garden.svg","category":"background","format":"svg","purpose":"해역 2 유령 배양정원 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-03-thermal-conduit","path":"backgrounds/zone-03-thermal-conduit.svg","category":"background","format":"svg","purpose":"해역 3 적열 동력수로 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-04-silent-archive","path":"backgrounds/zone-04-silent-archive.svg","category":"background","format":"svg","purpose":"해역 4 무음 기록해구 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"bg-zone-05-resonance-heart","path":"backgrounds/zone-05-resonance-heart.svg","category":"background","format":"svg","purpose":"해역 5 공명의 심장 공통 저대비 배경","intrinsicSize":[1000,1500],"displaySpace":"world","recommendedWorldSize":[1000,1500]},{"id":"entity-player-recovery-drone","path":"entities/player-recovery-drone.svg","category":"entity","format":"svg","purpose":"중앙이 빈 링형 무인 회수 드론","intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"entity-resonance-core","path":"entities/resonance-core.svg","category":"entity","format":"svg","purpose":"바닥·플레이어·라이벌 소유 상태에 공통 사용하는 공명 코어","intrinsicSize":[72,72],"displaySpace":"world","recommendedWorldSize":[64,64],"minimumCssAt320":[18,18],"anchor":"center"},{"id":"entity-player-relay-gate","path":"entities/player-relay-gate.svg","category":"entity","format":"svg","purpose":"출발·귀환·코어 업로드 중계문","intrinsicSize":[240,240],"displaySpace":"world","recommendedWorldSize":[220,220],"minimumCssAt320":[68,68],"anchor":"center"},{"id":"entity-rival-probe-drone","path":"entities/rival-probe-drone.svg","category":"entity","format":"svg","purpose":"라이벌 탐색·교전용 탐침형 외형","intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[120,120],"minimumCssAt320":[38,38],"anchor":"center"},{"id":"entity-rival-carrier-drone","path":"entities/rival-carrier-drone.svg","category":"entity","format":"svg","purpose":"외부 코어 소켓을 포함한 라이벌 운반형 외형","intrinsicSize":[144,144],"displaySpace":"world","recommendedWorldSize":[132,132],"minimumCssAt320":[42,42],"anchor":"center"},{"id":"entity-rival-relay-boundary","path":"entities/rival-relay-boundary.svg","category":"entity","format":"svg","purpose":"라이벌 코어 영구 반출용 화면 가장자리 회수 경계","intrinsicSize":[160,256],"displaySpace":"world","recommendedWorldSize":[96,180],"anchor":"right-center"},{"id":"entity-guardian-gate-pin","path":"entities/guardian-gate-pin.svg","category":"entity","format":"svg","purpose":"십자가 외곽 골격의 문지기 핀 수호자","intrinsicSize":[160,160],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"entity-guardian-lock-hound","path":"entities/guardian-lock-hound.svg","category":"entity","format":"svg","purpose":"길쭉한 마름모 외곽 골격의 잠금 사냥개 수호자","intrinsicSize":[160,160],"displaySpace":"world","recommendedWorldSize":[128,128],"minimumCssAt320":[40,40],"anchor":"center"},{"id":"entity-guardian-chorus-watcher","path":"entities/guardian-chorus-watcher.svg","category":"entity","format":"svg","purpose":"원형 외곽 골격의 합창 감시자 수호자","intrinsicSize":[176,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"effect-sonar-wave-player","path":"effects/sonar-wave-player.svg","category":"effect","format":"svg","purpose":"플레이어 중심 청록 문양 조각 소나 파동","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale square to current pulse diameter","anchor":"center"},{"id":"effect-sonar-wave-rival","path":"effects/sonar-wave-rival.svg","category":"effect","format":"svg","purpose":"라이벌 중심 호박 점선 공명 파동","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale square to current pulse diameter","anchor":"center"},{"id":"effect-guardian-chorus-wave","path":"effects/guardian-chorus-wave.svg","category":"effect","format":"svg","purpose":"합창 감시자의 삼각 경고편 원형 공격 파동","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale square to current attack-wave diameter","anchor":"center"},{"id":"effect-rival-projectile","path":"effects/rival-projectile.svg","category":"effect","format":"svg","purpose":"진행 방향이 고정된 라이벌 직선탄","intrinsicSize":[64,32],"displaySpace":"world","recommendedWorldSize":[52,26],"anchor":"center"},{"id":"effect-impact-fracture","path":"effects/impact-fracture.svg","category":"effect","format":"svg","purpose":"전체 화면 섬광을 대체하는 개체 중심 피격 균열","intrinsicSize":[96,96],"displaySpace":"world","recommendedWorldSize":[84,84],"anchor":"center"},{"id":"terrain-wall-pillar","path":"terrain/wall-pillar.svg","category":"terrain","format":"svg","purpose":"회전·반전·길이 조절하는 직선 벽 모듈","intrinsicSize":[96,256],"displaySpace":"world","runtimeSizing":"stretch along long axis only","anchor":"center"},{"id":"terrain-obstacle-foundation-square","path":"terrain/obstacle-foundation-square.svg","category":"terrain","format":"svg","purpose":"OBB 중앙 대형 정사각형과 소형 정사각 기둥에 공용하는 solid 기반","intrinsicSize":[256,256],"displaySpace":"world","runtimeSizing":"scale to cached OBB width and height","anchor":"center"},{"id":"terrain-obstacle-ruin-segment","path":"terrain/obstacle-ruin-segment.svg","category":"terrain","format":"svg","purpose":"0/45/90/135도 OBB 건물 폐허 solid 세그먼트","intrinsicSize":[256,128],"displaySpace":"world","runtimeSizing":"scale uniformly to 0.85, 1, or 1.15 profile size","anchor":"center"},{"id":"terrain-wall-broken-arch","path":"terrain/wall-broken-arch.svg","category":"terrain","format":"svg","purpose":"통로 랜드마크용 부서진 반원 아치","intrinsicSize":[320,220],"displaySpace":"world","recommendedWorldSize":[280,193],"anchor":"bottom-center"},{"id":"terrain-obstacle-ruin-cluster","path":"terrain/obstacle-ruin-cluster.svg","category":"terrain","format":"svg","purpose":"회전·반전하는 각진 유적 잔해 장애물","intrinsicSize":[256,192],"displaySpace":"world","recommendedWorldSize":[220,165],"anchor":"bottom-center"},{"id":"terrain-hazard-current","path":"terrain/hazard-current.svg","category":"terrain","format":"svg","purpose":"해류 방향과 흐름 구간 표식","intrinsicSize":[256,128],"displaySpace":"world","recommendedWorldSize":[240,120],"anchor":"center"},{"id":"terrain-hazard-thermal-vent","path":"terrain/hazard-thermal-vent.svg","category":"terrain","format":"svg","purpose":"적열 동력수로의 열수 분출 위험","source":"Graphic/echo-diver/source/terrain-hazard-thermal-vent.svg","intrinsicSize":[192,256],"displaySpace":"world","recommendedWorldSize":[144,192],"anchor":"bottom-center"},{"id":"terrain-hazard-resonance-sink","path":"terrain/hazard-resonance-sink.svg","category":"terrain","format":"svg","purpose":"공명 충전을 흡수하는 위험 구역","source":"Graphic/echo-diver/source/terrain-hazard-resonance-sink.svg","intrinsicSize":[192,192],"displaySpace":"world","recommendedWorldSize":[168,168],"anchor":"center"},{"id":"terrain-gimmick-variable-passage","path":"terrain/gimmick-variable-passage.svg","category":"terrain","format":"svg","purpose":"상하 이동 쐐기와 점선 통행축으로 가변 폭을 알리는 비충돌 통로 표식","source":"Graphic/echo-diver/source/terrain-gimmick-variable-passage.svg","intrinsicSize":[256,128],"displaySpace":"world","recommendedWorldSize":[240,120],"minimumCssAt320":[76,38],"visualRole":"stateful-passage-overlay","collisionSilhouette":false,"anchor":"center"},{"id":"ui-marker-player-direction","path":"ui/marker-player-direction.svg","category":"ui","format":"svg","purpose":"화면 밖 플레이어 진행 방향 또는 위치 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-core","path":"ui/marker-core.svg","category":"ui","format":"svg","purpose":"소나 공개 뒤 화면 밖 공명 코어 방향 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-guardian-alert","path":"ui/marker-guardian-alert.svg","category":"ui","format":"svg","purpose":"수호자 추적·공격 방향 위험 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-rival-status","path":"ui/marker-rival-status.svg","category":"ui","format":"svg","purpose":"라이벌 상태 방송과 방향 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-marker-relay-exit","path":"ui/marker-relay-exit.svg","category":"ui","format":"svg","purpose":"활성 중계문 귀환 방향 표식","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[32,32]},{"id":"ui-campaign-ending-seal","path":"ui/campaign-ending-seal.svg","category":"ui","format":"svg","purpose":"100스테이지 완료 후 간단 엔딩과 완료 카드에 재사용하는 5해역 공명망 복구 인장","source":"Graphic/echo-diver/source/ui-campaign-ending-seal.svg","intrinsicSize":[256,256],"displaySpace":"css","minimumCssSize":[160,160],"recommendedCssSize":[220,220],"maximumCssSize":[280,280],"languageNeutral":true},{"id":"ui-icon-settings","path":"ui/icon-settings.svg","category":"ui","format":"svg","purpose":"설정 진입용 언어 중립 기어 아이콘","source":"Graphic/echo-diver/source/ui-icon-settings.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[24,24]},{"id":"ui-guide-drag","path":"ui/guide-drag.svg","category":"ui","format":"svg","purpose":"드래그 이동 온보딩 아이콘","source":"Graphic/echo-diver/source/ui-guide-drag.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[20,20]},{"id":"ui-guide-sonar","path":"ui/guide-sonar.svg","category":"ui","format":"svg","purpose":"소나 발사 온보딩 아이콘","source":"Graphic/echo-diver/source/ui-guide-sonar.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[20,20]},{"id":"ui-guide-wall","path":"ui/guide-wall.svg","category":"ui","format":"svg","purpose":"장애물 차폐 온보딩 아이콘","source":"Graphic/echo-diver/source/ui-guide-wall.svg","intrinsicSize":[64,64],"displaySpace":"css","recommendedCssSize":[20,20]},{"id":"terrain-obstacle-cyan-reef-slab","path":"terrain/obstacle-cyan-reef-slab.svg","category":"terrain","format":"svg","purpose":"320px에서도 충돌 경계가 보이는 불투명 청록 암초 판","intrinsicSize":[256,192],"displaySpace":"world","recommendedWorldSize":[220,165],"anchor":"bottom-center","silhouette":"opaque","edgeColor":"#57e3d6"},{"id":"terrain-obstacle-cyan-reef-spire","path":"terrain/obstacle-cyan-reef-spire.svg","category":"terrain","format":"svg","purpose":"세로 통로에서 충돌 경계가 보이는 불투명 청록 암초 첨탑","intrinsicSize":[192,256],"displaySpace":"world","recommendedWorldSize":[144,192],"anchor":"bottom-center","silhouette":"opaque","edgeColor":"#57e3d6"},{"id":"skin-player-prism","path":"skins/player/prism.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 프리즘 플레이어 외형","collectionSet":"resonance-collection-01","skinTarget":"player","baseEntityId":"entity-player-recovery-drone","abilityNeutral":true,"intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"skin-player-archive","path":"skins/player/archive.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 기록고 플레이어 외형","collectionSet":"resonance-collection-01","skinTarget":"player","baseEntityId":"entity-player-recovery-drone","abilityNeutral":true,"intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"skin-player-ember","path":"skins/player/ember.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 적열 플레이어 외형","collectionSet":"resonance-collection-01","skinTarget":"player","baseEntityId":"entity-player-recovery-drone","abilityNeutral":true,"intrinsicSize":[128,128],"displaySpace":"world","recommendedWorldSize":[108,108],"minimumCssAt320":[34,34],"anchor":"center"},{"id":"skin-guardian-porcelain","path":"skins/guardian/porcelain.svg","category":"skin","format":"svg","purpose":"백자 장식으로 변형한 핀·사냥개·합창자 3종 전용 실루엣 스프라이트","collectionSet":"resonance-collection-01","skinTarget":"guardian-variants","baseEntityIds":["entity-guardian-gate-pin","entity-guardian-lock-hound","entity-guardian-chorus-watcher"],"composition":"guardian-type-sprite-v2","abilityNeutral":true,"intrinsicSize":[528,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"skin-guardian-reef","path":"skins/guardian/reef.svg","category":"skin","format":"svg","purpose":"산호 장식으로 변형한 핀·사냥개·합창자 3종 전용 실루엣 스프라이트","collectionSet":"resonance-collection-01","skinTarget":"guardian-variants","baseEntityIds":["entity-guardian-gate-pin","entity-guardian-lock-hound","entity-guardian-chorus-watcher"],"composition":"guardian-type-sprite-v2","abilityNeutral":true,"intrinsicSize":[528,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"skin-guardian-obsidian","path":"skins/guardian/obsidian.svg","category":"skin","format":"svg","purpose":"흑요석 장식으로 변형한 핀·사냥개·합창자 3종 전용 실루엣 스프라이트","collectionSet":"resonance-collection-01","skinTarget":"guardian-variants","baseEntityIds":["entity-guardian-gate-pin","entity-guardian-lock-hound","entity-guardian-chorus-watcher"],"composition":"guardian-type-sprite-v2","abilityNeutral":true,"intrinsicSize":[528,176],"displaySpace":"world","recommendedWorldSize":[140,140],"minimumCssAt320":[44,44],"anchor":"center"},{"id":"skin-rival-cobalt","path":"skins/rival/cobalt.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 코발트 라이벌 탐침 외형","collectionSet":"resonance-collection-01","skinTarget":"rival","baseEntityIds":["entity-rival-probe-drone","entity-rival-carrier-drone"],"abilityNeutral":true,"intrinsicSize":[144,144],"displaySpace":"world","recommendedWorldSize":[132,132],"minimumCssAt320":[42,42],"anchor":"center"},{"id":"skin-rival-scarlet","path":"skins/rival/scarlet.svg","category":"skin","format":"svg","purpose":"별 성취로 해금하는 공명 수집 외형 01의 진홍 라이벌 무장 운반 외형","collectionSet":"resonance-collection-01","skinTarget":"rival","baseEntityIds":["entity-rival-probe-drone","entity-rival-carrier-drone"],"abilityNeutral":true,"intrinsicSize":[144,144],"displaySpace":"world","recommendedWorldSize":[132,132],"minimumCssAt320":[42,42],"anchor":"center"},{"id":"ui-resonance-credit","path":"ui/resonance-credit.svg","category":"ui","format":"svg","purpose":"캠페인 별 성취로 획득하고 무료 수집 외형 해금에 사용하는 공명 크레딧","economyRole":"free-achievement-currency","source":"Graphic/echo-diver/master/resonance-credit-review.svg","intrinsicSize":[64,64],"displaySpace":"css","minimumCssSize":[18,18],"recommendedCssSize":[20,20],"maximumCssSize":[24,24]}],"audio":[{"id":"bgm-player-base","src":"assets/audio/Base.mp3","volume":0.16,"loop":true},{"id":"bgm-player-prism","src":"assets/audio/Skin1.mp3","volume":0.16,"loop":true},{"id":"bgm-player-archive","src":"assets/audio/Skin2.mp3","volume":0.16,"loop":true},{"id":"bgm-player-ember","src":"assets/audio/Skin3.mp3","volume":0.16,"loop":true},{"id":"ui","src":"assets/audio/ui.wav","volume":0.32},{"id":"sonar","src":"assets/audio/sonar.wav","volume":0.48},{"id":"core","src":"assets/audio/core.wav","volume":0.45},{"id":"guardian-alert","src":"assets/audio/guardian-alert.wav","volume":0.5},{"id":"rival-shot","src":"assets/audio/rival-shot.wav","volume":0.42},{"id":"extract","src":"assets/audio/extract.wav","volume":0.48},{"id":"hit","src":"assets/audio/hit.wav","volume":0.52},{"id":"win","src":"assets/audio/win.wav","volume":0.5},{"id":"fail","src":"assets/audio/fail.wav","volume":0.5}]});
 
   function assetPath(entry) {
     return entry && (entry.src || entry.path || entry.file || entry.url) || '';
@@ -2062,17 +2221,19 @@
 
   function defaults() {
     return {
-      version: 6,
+      version: 9,
       contentVersion: '100-stage-v1',
       highestUnlockedStage: 1,
       records: {},
-      abyssBest: { segment: 0, score: 0 },
+      abyssBest: { segment: 0, score: 0, contentVersion: PP.data.config.abyss.contentVersion },
       onboardingSeen: {},
       boostedSonar: 0,
       resonanceCredits: 0,
       creditAwardedStars: {},
       ownedCosmetics: [],
+      cosmeticMilestoneAcknowledged: false,
       creditDoubleClaims: {},
+      developmentUnlocks: { abyss: false },
       hard: {
         unlocked: false,
         endingSeen: false,
@@ -2198,6 +2359,7 @@
     /* v3 이하의 단발 재고 필드는 직렬화 호환용 0으로만 남기고 신규 런에는 사용하지 않습니다. */
     save.boostedSonar = 0;
     save.resonanceCredits = Math.floor(boundedNumber(raw.resonanceCredits, 0, 0, Number.MAX_SAFE_INTEGER));
+    save.cosmeticMilestoneAcknowledged = raw.cosmeticMilestoneAcknowledged === true;
     if (Array.isArray(raw.ownedCosmetics)) {
       var validCosmeticIds = PP.data.config.cosmetics.map(function (item) { return item.id; });
       raw.ownedCosmetics.forEach(function (id) {
@@ -2214,7 +2376,11 @@
         if (/^[a-z0-9-]{1,80}$/i.test(key) && raw.creditDoubleClaims[key] === true) save.creditDoubleClaims[key] = true;
       });
     }
-    if (raw.abyssBest && typeof raw.abyssBest === 'object') {
+    if (raw.developmentUnlocks && typeof raw.developmentUnlocks === 'object') {
+      save.developmentUnlocks.abyss = raw.developmentUnlocks.abyss === true;
+    }
+    if (raw.abyssBest && typeof raw.abyssBest === 'object'
+      && raw.abyssBest.contentVersion === PP.data.config.abyss.contentVersion) {
       save.abyssBest.segment = Math.floor(boundedNumber(raw.abyssBest.segment, 0, 0, Number.MAX_SAFE_INTEGER));
       save.abyssBest.score = Math.floor(boundedNumber(raw.abyssBest.score, 0, 0, Number.MAX_SAFE_INTEGER));
     }
@@ -2374,11 +2540,54 @@
     });
     return transaction.persisted ? true : 'storage-error';
   }
+  function acknowledgeCosmeticMilestone(save) {
+    return atomicUpdate(save, function () { save.cosmeticMilestoneAcknowledged = true; }).persisted;
+  }
   function unlockStage(save, stageId) {
     if (!Number.isInteger(stageId) || stageId < 1 || stageId > STAGE_COUNT) return false;
     return atomicUpdate(save, function () {
       save.highestUnlockedStage = Math.max(save.highestUnlockedStage, stageId);
     }).persisted;
+  }
+  function gmRecord() {
+    return {
+      cleared: true, bestStars: 1, bestScore: 0, bestPower: 0,
+      bestTime: 0, bestSonars: 0, fewestHits: 0
+    };
+  }
+  function gmCompleteProgress(records, awardedStars) {
+    for (var stageId = 1; stageId <= STAGE_COUNT; stageId += 1) {
+      if (!records[stageId]) records[stageId] = gmRecord();
+      awardedStars[stageId] = Math.max(1, Number(awardedStars[stageId]) || 0);
+    }
+  }
+  function gmUnlockDifficulty(save, difficultyId) {
+    if (difficultyId !== 'hard' && difficultyId !== 'extreme') return false;
+    return atomicUpdate(save, function () {
+      gmCompleteProgress(save.records, save.creditAwardedStars);
+      save.highestUnlockedStage = STAGE_COUNT;
+      save.hard.unlocked = true;
+      if (difficultyId === 'extreme') {
+        gmCompleteProgress(save.hard.records, save.hard.creditAwardedStars);
+        save.hard.highestUnlockedStage = STAGE_COUNT;
+        save.extreme.unlocked = true;
+      }
+    }).persisted;
+  }
+  function gmUnlockAbyss(save) {
+    return atomicUpdate(save, function () { save.developmentUnlocks.abyss = true; }).persisted;
+  }
+  function gmUnlockAllCosmetics(save) {
+    return atomicUpdate(save, function () {
+      save.ownedCosmetics = PP.data.config.cosmetics.map(function (item) { return item.id; });
+    }).persisted;
+  }
+  function resetGame(save) {
+    var snapshot = snapshotSave(save);
+    restoreSave(save, defaults());
+    if (write(save)) return true;
+    restoreSave(save, snapshot);
+    return false;
   }
   function resetAllStageRecords(save) {
     var snapshot = snapshotSave(save);
@@ -2386,7 +2595,7 @@
     var extremeAwardedStars = save.extreme && save.extreme.creditAwardedStars ? save.extreme.creditAwardedStars : {};
     save.records = {};
     save.highestUnlockedStage = 1;
-    save.abyssBest = { segment: 0, score: 0 };
+    save.abyssBest = { segment: 0, score: 0, contentVersion: PP.data.config.abyss.contentVersion };
     save.onboardingSeen = {};
     save.hard = {
       unlocked: false,
@@ -2430,8 +2639,12 @@
   }
   function recordAbyssBest(save, segment, score) {
     return atomicUpdate(save, function () {
-      save.abyssBest.segment = Math.max(save.abyssBest.segment, Math.floor(segment));
-      save.abyssBest.score = Math.max(save.abyssBest.score, Math.floor(score));
+      var nextScore = Math.max(0, Math.floor(score));
+      if (nextScore > save.abyssBest.score) {
+        save.abyssBest.segment = Math.max(0, Math.floor(segment));
+        save.abyssBest.score = nextScore;
+      }
+      save.abyssBest.contentVersion = PP.data.config.abyss.contentVersion;
     }).persisted;
   }
 
@@ -2448,7 +2661,12 @@
     grantCreditDouble: grantCreditDouble,
     purchaseCosmetic: purchaseCosmetic,
     equipCosmetic: equipCosmetic,
+    acknowledgeCosmeticMilestone: acknowledgeCosmeticMilestone,
     unlockStage: unlockStage,
+    gmUnlockDifficulty: gmUnlockDifficulty,
+    gmUnlockAbyss: gmUnlockAbyss,
+    gmUnlockAllCosmetics: gmUnlockAllCosmetics,
+    resetGame: resetGame,
     resetAllStageRecords: resetAllStageRecords,
     unlockNextDifficulty: unlockNextDifficulty,
     setCampaignDifficulty: setCampaignDifficulty,
@@ -2460,8 +2678,14 @@
 (function (PP) {
   'use strict';
 
-  function Input(canvas, onPause) {
+  function Input(canvas, movementTarget, onPause) {
+    if (typeof movementTarget === 'function') {
+      onPause = movementTarget;
+      movementTarget = null;
+    }
     this.canvas = canvas;
+    this.movementTarget = movementTarget || null;
+    this.captureTarget = null;
     this.pointer = { active: false, id: null, startX: 0, startY: 0, x: 0, y: 0 };
     this.pointerRect = null;
     this.sonarRequested = false;
@@ -2473,12 +2697,14 @@
     var self = this;
     this.pointerDown = function (event) {
       if (self.pointer.active) return;
+      if (event.preventDefault) event.preventDefault();
       self.pointer.active = true;
       self.pointer.id = event.pointerId;
       self.pointer.startX = self.pointer.x = event.clientX;
       self.pointer.startY = self.pointer.y = event.clientY;
       self.pointerRect = self.measureCanvasRect();
-      if (self.canvas.setPointerCapture) self.canvas.setPointerCapture(event.pointerId);
+      self.captureTarget = event.currentTarget || self.canvas;
+      if (self.captureTarget.setPointerCapture) self.captureTarget.setPointerCapture(event.pointerId);
     };
     this.pointerMove = function (event) {
       if (!self.pointer.active || self.pointer.id !== event.pointerId) return;
@@ -2497,10 +2723,12 @@
     if (window.visualViewport && window.visualViewport.addEventListener) {
       window.visualViewport.addEventListener('resize', this.invalidatePointerRect);
     }
-    this.canvas.addEventListener('pointerdown', this.pointerDown);
-    this.canvas.addEventListener('pointermove', this.pointerMove);
-    this.canvas.addEventListener('pointerup', this.pointerEnd);
-    this.canvas.addEventListener('pointercancel', this.pointerEnd);
+    [this.canvas, this.movementTarget].filter(Boolean).forEach(function (target) {
+      target.addEventListener('pointerdown', self.pointerDown);
+      target.addEventListener('pointermove', self.pointerMove);
+      target.addEventListener('pointerup', self.pointerEnd);
+      target.addEventListener('pointercancel', self.pointerEnd);
+    });
   };
 
   Input.prototype.vector = function () {
@@ -2521,12 +2749,17 @@
   Input.prototype.requestSonar = function () { this.sonarRequested = true; };
   Input.prototype.releasePointerCapture = function () {
     var pointerId = this.pointer && this.pointer.id;
-    if (pointerId === null || pointerId === undefined || !this.canvas.releasePointerCapture) return;
+    var target = this.captureTarget || this.canvas;
+    if (pointerId === null || pointerId === undefined || !target.releasePointerCapture) {
+      this.captureTarget = null;
+      return;
+    }
     try {
-      if (!this.canvas.hasPointerCapture || this.canvas.hasPointerCapture(pointerId)) this.canvas.releasePointerCapture(pointerId);
+      if (!target.hasPointerCapture || target.hasPointerCapture(pointerId)) target.releasePointerCapture(pointerId);
     } catch (_) {
       /* 이미 브라우저가 capture를 해제한 경우도 중립 상태로 계속 복구합니다. */
     }
+    this.captureTarget = null;
   };
   Input.prototype.measureCanvasRect = function () { return this.canvas.getBoundingClientRect(); };
   Input.prototype.canvasPoint = function (clientX, clientY, camera) {
@@ -2750,7 +2983,13 @@
     if (!playerTracked) { this.chorusCooldown = rules.intervalSeconds; return; }
     this.chorusCooldown -= dt;
     if (this.chorusCooldown <= 0) {
+      var activeChorusCount = stage.guardians.reduce(function (count, guardian) {
+        return count + Number(guardian.type === 'chorus' && guardian !== this
+          && !guardian.destroyed && (guardian.chorusWarning > 0 || !!guardian.chorusWave));
+      }.bind(this), 0);
+      if (activeChorusCount >= 2 || stage.elapsed - stage.lastChorusAttackAt < 0.4) return;
       this.chorusWarning = rules.warningSeconds;
+      stage.lastChorusAttackAt = stage.elapsed;
       events.waveWarning = true;
     }
   };
@@ -2898,6 +3137,7 @@
     this.avoidanceSuppressedUntil = 0;
     this.ignoredCoreId = null;
     this.ignoredCoreUntil = 0;
+    this.ignoredCoreUntilById = {};
   }
 
   Rival.prototype.recognize = function (now) {
@@ -2936,8 +3176,11 @@
   Rival.prototype.discoverCore = function (core, now) {
     if (!core || core.owner !== 'free' || !core.id) return false;
     if (this.knownCoreIds.indexOf(core.id) < 0) this.knownCoreIds.push(core.id);
-    var ignored = core.id === this.ignoredCoreId
-      && (!Number.isFinite(now) || now < this.ignoredCoreUntil);
+    var ignoredUntil = Math.max(
+      core.id === this.ignoredCoreId ? this.ignoredCoreUntil : 0,
+      Number(this.ignoredCoreUntilById[core.id]) || 0
+    );
+    var ignored = !Number.isFinite(now) || now < ignoredUntil;
     if (!ignored && !this.carriedCore && (!this.targetCore || this.targetCore.owner !== 'free')) this.targetCore = core;
     return true;
   };
@@ -2954,6 +3197,7 @@
     var droppedCore = this.dropCore();
     this.ignoredCoreId = droppedCore.id;
     this.ignoredCoreUntil = now + PP.data.config.rival.droppedCoreRetargetDelaySeconds;
+    this.ignoredCoreUntilById[droppedCore.id] = this.ignoredCoreUntil;
     this.state = 'scan';
     this.stunTimer = 0;
     this.scanTimer = 0;
@@ -3009,7 +3253,11 @@
       return PP.core.utils.normalize(target.x - this.x, target.y - this.y);
     }
     if (this.repathTimer <= 0 || !this.navPath.length) {
-      this.navPath = PP.core.utils.findGridPath(this, target, this.radius + 2, stage.world, stage.movementObstacles, PP.data.config.guardian.navigation.gridSize);
+      var gridSize = PP.data.config.guardian.navigation.gridSize;
+      this.navPath = PP.core.utils.findGridPath(
+        this, target, this.radius + gridSize * 0.5,
+        stage.world, stage.movementObstacles, gridSize
+      );
       this.repathTimer = PP.data.config.guardian.navigation.repathSeconds;
     }
     while (this.navPath.length && PP.core.utils.distance(this, this.navPath[0]) < 28) this.navPath.shift();
@@ -3021,13 +3269,17 @@
     var known = this.knownCoreIds;
     var ignoredCoreId = this.ignoredCoreId;
     var ignoredCoreUntil = this.ignoredCoreUntil;
+    var ignoredCoreUntilById = this.ignoredCoreUntilById;
     var nearest = null;
     var nearestDistance = Infinity;
     for (var coreIndex = 0; coreIndex < stage.cores.length; coreIndex += 1) {
       var core = stage.cores[coreIndex];
       recordEnemyWork(stage, 'knownCoreCandidates');
       if (core.owner !== 'free' || core.pickupCooldown > 0 || known.indexOf(core.id) < 0
-        || core.id === ignoredCoreId && stage.elapsed < ignoredCoreUntil) continue;
+        || stage.elapsed < Math.max(
+          core.id === ignoredCoreId ? ignoredCoreUntil : 0,
+          Number(ignoredCoreUntilById[core.id]) || 0
+        )) continue;
       var coreDistance = PP.core.utils.distance(core, this);
       if (coreDistance < nearestDistance) {
         nearest = core;
@@ -3038,12 +3290,21 @@
   };
   Rival.prototype.searchWaypoint = function (stage) {
     var margin = this.radius + 24;
+    var playableTop = 100 + margin;
+    var playableWidth = Math.max(0, stage.world.width - margin * 2);
+    var playableHeight = Math.max(0, stage.world.height - playableTop - margin);
+    function point(normalizedX, normalizedY) {
+      return {
+        x: margin + playableWidth * normalizedX,
+        y: playableTop + playableHeight * normalizedY
+      };
+    }
     var waypoints = [
-      { x: margin, y: 260 },
-      { x: stage.world.width - margin, y: 360 },
-      { x: stage.world.width - margin, y: 820 },
-      { x: margin, y: 920 },
-      { x: stage.world.width / 2, y: 1260 }
+      point(0, 0.08),
+      point(1, 0.16),
+      point(1, 0.54),
+      point(0, 0.62),
+      point(0.5, 0.92)
     ];
     var point = waypoints[this.searchWaypointIndex % waypoints.length];
     if (PP.core.utils.distance(this, point) <= PP.data.config.rival.searchWaypointReachRadius) {
@@ -3299,9 +3560,14 @@
     this.pulses = [];
     this.nextPulseId = 1;
   }
-  SonarSystem.prototype.emit = function (source, x, y, intensity, now, revealSeconds) {
+  SonarSystem.prototype.emit = function (source, x, y, intensity, now, revealSeconds, profile) {
     var config = PP.data.config.sonar;
-    var signal = { source: source, x: x, y: y, intensity: intensity || 1, now: now };
+    profile = profile || {};
+    var waveSeconds = Number(profile.waveSeconds) > 0 ? Number(profile.waveSeconds) : config.waveSeconds;
+    var signal = {
+      source: source, x: x, y: y, intensity: intensity || 1, now: now,
+      sonarMode: profile.sonarMode || 'standard', covert: profile.sonarMode === 'covert-run'
+    };
     this.pulses.push({
       id: this.nextPulseId,
       source: source,
@@ -3311,10 +3577,12 @@
       radius: 0,
       previousRadius: 0,
       maxRadius: config.radius * signal.intensity,
-      speed: config.radius * signal.intensity / config.waveSeconds,
-      life: config.waveSeconds,
+      speed: config.radius * signal.intensity / waveSeconds,
+      life: waveSeconds,
+      waveSeconds: waveSeconds,
       revealSeconds: revealSeconds || config.revealSeconds,
       boosted: (intensity || 1) > 1,
+      covert: signal.covert,
       contactedEntities: []
     });
     this.nextPulseId += 1;
@@ -3380,6 +3648,13 @@
     entity.hitCycleByActor = {};
     entity.resolved = false;
     entity.activated = false;
+    if (definition.type === 'thermalVent') {
+      var thermal = PP.data.config.environment.thermal;
+      entity.waitSeconds = thermal.waitSeconds;
+      entity.activeSeconds = thermal.activeSeconds;
+      entity.period = thermal.waitSeconds + thermal.activeSeconds;
+      entity.phase = ((Number(definition.phase) || 0) % entity.period + entity.period) % entity.period;
+    }
     return entity;
   }
   function passageEntity(definition, index) {
@@ -3536,16 +3811,18 @@
         zone.hitCooldowns[actorId] = Math.max(0, zone.hitCooldowns[actorId] - dt);
       });
       if (zone.environmentKind === 'decoyWave' && zone.activated && !zone.resolved
-        && contains(zone, run.player, PP.data.config.visibility.radius)) {
+        && U.distance(zone, run.player) <= PP.data.config.visibility.radius) {
         zone.resolved = true;
         zone.revealedUntil = 0;
       }
       if (zone.environmentKind !== 'thermalVent') return;
-      var cycle = (run.elapsed + Number(zone.phase || 0)) % Number(zone.period || 3);
-      var cycleId = Math.floor((run.elapsed + Number(zone.phase || 0)) / Number(zone.period || 3));
-      zone.active = cycle < Number(zone.activeSeconds || 1.5);
-      zone.secondsUntilActive = zone.active ? null : Number(zone.period || 3) - cycle;
-      zone.warning = !zone.active && cycle >= Number(zone.period || 3) - 0.65;
+      var period = Number(zone.period);
+      var waitSeconds = Number(zone.waitSeconds);
+      var cycle = (run.elapsed + Number(zone.phase || 0)) % period;
+      var cycleId = Math.floor((run.elapsed + Number(zone.phase || 0)) / period);
+      zone.active = cycle >= waitSeconds;
+      zone.secondsUntilActive = zone.active ? null : waitSeconds - cycle;
+      zone.warning = !zone.active && zone.secondsUntilActive <= 0.65;
       if (!zone.active) return;
       var targets = [{ key: 'player', actor: run.player }].concat(run.guardians.filter(function (guardian) {
         return !guardian.destroyed;
@@ -3557,7 +3834,9 @@
           || zone.hitCycleByActor[target.key] === cycleId) return;
         zone.hitCooldowns[target.key] = PP.data.config.environment.thermal.hitCooldownSeconds;
         zone.hitCycleByActor[target.key] = cycleId;
-        var damage = PP.data.config.environment.thermal.damage;
+        var thermalMultiplier = run.difficultyModifiers
+          ? Number(run.difficultyModifiers.thermalDamageMultiplier) || 1 : 1;
+        var damage = PP.data.config.environment.thermal.damage * thermalMultiplier;
         if (target.key === 'player') {
           if (run.player.damage(damage, 'thermal-vent')) events.thermalHit = true;
         } else if (target.actor.takeDamage(damage, 'thermal-vent', run.elapsed)) {
@@ -3633,11 +3912,35 @@
 
   var U = PP.core.utils;
   var runSequence = 1;
+  var abyssSeedSequence = 0;
   var CORE_SPOTS = [
     { x: 150, y: 280 }, { x: 500, y: 315 }, { x: 840, y: 355 }, { x: 190, y: 620 },
     { x: 800, y: 680 }, { x: 340, y: 930 }, { x: 690, y: 1010 }, { x: 500, y: 1190 },
     { x: 145, y: 1110 }, { x: 855, y: 1190 }, { x: 390, y: 560 }, { x: 610, y: 820 }
   ];
+  function createAbyssRunSeed(previousSeed) {
+    abyssSeedSequence = (abyssSeedSequence + 1) >>> 0;
+    var candidate = null;
+    try {
+      if (window.crypto && typeof window.crypto.getRandomValues === 'function') {
+        var values = new Uint32Array(1);
+        window.crypto.getRandomValues(values);
+        candidate = values[0] >>> 0;
+      }
+    } catch (error) {
+      candidate = null;
+    }
+    if (candidate === null) {
+      candidate = ((Date.now() >>> 0)
+        ^ Math.floor(Math.random() * 4294967296)
+        ^ Math.imul(abyssSeedSequence, 2654435761)) >>> 0;
+    }
+    if (candidate === 0) candidate = (PP.data.config.abyss.validationSeed + abyssSeedSequence) >>> 0;
+    if (Number.isFinite(previousSeed) && candidate === (Number(previousSeed) >>> 0)) {
+      candidate = (candidate + 2654435761) >>> 0;
+    }
+    return candidate || 1;
+  }
   function allowedRotation(value) {
     var normalized = U.normalizeObbDegrees(value);
     return PP.data.obstacles.allowedRotationDegrees.indexOf(normalized) >= 0;
@@ -3672,7 +3975,9 @@
     var rsIndex = 0;
     var groups = pattern.groups.map(function (source) {
       var profile = data.profiles[source.profileId];
-      var point = transformPoint(data.slots[source.slotId], layout.transform, world);
+      var slot = data.slots[source.slotId];
+      var normalizedSlot = { x: slot.x * world.width / 1000, y: slot.y * world.height / 1500 };
+      var point = transformPoint(normalizedSlot, layout.transform, world);
       var scale = source.scale;
       if (profile.code === 'RS') {
         if (layout.variant === 'V1') scale = 0.85;
@@ -3681,6 +3986,7 @@
       }
       return {
         id: 'stage-' + layout.stageId + '-' + source.id,
+        slotId: source.slotId,
         profileId: source.profileId,
         x: point.x,
         y: point.y,
@@ -3726,7 +4032,7 @@
     });
     return { id: groupId, colliders: colliders };
   }
-  function stageObstacles(definition, random, world) {
+  function stageObstacles(definition, random, world, protectedCircles, environment) {
     var data = PP.data.obstacles;
     if (Array.isArray(definition.fixedObstacleGroups)) {
       var fixedGroups = definition.fixedObstacleGroups.map(createObstacleGroup);
@@ -3734,7 +4040,7 @@
       fixedGroups.forEach(function (group) { fixedColliders = fixedColliders.concat(group.colliders); });
       return { patternId: definition.obstaclePatternId, groups: fixedGroups, colliders: fixedColliders, decorations: [] };
     }
-    var layout = data.stageLayouts[String(definition.id)] || {
+    var layout = data.stageLayouts[String(definition.templateStageId || definition.id)] || {
       stageId: definition.id,
       patternId: definition.obstaclePatternId,
       density: definition.obstacleDensity,
@@ -3743,7 +4049,59 @@
       designIntent: definition.obstacleDesignIntent || 'runtime-generated'
     };
     var expanded = expandObstacleLayout(layout, world);
-    var groups = expanded.groups.map(createObstacleGroup);
+    var targetCount = U.clamp(Math.floor(Number(definition.obstacleCount) || 0), 0, data.maxLogicalGroupsPerStage);
+    if (expanded.groups.length > targetCount) expanded.groups.length = targetCount;
+    var usedSlots = expanded.groups.map(function (group) { return group.slotId; });
+    var extraSlots = ['A', 'C', 'G', 'I', 'B', 'H', 'D', 'F', 'E', 'J', 'K'];
+    for (var extraIndex = 0; extraIndex < extraSlots.length; extraIndex += 1) {
+      var slotId = extraSlots[extraIndex];
+      if (usedSlots.indexOf(slotId) >= 0) continue;
+      var slot = data.slots[slotId];
+      var point = transformPoint({ x: slot.x * world.width / 1000, y: slot.y * world.height / 1500 }, layout.transform, world);
+      expanded.groups.push({
+        id: 'stage-' + definition.id + '-v3-extra-' + (expanded.groups.length + 1),
+        slotId: slotId,
+        profileId: 'column-square',
+        x: point.x,
+        y: point.y,
+        rotationDegrees: U.normalizeObbDegrees(variantRotation(layout.variant) + (extraIndex % 4) * 45),
+        scale: 1
+      });
+      usedSlots.push(slotId);
+    }
+    var candidateGroups = expanded.groups.map(createObstacleGroup).filter(function (group) {
+      var colliders = group.colliders;
+      if ((protectedCircles || []).some(function (entry) {
+        return colliders.some(function (wall) { return U.circleIntersectsObb(entry.point, entry.radius, wall); });
+      })) return false;
+      var environmentShapes = environment ? (environment.zones || []).concat(environment.passages || []) : [];
+      return !environmentShapes.some(function (shape) {
+        return colliders.some(function (wall) {
+          if (shape.radius) return U.circleIntersectsObb(shape, shape.radius * 0.7, wall);
+          return shape.aabb && !(wall.aabb.maxX < shape.aabb.minX || wall.aabb.minX > shape.aabb.maxX
+            || wall.aabb.maxY < shape.aabb.minY || wall.aabb.minY > shape.aabb.maxY);
+        });
+      });
+    });
+    candidateGroups.sort(function (left, right) {
+      var chorusStage = definition.guardianTypes && definition.guardianTypes.indexOf('chorus') >= 0;
+      var leftCover = chorusStage && left.colliders.some(function (wall) { return wall.profileId === 'ruin-segment'; });
+      var rightCover = chorusStage && right.colliders.some(function (wall) { return wall.profileId === 'ruin-segment'; });
+      if (leftCover !== rightCover) return leftCover ? -1 : 1;
+      var leftArea = left.colliders.reduce(function (sum, wall) { return sum + wall.width * wall.height; }, 0);
+      var rightArea = right.colliders.reduce(function (sum, wall) { return sum + wall.width * wall.height; }, 0);
+      return leftArea - rightArea;
+    });
+    var groups = [];
+    var selectedArea = 0;
+    var maximumArea = world.width * world.height * 0.055;
+    candidateGroups.forEach(function (group) {
+      if (groups.length >= targetCount) return;
+      var groupArea = group.colliders.reduce(function (sum, wall) { return sum + wall.width * wall.height; }, 0);
+      if (selectedArea + groupArea > maximumArea) return;
+      groups.push(group);
+      selectedArea += groupArea;
+    });
     var colliders = [];
     groups.forEach(function (group) { colliders = colliders.concat(group.colliders); });
     return { patternId: layout.patternId, groups: groups, colliders: colliders, decorations: expanded.decorations };
@@ -3774,20 +4132,80 @@
     return run;
   }
 
-  function createStageRun(definition, difficultyId) {
+  function randomRelaySpot(definition, world, playerStart, environment) {
+    if (!definition.randomRelay) return definition.relaySpot || { x: world.width * 0.5, y: 128 };
+    var relayRandom = U.seededRandom((Number(definition.seed) ^ 0x6d2b79f5) >>> 0);
+    var candidates = [];
+    [0.14, 0.32, 0.50, 0.68, 0.86].forEach(function (x) {
+      [0.16, 0.34, 0.52, 0.70, 0.86].forEach(function (y) {
+        candidates.push({ x: Math.round(x * world.width), y: Math.round(y * world.height) });
+      });
+    });
+    var minimumStartDistance = Math.min(600, Math.max(360, Math.round(Math.hypot(world.width, world.height) * 0.18)));
+    var blocked = (environment.passages || []).concat((environment.zones || []).filter(function (zone) {
+      return zone.environmentKind !== 'currentBand';
+    }));
+    var shuffled = U.shuffle(candidates, relayRandom);
+    for (var index = 0; index < shuffled.length; index += 1) {
+      var candidate = shuffled[index];
+      if (U.distance(candidate, playerStart) < minimumStartDistance) continue;
+      if (blocked.some(function (zone) {
+        if (zone.aabb || zone.width || zone.height) return U.circleIntersectsObb(candidate, 130, zone);
+        return U.distance(candidate, zone) < 130 + Math.max(0, Number(zone.radius) || 0);
+      })) continue;
+      return candidate;
+    }
+    return definition.relaySpot || { x: world.width * 0.5, y: 128 };
+  }
+
+  function createStageRun(definition, difficultyId, difficultyOverride) {
     var world = runWorld(definition);
     var random = U.seededRandom(definition.seed);
-    var obstacleBuild = stageObstacles(definition, random, world);
     var environment = PP.systems.environment.create(definition);
+    var playerStart = definition.playerStart || { x: world.width * 0.5, y: world.height - 150 };
+    var relaySpot = randomRelaySpot(definition, world, playerStart, environment);
+    var rivalAnchor = { x: Math.round(world.width * 0.11), y: Math.round(world.height * 0.153) };
+    var rivalExit = { x: Math.round(world.width * 0.9), y: world.height - 150, radius: 72 };
+    var protectedCircles = [
+      { point: playerStart, radius: PP.data.config.player.radius + 24 },
+      { point: relaySpot, radius: 106 + 24 }
+    ];
+    if (definition.rivalPreset) {
+      protectedCircles.push({ point: rivalAnchor, radius: 64 + 24 });
+      protectedCircles.push({ point: rivalExit, radius: rivalExit.radius + 24 });
+    }
+    var obstacleBuild = stageObstacles(definition, random, world, protectedCircles, environment);
     var walls = obstacleBuild.colliders.concat(environment.passages);
-    var selectedDifficulty = PP.data.config.difficulty.profiles[difficultyId] ? difficultyId : 'normal';
-    var difficultyProfile = PP.data.config.difficulty.profiles[selectedDifficulty];
+    var selectedDifficulty = difficultyOverride ? 'abyss'
+      : (PP.data.config.difficulty.profiles[difficultyId] ? difficultyId : 'normal');
+    var difficultyProfile = difficultyOverride || PP.data.config.difficulty.profiles[selectedDifficulty];
     var patternOffset = definition.corePattern % CORE_SPOTS.length;
-    var patternedSpots = CORE_SPOTS.slice(patternOffset).concat(CORE_SPOTS.slice(0, patternOffset));
+    var normalizedCoreSpots = [
+      { x: 0.16, y: 0.78 }, { x: 0.84, y: 0.62 }, { x: 0.20, y: 0.20 }, { x: 0.78, y: 0.18 },
+      { x: 0.22, y: 0.50 }, { x: 0.76, y: 0.42 }, { x: 0.50, y: 0.28 }, { x: 0.50, y: 0.72 },
+      { x: 0.34, y: 0.88 }, { x: 0.66, y: 0.88 }, { x: 0.10, y: 0.36 }, { x: 0.90, y: 0.34 },
+      { x: 0.12, y: 0.12 }, { x: 0.30, y: 0.12 }, { x: 0.50, y: 0.12 }, { x: 0.70, y: 0.12 }, { x: 0.88, y: 0.12 },
+      { x: 0.12, y: 0.32 }, { x: 0.30, y: 0.32 }, { x: 0.50, y: 0.32 }, { x: 0.70, y: 0.32 }, { x: 0.88, y: 0.32 },
+      { x: 0.12, y: 0.52 }, { x: 0.30, y: 0.52 }, { x: 0.50, y: 0.52 }, { x: 0.70, y: 0.52 }, { x: 0.88, y: 0.52 },
+      { x: 0.12, y: 0.72 }, { x: 0.30, y: 0.72 }, { x: 0.70, y: 0.72 }, { x: 0.88, y: 0.72 },
+      { x: 0.12, y: 0.88 }, { x: 0.50, y: 0.88 }, { x: 0.88, y: 0.88 }
+    ].map(function (spot) {
+      return { x: Math.round(spot.x * world.width), y: Math.round(spot.y * world.height) };
+    });
+    var patternedSpots = normalizedCoreSpots.slice(patternOffset).concat(normalizedCoreSpots.slice(0, patternOffset));
+    var shuffledPatternedSpots = U.shuffle(patternedSpots, random);
     var candidateSpots = definition.fixedCoreSpots && definition.fixedCoreSpots.length
-      ? definition.fixedCoreSpots.slice() : U.shuffle(patternedSpots, random);
-    var spots = candidateSpots.filter(function (spot) {
-      return !walls.some(function (wall) { return U.circleIntersectsObb(spot, 54, wall); });
+      ? definition.fixedCoreSpots.slice().concat(shuffledPatternedSpots) : shuffledPatternedSpots;
+    var spots = [];
+    var minimumCoreSpacing = Number(definition.coreMinimumSpacing) || (world.width * world.height > 1500000 ? 600 : 360);
+    var minimumCoreAnchorDistance = Math.max(0, Number(definition.coreAnchorMinimumDistance) || 0);
+    candidateSpots.forEach(function (spot) {
+      if (spots.length >= definition.coreTotal) return;
+      if (walls.some(function (wall) { return U.circleIntersectsObb(spot, 54, wall); })) return;
+      if (minimumCoreAnchorDistance > 0 && U.distance(spot, playerStart) < minimumCoreAnchorDistance) return;
+      if (minimumCoreAnchorDistance > 0 && U.distance(spot, relaySpot) < minimumCoreAnchorDistance) return;
+      if (spots.some(function (selected) { return U.distance(selected, spot) < minimumCoreSpacing; })) return;
+      spots.push(spot);
     });
     var cores = spots.slice(0, definition.coreTotal).map(function (spot, index) {
       return {
@@ -3796,27 +4214,45 @@
         playerDiscovered: !!definition.startRevealedCores, pickupCooldown: 0
       };
     });
-    var guardianCandidates = definition.fixedGuardianSpots && definition.fixedGuardianSpots.length
-      ? definition.fixedGuardianSpots.slice() : U.shuffle([
-      { x: 140, y: 320 }, { x: 860, y: 300 }, { x: 120, y: 650 }, { x: 880, y: 760 },
-      { x: 130, y: 1000 }, { x: 870, y: 1030 }, { x: 470, y: 690 }, { x: 540, y: 1120 }
-    ], random);
+    var guardianTemplates = [
+      { x: 0.075, y: 0.16 }, { x: 0.50, y: 0.16 }, { x: 0.925, y: 0.16 },
+      { x: 0.075, y: 0.28 }, { x: 0.925, y: 0.28 },
+      { x: 0.075, y: 0.42 }, { x: 0.50, y: 0.42 }, { x: 0.925, y: 0.42 },
+      { x: 0.075, y: 0.54 }, { x: 0.925, y: 0.54 },
+      { x: 0.075, y: 0.64 }, { x: 0.925, y: 0.64 },
+      { x: 0.075, y: 0.76 }, { x: 0.925, y: 0.76 },
+      { x: 0.075, y: 0.86 }, { x: 0.925, y: 0.86 }
+    ].map(function (spot) {
+      return { x: Math.round(spot.x * world.width), y: Math.round(spot.y * world.height) };
+    });
+    var fixedGuardianSpots = definition.fixedGuardianSpots && definition.fixedGuardianSpots.length
+      ? definition.fixedGuardianSpots.slice() : [];
+    var guardianCandidates = fixedGuardianSpots.concat(U.shuffle(guardianTemplates, random));
     var guardianSpots = guardianCandidates.filter(function (spot) {
-      return !walls.some(function (wall) { return U.circleIntersectsObb(spot, 93, wall); });
+      if (walls.some(function (wall) { return U.circleIntersectsObb(spot, 93, wall); })) return false;
+      if (definition.guardianCount >= 6 && U.distance(spot, playerStart) < 570) return false;
+      return true;
     });
     var guardians = [];
+    var chorusIndex = 0;
     for (var i = 0; i < definition.guardianCount; i += 1) {
       if (!guardianSpots[i]) break;
       var guardian = new PP.entities.Guardian(i + 1, guardianSpots[i].x, guardianSpots[i].y, definition.guardianTypes[i], random() * 6);
+      var encounterSectorCount = selectedDifficulty === 'abyss'
+        ? Math.max(1, Math.ceil(definition.guardianCount / 3)) : 3;
+      guardian.encounterSector = 'sector-' + (i % encounterSectorCount + 1);
+      if (guardian.type === 'chorus') {
+        guardian.chorusAttackOffset = chorusIndex * 0.4;
+        guardian.chorusCooldown += guardian.chorusAttackOffset;
+        chorusIndex += 1;
+      }
       guardian.baseSpeed = guardian.speed;
       guardian.baseDamage = guardian.damage;
       guardian.speed *= difficultyProfile.enemySpeedMultiplier;
       guardian.damage *= difficultyProfile.enemyDamageMultiplier;
       guardians.push(guardian);
     }
-    var rival = definition.rivalPreset ? new PP.entities.Rival(110, 230, definition.rivalPreset) : null;
-    var playerStart = definition.playerStart || { x: 500, y: 1350 };
-    var relaySpot = definition.relaySpot || { x: 500, y: 128 };
+    var rival = definition.rivalPreset ? new PP.entities.Rival(rivalAnchor.x, rivalAnchor.y, definition.rivalPreset) : null;
     var run = {
       runToken: 'run-' + definition.id + '-' + runSequence++,
       definition: definition,
@@ -3832,8 +4268,8 @@
         radius: 106,
         discovered: definition.relayHiddenUntilDiscovered !== true
       },
-      rivalExit: { x: 900, y: 1350, radius: 72 },
-      rivalAnchor: { x: 110, y: 230 },
+      rivalExit: rivalExit,
+      rivalAnchor: rivalAnchor,
       walls: walls,
       movementObstacles: [],
       projectileObstacles: [],
@@ -3858,6 +4294,7 @@
       projectiles: [],
       nextProjectileId: 1,
       sonar: new PP.systems.SonarSystem(),
+      lastChorusAttackAt: -Infinity,
       elapsed: 0,
       sonarsUsed: 0,
       hits: 0,
@@ -4056,12 +4493,13 @@
       if (!decoration.decorationOnly || run.walls.indexOf(decoration) >= 0) errors.push('decorationOnly collider 혼입: ' + decoration.id);
     });
     var area = run.walls.filter(function (wall) { return !wall.environmentKind; }).reduce(function (sum, wall) { return sum + wall.width * wall.height; }, 0);
-    var budget = {
-      sparse: [9000, 90000],
-      standard: [40000, 120000],
-      dense: [60000, 180000]
-    }[run.definition.obstacleDensity];
-    if (run.definition.id > 2 && budget && (area < budget[0] || area > budget[1])) errors.push('density OBB 면적 예산 오류: ' + area);
+    var obstacleBand = run.definition.obstacleBand;
+    if (obstacleBand) {
+      if (run.obstacleGroups.length < obstacleBand.minimumCount || run.obstacleGroups.length > obstacleBand.maximumCount) {
+        errors.push('v3 장애물 수 밴드 오류: ' + run.obstacleGroups.length + '/' + obstacleBand.token);
+      }
+      if (area / (run.world.width * run.world.height) > 0.055) errors.push('v3 장애물 면적률 상한 초과: ' + area);
+    }
     if (run.definition.id <= 2 && area !== 0) errors.push('S00 온보딩 collider는 0개여야 합니다.');
     var protectedCircles = [
       { id: 'player-start', point: run.player, radius: run.player.radius + 24 },
@@ -4170,29 +4608,8 @@
     stages.forEach(function (definition) {
       var contract = contracts[definition.id];
       if (!contract) {
-        if (definition.world || definition.playerStart || definition.relaySpot
-          || definition.relayHiddenUntilDiscovered
-          || Object.prototype.hasOwnProperty.call(definition, 'fixedObstacleGroups')) {
-          errors.push('비대상 stage 공간 override 금지: ' + definition.id);
-        }
-        var legacyRun = createStageRun(definition);
-        if (legacyRun.world.width !== PP.data.config.world.width || legacyRun.world.height !== PP.data.config.world.height
-          || legacyRun.player.x !== 500 || legacyRun.player.y !== 1350
-          || legacyRun.relay.x !== 500 || legacyRun.relay.y !== 128 || !relayDiscovered(legacyRun)) {
-          errors.push('비대상 stage fallback 변경: ' + definition.id);
-        }
-        if ([1, 4, 9].indexOf(definition.id) >= 0
-          && (definition.fixedCoreSpots || definition.fixedGuardianSpots)) {
-          errors.push('M4.28 파일럿 고정 spawn 원복 실패: ' + definition.id);
-        }
-        if (definition.id === 9) {
-          var restoredPassage = definition.environment.filter(function (entry) { return entry.type === 'variablePassage'; })[0];
-          var restoredContract = restoredPassage && [restoredPassage.x, restoredPassage.y, restoredPassage.width,
-            restoredPassage.height, restoredPassage.rotationDegrees || 0, restoredPassage.period, restoredPassage.openSeconds];
-          if (JSON.stringify(restoredContract) !== JSON.stringify([500, 760, 420, 72, 0, 4.2, 2.1])) {
-            errors.push('STAGE 9 variablePassage 원복 실패');
-          }
-        }
+        var v3Run = createStageRun(definition);
+        if (spatialFingerprint(v3Run) !== spatialFingerprint(createStageRun(definition))) errors.push('v3 공간 재현 실패: ' + definition.id);
         return;
       }
       var run = createStageRun(definition);
@@ -4205,7 +4622,7 @@
       if (run.cores.length !== contract.cores.length || run.cores.some(function (core, index) { return !samePoint(core, contract.cores[index]); })) {
         errors.push('파일럿 core 좌표 오류: ' + definition.id);
       }
-      if (run.guardians.length !== contract.guardians.length || run.guardians.some(function (guardian, index) { return !samePoint(guardian, contract.guardians[index]); })) {
+      if (run.guardians.length !== definition.guardianCount || contract.guardians.some(function (point, index) { return !samePoint(run.guardians[index], point); })) {
         errors.push('파일럿 guardian 좌표 오류: ' + definition.id);
       }
       var obstacleContract = (definition.fixedObstacleGroups || []).map(function (group) {
@@ -4302,6 +4719,54 @@
     }
     if (stageId === 2 && (run.cores.length !== 3 || run.definition.requiredCores !== 3)) {
       errors.push('STAGE 2 3코어 계약 오류');
+    }
+    return errors;
+  }
+  function v3PlacementErrors(run) {
+    var definition = run.definition;
+    if (definition.schemaVersion !== 3 || definition.contentVersion !== '100-stage-v3') return [];
+    var errors = [];
+    if (!Array.isArray(definition.mapDimensions)
+      || definition.mapDimensions[0] !== run.world.width || definition.mapDimensions[1] !== run.world.height) errors.push('v3 mapDimensions 불일치');
+    if (definition.guardianCounts !== definition.guardianCount || definition.guardianCount > 8) errors.push('v3 guardianCounts 불일치/상한 초과');
+    if (!Array.isArray(definition.proposedMechanics) || definition.proposedMechanics.length !== definition.environment.length) errors.push('v3 proposedMechanics 불일치');
+    if (definition.hiddenRelay !== definition.relayHiddenUntilDiscovered || relayDiscovered(run) === definition.hiddenRelay) errors.push('v3 hiddenRelay 불일치');
+    if (!definition.obstacleBands || definition.obstacleBands.token !== definition.obstacleBand.token) errors.push('v3 obstacleBands 불일치');
+    for (var first = 0; first < run.cores.length; first += 1) {
+      if (definition.coreAnchorMinimumDistance > 0
+        && U.distance(run.cores[first], run.player) < definition.coreAnchorMinimumDistance) {
+        errors.push('v3 코어-시작 위치 최소 거리 미달');
+      }
+      if (definition.coreAnchorMinimumDistance > 0
+        && U.distance(run.cores[first], run.relay) < definition.coreAnchorMinimumDistance) {
+        errors.push('v3 코어-중계문 최소 거리 미달');
+      }
+      for (var second = first + 1; second < run.cores.length; second += 1) {
+        if (U.distance(run.cores[first], run.cores[second]) < definition.coreMinimumSpacing) errors.push('v3 코어 최소 간격 미달');
+      }
+    }
+    if (definition.guardianCount >= 6) {
+      var unsafe = run.guardians.filter(function (guardian) { return U.distance(guardian, run.player) < 570; });
+      if (unsafe.length) errors.push('v3 시작 안전구역 570 침범');
+      var viewportWidth = Math.min(1000, run.world.width);
+      var viewportHeight = Math.min(1500, run.world.height);
+      var centerX = U.clamp(run.player.x, viewportWidth / 2, run.world.width - viewportWidth / 2);
+      var centerY = U.clamp(run.player.y, viewportHeight / 2, run.world.height - viewportHeight / 2);
+      var visible = run.guardians.filter(function (guardian) {
+        return guardian.x >= centerX - viewportWidth / 2 && guardian.x <= centerX + viewportWidth / 2
+          && guardian.y >= centerY - viewportHeight / 2 && guardian.y <= centerY + viewportHeight / 2;
+      });
+      if (visible.length > 2) errors.push('v3 시작 viewport 수호자 2기 초과');
+      if (visible.filter(function (guardian) { return guardian.type === 'hound'; }).length > 1) errors.push('v3 시작 viewport 사냥개 1기 초과');
+      var sectorCounts = {};
+      run.guardians.forEach(function (guardian) { sectorCounts[guardian.encounterSector] = (sectorCounts[guardian.encounterSector] || 0) + 1; });
+      if (Object.keys(sectorCounts).length < 3) errors.push('v3 encounter sector 3개 미달');
+      Object.keys(sectorCounts).forEach(function (sector) { if (sectorCounts[sector] > 3) errors.push('v3 encounter sector 3기 초과: ' + sector); });
+    }
+    var chorusOffsets = run.guardians.filter(function (guardian) { return guardian.type === 'chorus'; })
+      .map(function (guardian) { return guardian.chorusAttackOffset; }).sort(function (a, b) { return a - b; });
+    for (var chorusIndex = 1; chorusIndex < chorusOffsets.length; chorusIndex += 1) {
+      if (chorusOffsets[chorusIndex] - chorusOffsets[chorusIndex - 1] < 0.4 - 0.0001) errors.push('v3 합창 시작 시차 0.4초 미달');
     }
     return errors;
   }
@@ -4484,6 +4949,7 @@
       errors = errors.concat(obstacleRunErrors(run).map(function (message) { return stage.id + ': ' + message; }));
       errors = errors.concat(stageThreeShieldErrors(run).map(function (message) { return stage.id + ': ' + message; }));
       errors = errors.concat(earlyLearningErrors(run).map(function (message) { return stage.id + ': ' + message; }));
+      errors = errors.concat(v3PlacementErrors(run).map(function (message) { return stage.id + ': ' + message; }));
       errors = errors.concat(coreInvariantErrors(run).map(function (message) { return stage.id + ': ' + message; }));
       var expectedEarlyEnvironmentCount = 1;
       if (stage.id >= 5 && stage.id <= 9 && (!stage.environment || stage.environment.length !== expectedEarlyEnvironmentCount)) {
@@ -4496,7 +4962,7 @@
     if (Object.keys(intents).length !== campaign.stageCount) errors.push('100개 스테이지 설계 의도는 서로 달라야 합니다.');
     if (Object.keys(layouts).length < 30) errors.push('맵 프리셋 다양성이 부족합니다.');
     if (rivals.join(',') !== campaign.rivalStageIds.join(',')) errors.push('라이벌 조우 목록이 기획과 다릅니다.');
-    if (currentBandStages.join(',') !== '8,10,41,48,53,76') errors.push('구역 해류 배치 목록이 기획과 다릅니다.');
+    if (currentBandStages.join(',') !== '8,10,41,48,53,76,83,87,90,93,95,99,100') errors.push('구역 해류 배치 목록이 기획과 다릅니다.');
     var onboarding = stages.slice(0, 4).map(function (stage) { return stage.designIntent; }).join('|');
     if (onboarding.indexOf('이동') < 0 || onboarding.indexOf('소나') < 0 || onboarding.indexOf('코어') < 0 || onboarding.indexOf('문지기') < 0) errors.push('1~4 온보딩 순서가 기획과 다릅니다.');
     return errors;
@@ -4504,83 +4970,162 @@
 
   function createAbyssDefinition(seed, segmentIndex) {
     var abyss = PP.data.config.abyss;
-    var tier = Math.min(abyss.maxDifficultyTier, Math.floor(segmentIndex / abyss.difficultyStepSegments));
-    var roster = ['pin'];
-    if (tier >= 2) roster.push('hound');
-    if (tier >= 5) roster.push('chorus');
-    var guardianCount = Math.min(3, 1 + Math.floor(tier / 3));
+    var maximumTemplateId = Math.min(
+      PP.data.config.campaign.stageCount,
+      abyss.templateUnlockStartStage + segmentIndex * abyss.templateUnlockPerSegment
+    );
+    var templateIds = [];
+    for (var stageId = 1; stageId <= maximumTemplateId; stageId += 1) {
+      if (abyss.excludedTemplateStageIds.indexOf(stageId) < 0) templateIds.push(stageId);
+    }
+    var templateId = templateIds[(Number(seed) + segmentIndex * 37) % templateIds.length];
+    var template = PP.data.stages[templateId - 1];
+    var world = runWorld(template);
+    var area = world.width * world.height;
+    var guardianCap = area <= 1500000 ? abyss.guardianCaps.small
+      : (area <= 3000000 ? abyss.guardianCaps.medium : abyss.guardianCaps.large);
+    var guardianCount = U.clamp(
+      Math.max(abyss.guardianMinimum, template.guardianCount + Math.floor(segmentIndex / abyss.guardianGrowthSegments)),
+      abyss.guardianMinimum,
+      guardianCap
+    );
+    var roster = segmentIndex < 5 ? ['pin'] : (segmentIndex < 15 ? ['pin', 'hound'] : ['pin', 'hound', 'chorus']);
     var guardianTypes = [];
-    for (var i = 0; i < guardianCount; i += 1) guardianTypes.push(roster[(segmentIndex + i) % roster.length]);
+    var chorusCount = 0;
+    for (var i = 0; i < guardianCount; i += 1) {
+      var type = roster[(templateId + segmentIndex + i) % roster.length];
+      if (type === 'chorus' && chorusCount >= 2) type = i % 2 ? 'hound' : 'pin';
+      if (type === 'chorus') chorusCount += 1;
+      guardianTypes.push(type);
+    }
     var rivalPreset = segmentIndex >= 4 && segmentIndex % 5 === 4 ? (segmentIndex % 10 === 4 ? 'probe' : 'carrier') : null;
-    var patternPool = tier < 3
-      ? ['S01', 'S02', 'S03', 'S04', 'S05', 'S06']
-      : (tier < 6
-        ? ['N01', 'N02', 'N03', 'N04', 'N05', 'N06', 'N07', 'N08']
-        : ['D01', 'D02', 'D03', 'D04', 'D05', 'D06']);
-    var obstaclePatternId = patternPool[segmentIndex % patternPool.length];
-    var obstaclePattern = PP.data.obstacles.patterns[obstaclePatternId];
-    var obstacleTransforms = ['I', 'MX', 'MY', 'MXY'];
-    var obstacleVariants = ['V0', 'V1', 'V2', 'V3'];
+    var definition = {};
+    Object.keys(template).forEach(function (key) { definition[key] = template[key]; });
+    definition.schemaVersion = 3;
+    definition.contentVersion = abyss.contentVersion;
+    definition.id = 'A' + (segmentIndex + 1);
+    definition.templateStageId = templateId;
+    definition.zoneName = '무저갱';
+    definition.orderInZone = segmentIndex + 1;
+    definition.title = '무저갱 구획 ' + (segmentIndex + 1);
+    definition.designIntent = '고정 지형·시드형 코어 및 수호자 배치';
+    definition.unlockAfterStageId = PP.data.config.campaign.stageCount;
+    definition.seed = (Number(seed) + Math.imul(segmentIndex + 1, 2654435761)) >>> 0;
+    definition.seedPolicy = 'fixed';
+    definition.difficultyTier = segmentIndex + 1;
+    definition.corePattern = (template.corePattern + segmentIndex * 5) % 8;
+    definition.guardianCount = guardianCount;
+    definition.guardianCounts = guardianCount;
+    definition.guardianTypes = guardianTypes;
+    definition.rivalPreset = rivalPreset;
+    definition.rivalBulletSpeed = PP.data.config.rival.projectileSpeed;
+    definition.onboardingStageId = 0;
+    definition.world = { width: world.width, height: world.height };
+    definition.playerStart = { x: template.playerStart.x, y: template.playerStart.y };
+    definition.relaySpot = { x: template.relaySpot.x, y: template.relaySpot.y };
+    definition.randomRelay = true;
+    definition.environment = (template.environment || []).map(function (entry) {
+      var cloned = {};
+      Object.keys(entry).forEach(function (key) { cloned[key] = entry[key]; });
+      return cloned;
+    });
+    if (template.fixedObstacleGroups) {
+      definition.fixedObstacleGroups = template.fixedObstacleGroups.map(function (group) {
+        var cloned = {};
+        Object.keys(group).forEach(function (key) { cloned[key] = group[key]; });
+        return cloned;
+      });
+    }
+    delete definition.fixedCoreSpots;
+    delete definition.fixedGuardianSpots;
+    return Object.freeze(definition);
+  }
+  function abyssDifficultyProfile(segmentIndex) {
+    var abyss = PP.data.config.abyss;
+    var segment = Math.max(1, Math.floor(segmentIndex) + 1);
+    var anchors = abyss.difficultyAnchors;
+    var lower = anchors[0];
+    var upper = anchors[anchors.length - 1];
+    for (var index = 1; index < anchors.length; index += 1) {
+      if (segment <= anchors[index].segment) {
+        lower = anchors[index - 1];
+        upper = anchors[index];
+        break;
+      }
+      lower = anchors[index - 1];
+      upper = anchors[index];
+    }
+    var span = Math.max(1, upper.segment - lower.segment);
+    var ratio = (segment - lower.segment) / span;
+    function interpolate(key) { return lower[key] + (upper[key] - lower[key]) * ratio; }
     return Object.freeze({
-      schemaVersion: 2,
-      contentVersion: 'abyss-v1',
-      id: 'A' + (segmentIndex + 1),
-      zoneId: 'abyss',
-      zoneName: '무저갱',
-      orderInZone: segmentIndex + 1,
-      title: '무저갱 구획 ' + (segmentIndex + 1),
-      designIntent: '시드형 연속 구획',
-      unlockAfterStageId: 100,
-      mapPreset: 'abyss-layout-' + ((segmentIndex * 3 + tier) % 7 + 1),
-      layoutVariant: (segmentIndex * 3 + tier) % 7,
-      obstaclePatternId: obstaclePatternId,
-      obstacleDensity: obstaclePattern.density,
-      obstacleTransform: obstacleTransforms[segmentIndex % obstacleTransforms.length],
-      obstacleVariant: obstacleVariants[(segmentIndex + tier) % obstacleVariants.length],
-      obstacleDesignIntent: 'abyss-tier-' + tier,
-      corePattern: (segmentIndex * 5 + tier) % 8,
-      seed: (Number(seed) + Math.imul(segmentIndex + 1, 2654435761)) >>> 0,
-      seedPolicy: 'fixed',
-      difficultyTier: tier,
-      timeLimit: Math.max(92, 128 - tier * 3),
-      coreTotal: 3,
-      requiredCores: 3,
-      startRevealedCores: false,
-      guardianCount: guardianCount,
-      guardianTypes: guardianTypes,
-      obstacleCount: obstaclePattern.groups.length,
-      currentStrength: Math.min(52, 10 + tier * 4),
-      currentPhase: (segmentIndex * 71 % 360) * Math.PI / 180,
-      sonarCost: Math.min(36, 28 + Math.floor(tier / 2)),
-      sonarRechargePerSecond: Math.max(8, 13 - Math.floor(tier / 2)),
-      rivalPreset: rivalPreset,
-      rivalBulletSpeed: PP.data.config.rival.projectileSpeed,
-      environment: []
+      id: 'abyss',
+      powerDrainMultiplier: interpolate('powerDrainMultiplier'),
+      enemyDamageMultiplier: interpolate('enemyDamageMultiplier'),
+      enemySpeedMultiplier: Math.min(abyss.speedCap, interpolate('enemySpeedMultiplier')),
+      thermalDamageMultiplier: interpolate('thermalDamageMultiplier'),
+      rewardProfile: 'campaign-normal-v1'
     });
   }
-  function createAbyssRun(seed, segmentIndex, totalScore, previousPlayer) {
-    var run = createStageRun(createAbyssDefinition(seed, segmentIndex), 'normal');
+  function createAbyssRun(seed, segmentIndex, previousAbyss, previousPlayer) {
+    var difficultyProfile = abyssDifficultyProfile(segmentIndex);
+    var run = createStageRun(createAbyssDefinition(seed, segmentIndex), 'normal', difficultyProfile);
+    var carry = previousAbyss && typeof previousAbyss === 'object' ? previousAbyss : {};
     run.mode = 'abyss';
-    run.abyss = { seed: Number(seed) >>> 0, segmentIndex: segmentIndex, totalScore: totalScore || 0 };
+    run.abyss = {
+      contentVersion: PP.data.config.abyss.contentVersion,
+      seed: Number(seed) >>> 0,
+      segmentIndex: segmentIndex,
+      directCores: Math.max(0, Math.floor(Number(carry.directCores) || 0)),
+      activeSeconds: Math.max(0, Number(carry.activeSeconds) || 0)
+    };
     if (previousPlayer) {
-      run.player.power = previousPlayer.power;
-      run.player.sonarCharge = previousPlayer.sonarCharge;
+      run.player.power = Math.min(PP.data.config.player.maxPower,
+        previousPlayer.power + PP.data.config.abyss.powerRecoveryPercentagePoints);
+      run.player.sonarCharge = PP.data.config.sonar.maxCharge;
     }
     return run;
   }
+  function calculateAbyssScore(abyssState, currentElapsed, currentCoreTotal) {
+    var rules = PP.data.config.abyss.score;
+    var completed = Math.max(0, Math.floor(Number(abyssState.segmentIndex) || 0));
+    var directCores = Math.max(0, Math.floor(Number(abyssState.directCores) || 0));
+    var totalCores = completed * PP.data.config.coreRules.required + Math.max(0, Math.floor(Number(currentCoreTotal) || 0));
+    var activeSeconds = Math.max(0, Number(abyssState.activeSeconds) || 0) + Math.max(0, Number(currentElapsed) || 0);
+    return {
+      completedSegments: completed,
+      directCores: directCores,
+      totalCores: totalCores,
+      activeSeconds: activeSeconds,
+      score: completed * rules.segmentBase
+        + directCores * rules.directCoreUnit
+        + Math.min(Math.floor(activeSeconds), rules.survivalSecondsCap) * rules.survivalSecondUnit
+    };
+  }
   function validateAbyss() {
     var errors = [];
-    var seed = PP.data.config.abyss.baseSeed;
+    var seed = PP.data.config.abyss.validationSeed;
     var first = createAbyssDefinition(seed, 7);
     var repeated = createAbyssDefinition(seed, 7);
     if (JSON.stringify(first) !== JSON.stringify(repeated)) errors.push('무저갱 동일 시드 재현 실패');
-    var capped = createAbyssDefinition(seed, 999);
-    if (capped.difficultyTier !== PP.data.config.abyss.maxDifficultyTier) errors.push('무저갱 난이도 상한 실패');
-    var run = createAbyssRun(seed, 0, 0, null);
+    if (PP.data.config.abyss.excludedTemplateStageIds.indexOf(first.templateStageId) >= 0) errors.push('무저갱 튜토리얼 지형 제외 실패');
+    var lateProfile = abyssDifficultyProfile(999);
+    if (lateProfile.enemySpeedMultiplier > PP.data.config.abyss.speedCap) errors.push('무저갱 수호자 속도 상한 실패');
+    var run = createAbyssRun(seed, 0, null, null);
     errors = errors.concat(worldBoundaryErrors(run).map(function (message) { return '무저갱: ' + message; }));
     if (coreInvariantErrors(run).length) errors.push('무저갱 코어 불변식 실패');
     errors = errors.concat(obstacleRunErrors(run));
     if (!canReach(run, run.relay) || run.cores.some(function (core) { return !canReach(run, core); })) errors.push('무저갱 첫 구획 도달성 실패');
+    [24, 50, 75, 100, 150].forEach(function (segmentIndex) {
+      var sample = createAbyssRun(seed, segmentIndex, null, null);
+      if (sample.guardians.length !== sample.definition.guardianCount) {
+        errors.push('무저갱 A' + (segmentIndex + 1) + ' 수호자 배치 수 불일치');
+      }
+      if (coreInvariantErrors(sample).length) errors.push('무저갱 A' + (segmentIndex + 1) + ' 코어 불변식 실패');
+      if (!canReach(sample, sample.relay) || sample.cores.some(function (core) { return !canReach(sample, core); })) {
+        errors.push('무저갱 A' + (segmentIndex + 1) + ' 도달성 실패');
+      }
+    });
     return errors;
   }
 
@@ -4611,6 +5156,9 @@
   PP.systems.validateCampaign = validateCampaign;
   PP.systems.createAbyssDefinition = createAbyssDefinition;
   PP.systems.createAbyssRun = createAbyssRun;
+  PP.systems.createAbyssRunSeed = createAbyssRunSeed;
+  PP.systems.abyssDifficultyProfile = abyssDifficultyProfile;
+  PP.systems.calculateAbyssScore = calculateAbyssScore;
   PP.systems.validateAbyss = validateAbyss;
 })(window.PingPanic);
 
@@ -4980,12 +5528,18 @@
 
     var normalClears = 0;
     for (stageId = 1; stageId <= stageCount && isCleared(save.records && save.records[stageId]); stageId += 1) normalClears += 1;
-    var primaryAction = complete && difficultyId === 'normal' ? 'abyss' : 'stage';
-    var primaryStageId = complete && difficultyId !== 'normal' ? stageCount : nextStage;
-    var primaryLabel = complete
-      ? (difficultyId === 'normal' ? PP.core.i18n.t('hub.abyss') : PP.core.i18n.t('hub.difficultyReplay', {
-        difficulty: PP.core.i18n.t('difficulty.' + difficultyId)
-      }))
+    var developmentAbyssUnlocked = !!(
+      developmentEnabled && save && save.developmentUnlocks && save.developmentUnlocks.abyss
+    );
+    var abyssUnlocked = normalClears === stageCount || developmentAbyssUnlocked;
+    var ownedCosmetics = save && Array.isArray(save.ownedCosmetics) ? save.ownedCosmetics : [];
+    var balance = Math.max(0, Math.floor(Number(save && save.resonanceCredits) || 0));
+    var hasAffordableCosmetic = PP.data.config.cosmetics.some(function (item) {
+      return ownedCosmetics.indexOf(item.id) < 0 && balance >= item.price;
+    });
+    var primaryAction = 'stage';
+    var primaryStageId = nextStage;
+    var primaryLabel = complete ? ''
       : (state === 'new' ? PP.core.i18n.t('hub.first') : PP.core.i18n.t('hub.next', { stage: nextStage }));
     return {
       state: state,
@@ -5004,15 +5558,18 @@
       primaryAction: primaryAction,
       primaryStageId: primaryStageId,
       primaryLabel: primaryLabel,
+      showPrimaryAction: !complete,
       difficultyId: difficultyId,
       hardUnlocked: hardUnlocked,
       extremeUnlocked: extremeUnlocked,
       normalClears: normalClears,
       showProgressCard: state !== 'new' || hardUnlocked,
       showStageSelect: state !== 'new' || hardUnlocked,
-      showCosmetics: normalClears > 0,
-        showRemoveAds: normalClears > 0,
-      showAbyssBest: normalClears === stageCount,
+      showCosmetics: normalClears > 0 || !!(save.ownedCosmetics && save.ownedCosmetics.length),
+      hasAffordableCosmetic: hasAffordableCosmetic,
+      showRemoveAds: normalClears > 0,
+      showAbyssEntry: abyssUnlocked,
+      showAbyssBest: abyssUnlocked,
       abyssBestSegment: Math.max(0, Math.floor(Number(abyssBest.segment) || 0)),
       abyssBestScore: Math.max(0, Math.floor(Number(abyssBest.score) || 0)),
       entitlementRemoved: entitlementRemoved,
@@ -5046,10 +5603,52 @@
   ToastStack.prototype.displayText = function (item) {
     return item.message + (item.count > 1 ? ' ×' + item.count : '');
   };
+  ToastStack.prototype.objectTokenKind = function (text) {
+    var normalized = String(text || '').toLowerCase();
+    if (normalized === '공명 코어' || normalized === '코어'
+      || /^resonance cores?$/.test(normalized) || /^cores?$/.test(normalized)) return 'core';
+    if (normalized === '중계문' || /^relays?$/.test(normalized)) return 'relay';
+    if (normalized === '수호자' || /^guardians?$/.test(normalized)) return 'guardian';
+    if (normalized === '라이벌' || /^rivals?$/.test(normalized)) return 'rival';
+    return '';
+  };
+  ToastStack.prototype.tokenizeObjectNames = function (text) {
+    var pattern = /(공명 코어|\bResonance Cores?\b|수호자|\bGuardians?\b|중계문|\bRelays?\b|라이벌|\bRivals?\b|코어|\bCores?\b)/gi;
+    var tokens = [];
+    var lastIndex = 0;
+    var match;
+    while ((match = pattern.exec(text))) {
+      if (match.index > lastIndex) tokens.push({ text: text.slice(lastIndex, match.index), kind: '' });
+      tokens.push({ text: match[0], kind: this.objectTokenKind(match[0]) });
+      lastIndex = match.index + match[0].length;
+    }
+    if (lastIndex < text.length) tokens.push({ text: text.slice(lastIndex), kind: '' });
+    return tokens.length ? tokens : [{ text: text, kind: '' }];
+  };
+  ToastStack.prototype.renderText = function (node, text) {
+    while (node.firstChild) node.removeChild(node.firstChild);
+    this.tokenizeObjectNames(text).forEach(function (token) {
+      var span = this.document.createElement('span');
+      span.className = token.kind ? 'toast-token toast-token--' + token.kind : 'toast-copy';
+      if (token.kind) span.setAttribute('data-toast-object', token.kind);
+      span.textContent = token.text;
+      node.appendChild(span);
+    }, this);
+    node.setAttribute('aria-label', text);
+  };
+  ToastStack.prototype.measureItem = function (item) {
+    if (!item || !item.node || item.leaveTimer !== null) return;
+    var node = item.node;
+    var height = Math.ceil(Math.max(Number(node.offsetHeight || 0), Number(node.scrollHeight || 0)));
+    if (height > 0 && node.style && node.style.setProperty) {
+      node.style.setProperty('--toast-height', height + 'px');
+    }
+  };
   ToastStack.prototype.updateItem = function (item) {
     var text = this.displayText(item);
     if (item.node) {
-      item.node.textContent = text;
+      this.renderText(item.node, text);
+      this.measureItem(item);
       if (this.announcer) this.announcer.textContent = text;
     }
   };
@@ -5113,7 +5712,11 @@
     var self = this;
     if (this.visible.indexOf(item) < 0 || item.leaveTimer !== null) return;
     item.displayTimer = null;
-    if (item.node) { item.node.classList.remove('is-visible'); item.node.classList.add('is-leaving'); }
+    if (item.node) {
+      this.measureItem(item);
+      item.node.classList.remove('is-visible');
+      item.node.classList.add('is-leaving');
+    }
     item.leaveTimer = this.schedule(function () { self.removeVisible(item); }, this.leaveMilliseconds);
   };
   ToastStack.prototype.removeVisible = function (item) {
@@ -5151,8 +5754,9 @@
       '      <div class="hub-art-spacer" aria-hidden="true"><div class="title-orbit"><i></i><i></i><i></i></div></div>',
       '      <div class="hub-actions" data-role="hub-actions">',
       '        <section class="hub-progress hub-progress-card" data-role="hub-progress" aria-label="캠페인 진행" hidden><div><p class="hub-progress-label" data-role="hub-progress-kicker">NEXT DIVE</p><strong class="hub-progress-value" data-role="hub-progress-value">0 / 100</strong></div><p class="hub-progress-meta" data-role="hub-progress-meta">침강 중계기지 · STAGE 1</p><p class="hub-progress-stars" data-role="hub-progress-stars">★ 0</p><div class="hub-progress-track" aria-hidden="true"><i data-role="hub-progress-fill"></i></div><p class="hub-abyss-best hub-abyss-state" data-role="hub-abyss-best" hidden>최고 구획 0 · 0점</p></section>',
-      '        <div class="hub-difficulty" data-role="hub-difficulty" hidden><button data-action="difficulty-normal" aria-pressed="true">노말</button><button data-action="difficulty-hard" aria-pressed="false">하드</button><button data-action="difficulty-extreme" aria-pressed="false">익스트림</button></div>',
+      '        <div class="hub-difficulty" data-role="hub-difficulty" hidden><button data-action="difficulty-normal" aria-pressed="true">노멀</button><button data-action="difficulty-hard" aria-pressed="false">하드</button><button data-action="difficulty-extreme" aria-pressed="false">익스트림</button></div>',
       '        <button class="primary hub-primary hub-primary-cta" data-action="hub-primary">첫 잠수 시작</button>',
+      '        <button class="hub-abyss-entry" data-action="abyss" hidden>무저갱 시작</button>',
       '        <div class="hub-secondary hub-secondary-grid" data-role="hub-secondary" hidden><button class="hub-stage-select" data-action="stage-select" hidden>해역 선택</button><button class="hub-cosmetics" data-action="cosmetics" hidden>외형</button></div>',
       '        <button class="hub-product hub-remove-ads" data-action="remove-ads-product" data-entitled="false" hidden>강제 광고 제거권</button>',
       '      </div>',
@@ -5164,26 +5768,28 @@
       '  </section>',
       '  <section class="screen game-screen" data-screen="game" data-role="game-screen">',
       '    <canvas data-role="canvas" width="1000" height="1500" aria-label="심해 회수 구역"></canvas>',
-      '    <div class="hud"><div class="hud-line"><button class="pause-control" data-action="pause" aria-label="일시정지"><span class="pause-icon" aria-hidden="true"></span></button><strong data-role="stage-label">1</strong><span><i data-i18n="hud.core">코어</i> <b data-role="core-label">0 / 3</b></span></div><div class="hud-badges"><div class="rival-broadcast" data-role="rival-broadcast" hidden>라이벌 · 탐색</div><div class="boosted-sonar-badge" data-role="boosted-sonar-hud" data-i18n="hud.boosted" hidden>이번 도전 · 모든 소나 증폭</div></div><div class="power-track" data-role="power-track" aria-label="잔여 동력"><i data-role="power-bar"></i><span class="power-threshold" aria-hidden="true"></span></div></div>',
-      '    <div class="game-controls" data-role="game-controls" data-sonar-hand="right"><div class="movement-guide" data-role="movement-guide"><b>DRAG</b><span data-i18n="hud.drag">끌어서 이동</span></div><div class="sonar-track"><i data-role="sonar-bar"></i></div><button class="sonar-button" data-role="sonar-button" data-action="sonar">SONAR<span>TAP</span></button><small data-i18n="hud.move">플레이 화면을 끌어 이동</small></div>',
-      '    <div class="pause-panel" data-role="pause-panel" hidden><div><h2 data-role="pause-title">일시정지</h2><p data-role="pause-copy">신호와 시간도 멈췄습니다.</p><button class="primary" data-action="resume">계속하기</button><button data-action="pause-restart">다시하기</button><button class="sound-toggle pause-sound-toggle" data-role="pause-sound" data-action="pause-sound" aria-label="소리 끄기" aria-pressed="true" title="소리 끄기">' + soundIcon + '<span class="visually-hidden" data-role="pause-sound-label">소리 끄기</span></button><fieldset class="hand-settings"><legend data-role="pause-hand-legend">소나 버튼 위치</legend><div><button data-action="pause-hand-left" aria-pressed="false">왼쪽</button><button data-action="pause-hand-right" aria-pressed="true">오른쪽</button></div></fieldset><button data-action="abyss-end" hidden>무저갱 종료</button><button data-action="quit">해역으로</button></div></div>',
+      '    <div class="hud"><div class="hud-line"><button class="pause-control" data-action="pause" aria-label="일시정지"><span class="pause-icon" aria-hidden="true"></span></button><strong data-role="stage-label">1</strong><span><i data-i18n="hud.core">코어</i> <b data-role="core-label">0 / 3</b></span></div><div class="hud-badges"><div class="rival-broadcast" data-role="rival-broadcast" hidden>라이벌 · 탐색</div><div class="sonar-mode-badge" data-role="boosted-sonar-hud" hidden>이번 잠수 · 증폭 소나 장비</div></div><div class="power-track" data-role="power-track" aria-label="잔여 동력"><i data-role="power-bar"></i><span class="power-threshold" aria-hidden="true"></span></div></div>',
+      '    <div class="game-controls" data-role="game-controls" data-sonar-hand="right"><div class="movement-guide" data-role="movement-guide"><b>DRAG</b><span data-i18n="hud.drag">이동 영역</span></div><div class="sonar-track"><i data-role="sonar-bar"></i></div><button class="sonar-button" data-role="sonar-button" data-action="sonar">SONAR<span>TAP</span></button><small data-i18n="hud.move">이 영역이나 플레이 화면을 끌어 이동</small></div>',
+      '    <div class="pause-panel" data-role="pause-panel" hidden><div><h2 data-role="pause-title">일시정지</h2><p data-role="pause-copy">탐사와 모든 신호가 일시 정지되었습니다.</p><button class="primary" data-action="resume">계속하기</button><button data-action="pause-restart">다시 하기</button><button class="sound-toggle pause-sound-toggle" data-role="pause-sound" data-action="pause-sound" aria-label="소리 끄기" aria-pressed="true" title="소리 끄기">' + soundIcon + '<span class="visually-hidden" data-role="pause-sound-label">소리 끄기</span></button><fieldset class="hand-settings"><legend data-role="pause-hand-legend">소나 버튼 위치</legend><div><button data-action="pause-hand-left" aria-pressed="false">왼쪽</button><button data-action="pause-hand-right" aria-pressed="true">오른쪽</button></div></fieldset><button data-action="abyss-end" hidden>무저갱 종료</button><button data-action="quit">해역으로</button><button data-action="pause-main">메인 화면</button></div></div>',
       '  </section>',
       '  <section class="screen ending-screen" data-screen="ending"><div class="ending-card"><img data-role="ending-seal" alt=""><p class="eyebrow">CAMPAIGN COMPLETE</p><h2 data-role="ending-title">중계망 완전 복구</h2><p data-role="ending-copy">100개의 신호가 다시 이어졌습니다.</p><div class="menu-stack"><button class="primary" data-role="ending-next" data-action="ending-next">다음 난이도 시작</button><button data-action="ending-result">결과 확인</button><button data-action="ending-main">메인으로</button></div></div></section>',
       '  <section class="screen result-screen" data-screen="result">',
       '    <div class="result-scroll"><div class="result-mark" data-role="result-mark">◇</div><p class="eyebrow" data-role="result-zone"></p><h2 data-role="result-title">회수 완료</h2><p data-role="result-message"></p>',
-      '    <div class="result-stars" data-role="result-stars" aria-label="획득 0/3"><span class="star-unearned">★</span><span class="star-unearned">★</span><span class="star-unearned">★</span></div><div class="result-stats"><div><i class="credit-icon" aria-hidden="true"></i><span data-i18n="result.credits">이번 크레딧</span><strong data-role="result-credits">0</strong></div></div>',
-      '    <div class="menu-stack result-actions"><button class="primary" data-action="next">다음 스테이지</button><button data-action="retry">다시 하기</button><button data-action="emergency-reward">광고 보고 긴급 동력 복구</button><button data-action="credit-double">광고 보고 이번 보상 2배</button><button data-action="result-select">해역 선택</button></div></div>',
+      '    <div class="result-campaign-summary" data-role="result-campaign-summary"><div class="result-stars" data-role="result-stars" aria-label="획득 0/3"><span class="star-unearned">★</span><span class="star-unearned">★</span><span class="star-unearned">★</span></div><div class="result-stats"><div><i class="credit-icon" aria-hidden="true"></i><span data-i18n="result.credits">이번 크레딧</span><strong data-role="result-credits">0</strong></div></div></div>',
+      '    <div class="abyss-result-summary" data-role="result-abyss-summary" hidden><div><span data-i18n="result.abyssSegments">돌파 구획</span><strong data-role="result-abyss-segments">0 구획</strong></div><div><span data-i18n="result.abyssCores">회수량</span><strong data-role="result-abyss-cores">0개</strong></div><div><span data-i18n="result.abyssSurvival">생존 시간</span><strong data-role="result-abyss-survival">00:00</strong></div><div class="abyss-score"><span data-i18n="result.abyssScore">총점</span><strong data-role="result-abyss-score">0</strong></div></div>',
+      '    <div class="menu-stack result-actions"><button class="primary" data-action="next">다음 스테이지</button><button data-action="retry">다시 하기</button><button data-action="emergency-reward">광고 보고 긴급 동력 복구</button><button data-action="credit-double">광고 보고 이번 보상 2배</button><button data-action="result-select">해역 선택</button><button class="primary" data-action="result-main" hidden>메인 화면</button></div></div>',
       '  </section>',
-      '  <div class="ad-overlay" data-role="ad-overlay" hidden><div><p class="eyebrow">ADVERTISEMENT</p><h2 data-i18n="ad.title">광고 출력 예정</h2><p data-role="ad-copy" data-i18n="ad.default">실제 SDK 연결 전 UX 확인 화면입니다.</p><button class="primary" data-action="ad-confirm">확인</button></div></div>',
-      '  <div class="modal-panel dive-preparation-panel" data-role="dive-preparation-panel" hidden><div><p class="eyebrow">DIVE PREPARATION</p><h2 data-role="dive-preparation-title">잠수 준비</h2><p class="dive-target" data-role="dive-preparation-target">STAGE 1</p><p data-role="dive-preparation-status">사용할 소나 장비를 선택하세요.</p><div class="menu-stack"><button class="primary" data-action="dive-normal"><span data-i18n="prep.normal">일반 소나 장비</span></button><button class="reward-action" data-action="dive-boosted"><span class="ad-badge" aria-label="광고">AD</span><span data-i18n="prep.boosted">증폭 소나 장비</span></button><button data-action="dive-cancel">취소</button></div></div></div>',
+      '  <div class="ad-overlay" data-role="ad-overlay" hidden><div><p class="eyebrow">ADVERTISEMENT</p><h2 data-i18n="ad.title">광고 출력 예정</h2><p data-role="ad-copy" data-i18n="ad.default">실제 광고 SDK 연동 전 확인용 화면입니다.</p><button class="primary" data-action="ad-confirm">확인</button></div></div>',
+      '  <div class="modal-panel dive-preparation-panel" data-role="dive-preparation-panel" hidden><div><p class="eyebrow">DIVE PREPARATION</p><h2 data-role="dive-preparation-title">잠수 준비</h2><p class="dive-target" data-role="dive-preparation-target">STAGE 1</p><p data-role="dive-preparation-status">사용할 소나 장비를 선택하세요.</p><div class="menu-stack dive-equipment-list"><button class="primary equipment-action" data-action="dive-normal"><span class="equipment-label" data-i18n="prep.normal">일반 소나 장비</span></button><button class="reward-action equipment-action" data-action="dive-boosted"><span class="ad-badge" aria-label="광고">AD</span><span class="equipment-label" data-i18n="prep.boosted">증폭 소나 장비</span></button><button class="reward-action equipment-action" data-action="dive-covert"><span class="ad-badge" aria-label="광고">AD</span><span class="equipment-label" data-i18n="prep.covert">은폐 소나 장비</span></button><button data-action="dive-cancel">취소</button></div></div></div>',
       '  <div class="modal-panel hand-choice-panel" data-role="hand-choice-panel" hidden><div><p class="eyebrow">CONTROL SETUP</p><h2 data-i18n="handChoice.title">소나 버튼 위치</h2><p data-i18n="handChoice.copy">선택한 쪽에 소나 버튼을, 반대쪽에 이동 가이드를 배치합니다. 일시정지에서 언제든 바꿀 수 있습니다.</p><div class="modal-actions"><button data-action="hand-choice-left">왼쪽</button><button class="primary" data-action="hand-choice-right">오른쪽</button></div></div></div>',
       '  <div class="modal-panel settings-panel" data-role="settings-panel" hidden><div><button class="modal-close" data-action="settings-close" data-i18n-aria="settings.close" aria-label="닫기"></button><p class="eyebrow">SETTINGS</p><h2 data-role="settings-title">설정</h2><p class="current-language" data-role="settings-language-current">언어 · 한국어</p><fieldset class="language-settings"><legend data-role="settings-language-legend">언어</legend><div><button data-action="language-ko" aria-pressed="true"><b>가</b><span>한국어</span></button><button data-action="language-en" aria-pressed="false"><b>A</b><span>English</span></button></div></fieldset><fieldset class="hand-settings"><legend data-role="settings-hand-legend">소나 버튼 위치</legend><p data-i18n="settings.handCopy">소나 버튼을 표시할 위치를 선택하세요.</p><div><button data-action="settings-hand-left" aria-pressed="false">왼쪽</button><button data-action="settings-hand-right" aria-pressed="true">오른쪽</button></div></fieldset></div></div>',
       '  <div class="modal-panel onboarding-panel" data-role="onboarding-panel" hidden><div><p class="eyebrow">FIRST DIVE GUIDE</p><h2 data-role="onboarding-title"></h2><p class="onboarding-copy" data-role="onboarding-copy"><i class="guide-inline-icon" data-role="onboarding-icon" aria-hidden="true"></i><span data-role="onboarding-text"></span></p><button class="primary" data-action="onboarding-ack">확인</button></div></div>',
-      '  <div class="modal-panel cosmetics-panel" data-role="cosmetics-panel" hidden><div class="cosmetics-card"><button class="modal-close" data-action="cosmetics-close" data-i18n-aria="common.close" aria-label="닫기"></button><header class="cosmetics-fixed-header"><p class="eyebrow">RESONANCE SKINS</p><h2 data-i18n="cosmetic.title">외형 모듈</h2><div class="credit-wallet"><i class="credit-icon" aria-hidden="true"></i><span data-i18n="cosmetic.wallet">크레딧 지갑</span><strong data-role="cosmetics-balance">0</strong></div><p class="cosmetics-description" data-i18n="cosmetic.copy">모든 외형은 능력 중립입니다.</p></header><div class="cosmetic-list" data-role="cosmetic-list"></div></div></div>',
-      '  <div class="modal-panel purchase-panel" data-role="purchase-panel" hidden><div><p class="eyebrow">PURCHASE CONFIRM</p><h2 data-role="purchase-title">외형 구매</h2><p data-role="purchase-copy"></p><div class="modal-actions"><button data-action="purchase-cancel">취소</button><button class="primary" data-action="purchase-confirm">구매 확인</button></div></div></div>',
+      '  <div class="modal-panel cosmetics-panel" data-role="cosmetics-panel" hidden><div class="cosmetics-card"><button class="modal-close" data-action="cosmetics-close" data-i18n-aria="common.close" aria-label="닫기"></button><header class="cosmetics-fixed-header"><p class="eyebrow">RESONANCE SKINS</p><h2 data-i18n="cosmetic.title">외형 모듈</h2><div class="credit-wallet"><i class="credit-icon" aria-hidden="true"></i><span data-i18n="cosmetic.wallet">크레딧 지갑</span><strong data-role="cosmetics-balance">0</strong></div><p class="cosmetics-description" data-i18n="cosmetic.copy">모든 외형은 능력에 영향을 주지 않습니다. 플레이어 외형 3종에는 각각 전용 BGM이 포함됩니다.</p></header><div class="cosmetic-list" data-role="cosmetic-list"></div></div></div>',
+      '  <div class="modal-panel purchase-panel" data-role="purchase-panel" hidden><div><p class="eyebrow">PURCHASE CONFIRM</p><h2 data-role="purchase-title">외형 구매</h2><div class="credit-wallet purchase-wallet"><i class="credit-icon" aria-hidden="true"></i><span data-i18n="cosmetic.wallet">크레딧 지갑</span><strong data-role="purchase-balance">0</strong></div><div class="purchase-price" data-role="purchase-copy"></div><div class="modal-actions"><button data-action="purchase-cancel">취소</button><button class="primary" data-action="purchase-confirm">구매 확인</button></div></div></div>',
+      '  <div class="modal-panel cosmetic-milestone-panel" data-role="cosmetic-milestone-panel" hidden><div><p class="eyebrow">NEW RESONANCE SKIN</p><h2 data-i18n="cosmetic.milestoneTitle">전용 BGM 외형 구매 가능</h2><div class="credit-wallet"><i class="credit-icon" aria-hidden="true"></i><span data-i18n="cosmetic.wallet">크레딧 지갑</span><strong data-role="cosmetic-milestone-balance">0</strong></div><p data-i18n="cosmetic.milestoneCopy">플레이어 드론 외형에는 각각 전용 BGM이 포함됩니다.</p><div class="modal-actions"><button data-action="cosmetic-milestone-later">나중에</button><button class="primary" data-action="cosmetic-milestone-open">외형 보기</button></div></div></div>',
       '  <div class="modal-panel product-panel" data-role="product-panel" hidden><div class="product-card"><p class="eyebrow">PRODUCT</p><h2 data-role="product-title">강제 광고 제거권</h2><p data-role="product-copy"></p><strong class="product-price" data-role="product-price">결제 연결 예정</strong><p class="product-status" data-role="product-status" aria-live="polite"></p><div class="product-actions"><button data-action="product-close">닫기</button><button data-action="product-restore">구매 복원</button><button class="primary" data-action="product-purchase">구매</button></div></div></div>',
-      '  <div class="modal-panel gm-panel" data-role="gm-panel" hidden><div><p class="eyebrow">DEVELOPMENT ONLY</p><h2>GM 도구</h2><p>스테이지 개방은 실제 연속 진행이나 무저갱 해금으로 처리되지 않습니다.</p><div data-role="gm-tools-host"></div><button data-action="gm-stage-select">열린 해역 테스트</button><button data-action="gm-close">닫기</button></div></div>',
-      '  <aside class="global-ad-banner" data-role="global-ad-banner" data-banner-profile="toss" data-banner-position="top" data-banner-height-dp="54" data-banner-height-source="mock" data-banner-surface="simulated" aria-label="고정 배너 광고 검증 영역"><div class="banner-placeholder" data-role="banner-placeholder"><b>AD</b><span><strong data-i18n="banner.title">배너 광고 영역</strong><small data-i18n="banner.copy">개발용 표시 · 실제 광고 아님</small></span></div><div class="banner-sdk-slot" data-role="banner-sdk-slot" hidden></div></aside>',
+      '  <div class="modal-panel gm-panel" data-role="gm-panel" hidden><div><p class="eyebrow">DEVELOPMENT ONLY</p><h2>GM 도구</h2><p>테스트용 진행 상태를 저장 데이터에 적용합니다.</p><div data-role="gm-tools-host"></div><button data-action="gm-close">닫기</button></div></div>',
+      '  <aside class="global-ad-banner" data-role="global-ad-banner" data-banner-profile="toss" data-banner-position="top" data-banner-height-dp="54" data-banner-height-source="mock" data-banner-surface="simulated" aria-label="고정 배너 광고 검증 영역"><div class="banner-placeholder" data-role="banner-placeholder"><b>AD</b><span><strong data-i18n="banner.title">배너 광고 영역</strong><small data-i18n="banner.copy">개발용 표시 · 실제 광고가 아닙니다.</small></span></div><div class="banner-sdk-slot" data-role="banner-sdk-slot" hidden></div></aside>',
       '  <div class="toast-stack" data-role="toast" aria-hidden="true"></div>',
       '  <div class="visually-hidden toast-announcer" data-role="toast-announcer" aria-live="polite" aria-atomic="true"></div>',
       '</main>'
@@ -5195,10 +5801,12 @@
       'hub-progress-meta', 'hub-progress-stars', 'hub-progress-fill', 'hub-abyss-best', 'pause-sound', 'pause-sound-label',
       'game-screen', 'canvas', 'zone-tabs', 'stage-list', 'game-controls', 'movement-guide', 'sonar-button',
       'stage-label', 'core-label', 'rival-broadcast', 'boosted-sonar-hud', 'power-track', 'power-bar', 'sonar-bar', 'pause-panel', 'pause-title', 'pause-copy', 'pause-hand-legend',
-      'result-mark', 'result-zone', 'result-title', 'result-message', 'result-stars', 'result-credits', 'ad-overlay', 'ad-copy',
+      'result-mark', 'result-zone', 'result-title', 'result-message', 'result-campaign-summary', 'result-stars', 'result-credits',
+      'result-abyss-summary', 'result-abyss-segments', 'result-abyss-cores', 'result-abyss-survival', 'result-abyss-score', 'ad-overlay', 'ad-copy',
       'dive-preparation-panel', 'dive-preparation-title', 'dive-preparation-target', 'dive-preparation-status', 'hand-choice-panel', 'settings-panel', 'settings-title', 'settings-language-legend', 'settings-hand-legend',
       'onboarding-panel', 'onboarding-title', 'onboarding-copy', 'onboarding-icon', 'onboarding-text', 'cosmetics-panel', 'cosmetics-balance', 'cosmetic-list',
-      'purchase-panel', 'purchase-title', 'purchase-copy', 'product-panel', 'product-title', 'product-copy', 'product-price', 'product-status', 'gm-panel', 'gm-tools-host',
+      'purchase-panel', 'purchase-title', 'purchase-copy', 'purchase-balance', 'cosmetic-milestone-panel', 'cosmetic-milestone-balance',
+      'product-panel', 'product-title', 'product-copy', 'product-price', 'product-status', 'gm-panel', 'gm-tools-host',
       'ending-seal', 'ending-title', 'ending-copy', 'ending-next', 'global-ad-banner', 'banner-placeholder', 'banner-sdk-slot', 'toast', 'toast-announcer'
     ].forEach(function (role) { elements[role] = app.querySelector('[data-role="' + role + '"]'); });
 
@@ -5207,7 +5815,7 @@
         elements[role].hidden = true;
         elements[role].setAttribute('aria-hidden', 'true');
       });
-      ['remove-ads-product', 'dive-boosted', 'emergency-reward', 'credit-double'].forEach(function (action) {
+      ['remove-ads-product', 'dive-boosted', 'dive-covert', 'emergency-reward', 'credit-double'].forEach(function (action) {
         var node = app.querySelector('[data-action="' + action + '"]');
         node.hidden = true;
         node.setAttribute('aria-hidden', 'true');
@@ -5219,7 +5827,7 @@
     var forcedAdsRemoved = false;
     var transientOverlayRoles = [
       'pause-panel', 'ad-overlay', 'dive-preparation-panel', 'hand-choice-panel', 'settings-panel',
-      'onboarding-panel', 'purchase-panel', 'product-panel', 'gm-panel'
+      'onboarding-panel', 'purchase-panel', 'cosmetic-milestone-panel', 'product-panel', 'gm-panel'
     ];
     function syncTransientOverlay() {
       var overlayOpen = transientOverlayRoles.some(function (role) { return !elements[role].hidden; });
@@ -5284,7 +5892,8 @@
       var placement = request && request.placement;
       elements['ad-copy'].textContent = PP.core.i18n.t(placement === 'emergency-revive' ? 'ad.emergency'
         : (placement === 'boosted-sonar' ? 'ad.boosted'
-          : (placement === 'credit-double' ? 'ad.double' : 'ad.interstitial')));
+          : (placement === 'covert-sonar' ? 'ad.covert'
+            : (placement === 'credit-double' ? 'ad.double' : 'ad.interstitial'))));
       var confirm = app.querySelector('[data-action="ad-confirm"]');
       if (confirm) confirm.disabled = false;
       elements['ad-overlay'].hidden = false;
@@ -5391,10 +6000,18 @@
       if (stage.rival) elements['rival-broadcast'].textContent = PP.core.i18n.t('hud.rival', {
         broadcast: stage.rival.broadcast(stage)
       });
-      elements['boosted-sonar-hud'].hidden = stage.sonarMode !== 'boosted-run';
+      var sonarMode = stage.sonarMode || 'standard';
+      elements['boosted-sonar-hud'].hidden = sonarMode === 'standard';
+      elements['boosted-sonar-hud'].setAttribute('data-mode', sonarMode);
+      if (sonarMode !== 'standard') elements['boosted-sonar-hud'].textContent = PP.core.i18n.t(sonarMode === 'covert-run' ? 'hud.covert' : 'hud.boosted');
     }
     function setPaused(value) { elements['pause-panel'].hidden = !value; syncTransientOverlay(); }
-    function setAbyssMode(enabled) { app.querySelector('[data-action="abyss-end"]').hidden = !enabled; }
+    function setAbyssMode(enabled) {
+      app.querySelector('[data-action="abyss-end"]').hidden = !enabled;
+      app.querySelector('[data-action="pause-restart"]').hidden = enabled;
+      app.querySelector('[data-action="quit"]').hidden = enabled;
+      app.querySelector('[data-action="pause-main"]').hidden = enabled;
+    }
     function setSoundState(enabled) {
       var label = PP.core.i18n.t(enabled ? 'sound.on' : 'sound.off');
       [elements['hub-sound'], elements['pause-sound']].forEach(function (button) {
@@ -5420,15 +6037,16 @@
       }
       var actionKeys = {
         'stage-select': 'hub.stageSelect', cosmetics: 'hub.cosmetics',
-        resume: 'pause.resume', 'pause-restart': 'pause.restart', quit: 'pause.quit', 'abyss-end': 'pause.abyssEnd',
+        resume: 'pause.resume', 'pause-restart': 'pause.restart', quit: 'pause.quit', 'pause-main': 'result.main', 'abyss-end': 'pause.abyssEnd',
         'dive-cancel': 'prep.cancel',
-        next: 'result.next', retry: 'result.retry', 'result-select': 'result.select',
+        next: 'result.next', retry: 'result.retry', 'result-select': 'result.select', 'result-main': 'result.main',
         'emergency-reward': 'result.emergency', 'credit-double': 'result.double',
         'pause-hand-left': 'hand.left', 'pause-hand-right': 'hand.right',
         'settings-hand-left': 'hand.left', 'settings-hand-right': 'hand.right',
         'hand-choice-left': 'hand.left', 'hand-choice-right': 'hand.right',
         'ad-confirm': 'common.confirm',
-        'purchase-cancel': 'common.cancel', 'purchase-confirm': 'common.buy', 'product-close': 'common.close',
+        'purchase-cancel': 'common.cancel', 'purchase-confirm': 'common.buy',
+        'cosmetic-milestone-later': 'cosmetic.milestoneLater', 'cosmetic-milestone-open': 'cosmetic.milestoneOpen', 'product-close': 'common.close',
         'product-restore': 'product.restore', 'product-purchase': 'product.purchase',
         'difficulty-normal': 'difficulty.normal', 'difficulty-hard': 'difficulty.hard', 'difficulty-extreme': 'difficulty.extreme',
         'ending-result': 'ending.result', 'ending-main': 'ending.main'
@@ -5531,11 +6149,13 @@
       var primary = app.querySelector('[data-action="hub-primary"]');
       var stageSelect = app.querySelector('[data-action="stage-select"]');
       var cosmetics = app.querySelector('[data-action="cosmetics"]');
+      var abyssEntry = app.querySelector('[data-action="abyss"]');
       var product = app.querySelector('[data-action="remove-ads-product"]');
       setForcedAdsRemoved(model.entitlementRemoved);
       title.setAttribute('data-hub-state', model.state);
       title.classList.toggle('has-gm-divergence', model.developmentTestAccess);
       elements['hub-gm-entry'].hidden = !PP.data.config.development.gmToolsEnabled;
+      primary.hidden = !model.showPrimaryAction;
       primary.textContent = model.primaryLabel;
       primary.setAttribute('data-primary-action', model.primaryAction);
       if (model.primaryStageId) primary.setAttribute('data-primary-stage', model.primaryStageId);
@@ -5555,6 +6175,9 @@
       stageSelect.hidden = !model.showStageSelect;
       stageSelect.textContent = PP.core.i18n.t('hub.stageSelect');
       cosmetics.hidden = !model.showCosmetics;
+      setCosmeticAttention(model.hasAffordableCosmetic);
+      abyssEntry.hidden = !model.showAbyssEntry;
+      abyssEntry.textContent = PP.core.i18n.t('hub.abyss');
       elements['hub-secondary'].hidden = !model.showStageSelect && !model.showCosmetics;
       product.hidden = contestMode || !model.showRemoveAds;
       product.textContent = model.entitlementLabel;
@@ -5591,6 +6214,7 @@
         ? PP.core.i18n.t('prep.contest')
         : PP.core.i18n.t('prep.copy'));
       app.querySelector('[data-action="dive-boosted"]').hidden = !advertisingEnabled;
+      app.querySelector('[data-action="dive-covert"]').hidden = !advertisingEnabled;
       elements['dive-preparation-panel'].hidden = false;
       syncTransientOverlay();
     }
@@ -5602,31 +6226,58 @@
     function setDivePreparationBusy(busy) {
       app.querySelector('[data-action="dive-normal"]').disabled = !!busy;
       app.querySelector('[data-action="dive-boosted"]').disabled = !!busy;
+      app.querySelector('[data-action="dive-covert"]').disabled = !!busy;
+      ['dive-boosted', 'dive-covert'].forEach(function (action) {
+        var button = app.querySelector('[data-action="' + action + '"]');
+        if (busy) button.setAttribute('aria-busy', 'true');
+        else button.removeAttribute('aria-busy');
+      });
       app.querySelector('[data-action="dive-boosted"]').hidden = !advertisingEnabled;
+      app.querySelector('[data-action="dive-covert"]').hidden = !advertisingEnabled;
     }
     function setResult(stage, won, message, stars) {
+      var abyssMode = stage.mode === 'abyss';
       elements['result-mark'].textContent = won ? '◆' : '◇';
-      elements['result-zone'].textContent = stage.mode === 'abyss' ? 'ABYSS · SEED ' + stage.abyss.seed
-        : PP.core.i18n.t('hud.stage', {
+      elements['result-zone'].hidden = abyssMode;
+      elements['result-zone'].textContent = abyssMode ? '' : PP.core.i18n.t('hud.stage', {
           zone: PP.core.i18n.t('zone.' + stage.definition.zoneId), stage: stage.definition.id
         });
-      elements['result-title'].textContent = stage.mode === 'abyss' ? PP.core.i18n.t('pause.abyssEnd') : PP.core.i18n.t(won ? 'result.win' : 'result.fail');
+      elements['result-title'].textContent = abyssMode ? PP.core.i18n.t('pause.abyssEnd') : PP.core.i18n.t(won ? 'result.win' : 'result.fail');
       elements['result-message'].textContent = message;
       var earnedStars = won ? stars : 0;
       elements['result-stars'].innerHTML = starMarkup(earnedStars);
       elements['result-stars'].setAttribute('aria-label', PP.core.i18n.t('stars.earnedAria', { stars: earnedStars }));
       elements['result-credits'].textContent = stage.creditEarned ? '+' + stage.creditEarned : '0';
-      app.querySelector('[data-action="next"]').hidden = stage.mode === 'abyss' || !won || stage.definition.id >= PP.data.config.campaign.stageCount;
-      app.querySelector('[data-action="emergency-reward"]').hidden = !advertisingEnabled || stage.mode === 'abyss' || won || stage.rewardOfferUsed;
-      app.querySelector('[data-action="credit-double"]').hidden = !advertisingEnabled || !won || !stage.creditEarned || stage.creditDoubleClaimed;
+      elements['result-campaign-summary'].hidden = abyssMode;
+      elements['result-abyss-summary'].hidden = !abyssMode;
+      if (abyssMode) {
+        var abyssResult = stage.abyssResult || {
+          completedSegments: stage.abyss.segmentIndex || 0,
+          directCores: stage.abyss.directCores || 0,
+          activeSeconds: stage.abyss.activeSeconds || 0,
+          score: stage.score || 0
+        };
+        var survivalSeconds = Math.max(0, Math.floor(Number(abyssResult.activeSeconds) || 0));
+        var minutes = Math.floor(survivalSeconds / 60);
+        var seconds = survivalSeconds % 60;
+        elements['result-abyss-segments'].textContent = PP.core.i18n.t('result.abyssSegmentsValue', { count: abyssResult.completedSegments });
+        elements['result-abyss-cores'].textContent = PP.core.i18n.t('result.abyssCoresValue', { count: abyssResult.directCores });
+        elements['result-abyss-survival'].textContent = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+        elements['result-abyss-score'].textContent = Math.max(0, Math.floor(Number(abyssResult.score) || 0)).toLocaleString(PP.core.i18n.getLocale() === 'ko' ? 'ko-KR' : 'en-US');
+      }
+      app.querySelector('[data-action="next"]').hidden = abyssMode || !won || stage.definition.id >= PP.data.config.campaign.stageCount;
+      app.querySelector('[data-action="emergency-reward"]').hidden = !advertisingEnabled || abyssMode || won || stage.rewardOfferUsed;
+      app.querySelector('[data-action="credit-double"]').hidden = !advertisingEnabled || abyssMode || !won || !stage.creditEarned || stage.creditDoubleClaimed;
+      app.querySelector('[data-action="result-select"]').hidden = abyssMode;
+      app.querySelector('[data-action="result-main"]').hidden = false;
     }
     function showOnboarding(stageId) {
       var guide = PP.data.config.onboarding[stageId];
       elements['onboarding-title'].textContent = PP.core.i18n.t(guide.titleKey);
       var copy = PP.core.i18n.t(guide.textKey);
       elements['onboarding-text'].innerHTML = '';
-      elements['onboarding-icon'].hidden = stageId === 1;
-      elements['onboarding-icon'].setAttribute('data-icon', guide.icon || 'guide');
+      elements['onboarding-icon'].hidden = stageId === 1 || !guide.icon;
+      elements['onboarding-icon'].setAttribute('data-icon', guide.icon || 'none');
       if (stageId === 1) {
         copy.split(/(\{core\}|\{relay\})/).forEach(function (part) {
           if (part !== '{core}' && part !== '{relay}') {
@@ -5706,8 +6357,7 @@
           preview.setAttribute('aria-hidden', 'true');
           previewFrame.appendChild(preview);
         }
-        appendPreview(model.assetId, model.overlayAssetId ? 'cosmetic-preview-base' : 'cosmetic-preview-single');
-        if (model.overlayAssetId) appendPreview(model.overlayAssetId, 'cosmetic-preview-overlay');
+        appendPreview(model.assetId, model.guardianSprite ? 'cosmetic-preview-guardian-sprite' : 'cosmetic-preview-single');
         var copy = document.createElement('span'); copy.className = 'cosmetic-copy';
         var name = document.createElement('strong'); name.textContent = model.name;
         var state = document.createElement('small'); state.className = 'cosmetic-state';
@@ -5731,8 +6381,8 @@
           var owned = save.ownedCosmetics.indexOf(item.id) >= 0; var equipped = save.settings.equippedCosmetics[category] === item.id;
           var button = document.createElement('button'); button.style.setProperty('--cosmetic-color', item.color);
           fillCosmeticButton(button, {
-            name: PP.core.i18n.t('cosmetic.' + item.id), assetId: category === 'guardian' ? baseAssets.guardian : item.assetId,
-            overlayAssetId: category === 'guardian' ? item.assetId : '',
+            name: PP.core.i18n.t('cosmetic.' + item.id), assetId: item.assetId,
+            guardianSprite: category === 'guardian',
             owned: owned, equipped: equipped, price: item.price, bgmIncluded: category === 'player'
           });
           button.setAttribute('data-cosmetic-id', item.id);
@@ -5747,13 +6397,29 @@
       elements['purchase-title'].textContent = PP.core.i18n.t('cosmetic.purchaseTitle', {
         name: PP.core.i18n.t('cosmetic.' + item.id)
       });
-      elements['purchase-copy'].textContent = PP.core.i18n.t('cosmetic.purchaseCopy', {
-        price: item.price, balance: balance
-      });
+      elements['purchase-balance'].textContent = Number(balance).toLocaleString(PP.core.i18n.getLocale() === 'ko' ? 'ko-KR' : 'en-US');
+      elements['purchase-copy'].innerHTML = '';
+      var priceLabel = document.createElement('span'); priceLabel.textContent = PP.core.i18n.t('cosmetic.price');
+      var priceValue = document.createElement('strong'); priceValue.textContent = Number(item.price).toLocaleString(PP.core.i18n.getLocale() === 'ko' ? 'ko-KR' : 'en-US');
+      var creditTerm = document.createElement('em'); creditTerm.className = 'credit-term'; creditTerm.textContent = PP.core.i18n.t('currency.credit');
+      elements['purchase-copy'].appendChild(priceLabel); elements['purchase-copy'].appendChild(priceValue); elements['purchase-copy'].appendChild(creditTerm);
       elements['purchase-panel'].hidden = false;
       syncTransientOverlay();
     }
     function hidePurchaseConfirmation() { elements['purchase-panel'].hidden = true; syncTransientOverlay(); }
+    function showCosmeticMilestone(balance) {
+      elements['cosmetic-milestone-balance'].textContent = Number(balance).toLocaleString(PP.core.i18n.getLocale() === 'ko' ? 'ko-KR' : 'en-US');
+      elements['cosmetic-milestone-panel'].hidden = false;
+      syncTransientOverlay();
+    }
+    function hideCosmeticMilestone() { elements['cosmetic-milestone-panel'].hidden = true; syncTransientOverlay(); }
+    function setCosmeticAttention(enabled) {
+      [app.querySelector('[data-action="cosmetics"]'), app.querySelector('[data-action="result-main"]')].forEach(function (button) {
+        button.setAttribute('data-attention', String(!!enabled));
+        var actionKey = button.getAttribute('data-action') === 'cosmetics' ? 'hub.cosmetics' : 'result.main';
+        button.setAttribute('aria-label', PP.core.i18n.t(actionKey) + (enabled ? ' · ' + PP.core.i18n.t('cosmetic.attentionAria') : ''));
+      });
+    }
     function renderRemoveAdsProduct(state) {
       state = state || { status: 'idle', owned: false, product: null };
       var busy = state.status === 'loading' || state.status === 'pending';
@@ -5805,6 +6471,7 @@
       setResult: setResult, showOnboarding: showOnboarding, hideOnboarding: hideOnboarding, showEnding: showEnding,
       showCosmetics: showCosmetics, hideCosmetics: hideCosmetics,
       showPurchaseConfirmation: showPurchaseConfirmation, hidePurchaseConfirmation: hidePurchaseConfirmation,
+      showCosmeticMilestone: showCosmeticMilestone, hideCosmeticMilestone: hideCosmeticMilestone, setCosmeticAttention: setCosmeticAttention,
       showRemoveAdsProduct: showRemoveAdsProduct, hideRemoveAdsProduct: hideRemoveAdsProduct,
       renderRemoveAdsProduct: renderRemoveAdsProduct, isRemoveAdsProductOpen: isRemoveAdsProductOpen,
       showGm: showGm, hideGm: hideGm,
@@ -5821,47 +6488,51 @@
 (function (PP) {
   'use strict';
 
+  function createButton(action, label, callback) {
+    var button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = label;
+    button.setAttribute('data-gm-action', action);
+    button.addEventListener('click', callback);
+    return button;
+  }
+
   function createGmTools(host, callbacks) {
     if (!PP.data.config.development.gmToolsEnabled || !host) return null;
 
     var root = document.createElement('div');
-    var stageInput = document.createElement('input');
-    var unlockButton = document.createElement('button');
-    var resetAllButton = document.createElement('button');
-    var resetAllArmed = false;
+    var resetArmed = false;
     root.className = 'gm-tools';
     root.setAttribute('aria-label', '개발자 도구');
-    stageInput.type = 'number';
-    stageInput.min = '1';
-    stageInput.max = String(PP.data.config.campaign.stageCount);
-    stageInput.value = '1';
-    stageInput.setAttribute('aria-label', '해금할 스테이지');
-    unlockButton.type = 'button';
-    unlockButton.textContent = '선택 스테이지 개방';
-    unlockButton.setAttribute('data-gm-action', 'unlock-stage');
-    unlockButton.addEventListener('click', function () {
-      if (callbacks && callbacks.unlockStage) callbacks.unlockStage(Math.floor(Number(stageInput.value)));
-    });
-    resetAllButton.type = 'button';
-    resetAllButton.textContent = '모든 스테이지 초기화';
-    resetAllButton.setAttribute('data-gm-action', 'reset-all');
-    resetAllButton.addEventListener('click', function () {
-      if (!resetAllArmed) {
-        resetAllArmed = true;
-        resetAllButton.textContent = '다시 눌러 초기화 확인';
-        resetAllButton.setAttribute('aria-pressed', 'true');
+
+    root.appendChild(createButton('unlock-hard', '하드 개방', function () {
+      if (callbacks && callbacks.unlockHard) callbacks.unlockHard();
+    }));
+    root.appendChild(createButton('unlock-extreme', '익스트림 개방', function () {
+      if (callbacks && callbacks.unlockExtreme) callbacks.unlockExtreme();
+    }));
+    root.appendChild(createButton('unlock-abyss', '무저갱 개방', function () {
+      if (callbacks && callbacks.unlockAbyss) callbacks.unlockAbyss();
+    }));
+    root.appendChild(createButton('unlock-cosmetics', '모든 외형 개방', function () {
+      if (callbacks && callbacks.unlockCosmetics) callbacks.unlockCosmetics();
+    }));
+
+    var resetButton = createButton('reset-game', '게임 초기화', function () {
+      if (!resetArmed) {
+        resetArmed = true;
+        resetButton.textContent = '다시 눌러 전체 초기화';
+        resetButton.setAttribute('aria-pressed', 'true');
         return;
       }
-      resetAllArmed = false;
-      resetAllButton.textContent = '모든 스테이지 초기화';
-      resetAllButton.setAttribute('aria-pressed', 'false');
-      if (callbacks && callbacks.resetAll) callbacks.resetAll();
+      resetArmed = false;
+      resetButton.textContent = '게임 초기화';
+      resetButton.setAttribute('aria-pressed', 'false');
+      if (callbacks && callbacks.resetGame) callbacks.resetGame();
     });
-    root.appendChild(stageInput);
-    root.appendChild(unlockButton);
-    root.appendChild(resetAllButton);
+    root.appendChild(resetButton);
     host.appendChild(root);
-    return { root: root, stageInput: stageInput };
+    return { root: root, resetButton: resetButton };
   }
 
   PP.dev.createGmTools = createGmTools;
@@ -5899,8 +6570,9 @@
     var ads = null;
     var purchases = null;
     var stage = null;
+    var lastAbyssRunSeed = null;
     var paused = false;
-    var boostedRewardSequence = 0;
+    var sonarRewardSequence = 0;
     var pendingCosmeticId = null;
     var pendingOnboardingStageId = 0;
     var pendingCampaignStart = null;
@@ -6045,7 +6717,7 @@
     if (window.visualViewport && window.visualViewport.addEventListener) {
       window.visualViewport.addEventListener('resize', syncCanvasBackingResolution);
     }
-    var input = new PP.core.Input(canvas, function () {
+    var input = new PP.core.Input(canvas, ui.elements['movement-guide'], function () {
       var onboardingOpen = pendingOnboardingStageId > 0 && !ui.elements['onboarding-panel'].hidden;
       var preparationOpen = !ui.elements['dive-preparation-panel'].hidden || !ui.elements['hand-choice-panel'].hidden;
       if (stage && stage.status === 'playing' && !onboardingOpen && !preparationOpen && !activeAdFlow) setPaused(!paused);
@@ -6115,19 +6787,37 @@
     }
 
     var gmTools = PP.dev.createGmTools ? PP.dev.createGmTools(ui.elements['gm-tools-host'], {
-      unlockStage: function (stageId) {
-        if (!Number.isInteger(stageId) || stageId < 1 || stageId > PP.data.config.campaign.stageCount) {
-          ui.toast('GM: 1~' + PP.data.config.campaign.stageCount + ' 스테이지를 선택하세요.');
-          return;
-        }
-        if (!PP.core.storage.unlockStage(save, stageId)) { ui.toast(PP.core.i18n.t('toast.saveError')); return; }
+      unlockHard: function () {
+        if (!PP.core.storage.gmUnlockDifficulty(save, 'hard')) { ui.toast(PP.core.i18n.t('toast.saveError')); return; }
         renderHub();
-        ui.toast('GM: ' + stageId + ' 스테이지가 열렸습니다.');
+        ui.toast(PP.core.i18n.t('toast.gmHard'));
       },
-      resetAll: function () {
-        if (!PP.core.storage.resetAllStageRecords(save)) { ui.toast(PP.core.i18n.t('toast.saveError')); return; }
+      unlockExtreme: function () {
+        if (!PP.core.storage.gmUnlockDifficulty(save, 'extreme')) { ui.toast(PP.core.i18n.t('toast.saveError')); return; }
         renderHub();
-        ui.toast('GM: 모든 스테이지를 초기화했습니다.');
+        ui.toast(PP.core.i18n.t('toast.gmExtreme'));
+      },
+      unlockAbyss: function () {
+        if (!PP.core.storage.gmUnlockAbyss(save)) { ui.toast(PP.core.i18n.t('toast.saveError')); return; }
+        renderHub();
+        ui.toast(PP.core.i18n.t('toast.gmAbyss'));
+      },
+      unlockCosmetics: function () {
+        if (!PP.core.storage.gmUnlockAllCosmetics(save)) { ui.toast(PP.core.i18n.t('toast.saveError')); return; }
+        renderHub();
+        ui.toast(PP.core.i18n.t('toast.gmCosmetics'));
+      },
+      resetGame: function () {
+        if (!PP.core.storage.resetGame(save)) { ui.toast(PP.core.i18n.t('toast.saveError')); return; }
+        ui.hideGm();
+        ui.setLanguage(save.settings.language);
+        ui.setSonarHand(save.settings.sonarHand);
+        audio.setEnabled(save.settings.sound);
+        bgm.setEnabled(save.settings.sound);
+        bgm.setTrack(playerBgmId());
+        renderHub();
+        showTitle();
+        ui.toast(PP.core.i18n.t('toast.gmReset'));
       }
     }) : null;
     renderHub();
@@ -6136,8 +6826,7 @@
 
     callbacks['hub-primary'] = function () {
       if (!hubModel) renderHub();
-      if (hubModel.primaryAction === 'abyss') startAbyss();
-      else requestCampaignStart(hubModel.primaryStageId, hubModel.productMaxStage, 'title');
+      requestCampaignStart(hubModel.primaryStageId, hubModel.productMaxStage, 'title');
     };
     callbacks['stage-select'] = function () { showStageSelect(false); };
     callbacks.title = showTitle;
@@ -6183,7 +6872,6 @@
     callbacks['settings-close'] = ui.hideSettings;
     callbacks['gm-open'] = ui.showGm;
     callbacks['gm-close'] = ui.hideGm;
-    callbacks['gm-stage-select'] = function () { ui.hideGm(); showStageSelect(true); };
     callbacks.pause = function () { setPaused(true); };
     callbacks.resume = function () { setPaused(false, true); };
     callbacks['pause-restart'] = function () {
@@ -6192,6 +6880,7 @@
       else requestCampaignStart(stage.definition.id, Math.max(stage.definition.id, hubModel ? hubModel.productMaxStage : 1), 'game');
     };
     callbacks.quit = function () { showStageSelect(false); };
+    callbacks['pause-main'] = showTitle;
     callbacks.sonar = function () { input.requestSonar(); };
     callbacks.retry = function () {
       if (!stage) return;
@@ -6206,14 +6895,16 @@
       );
     };
     callbacks['result-select'] = function () { showStageSelect(false); };
+    callbacks['result-main'] = showTitle;
     callbacks.selectStage = function (stageId) { requestCampaignStart(stageId, stageSelectMaximum, 'select'); };
     callbacks.abyss = startAbyss;
     callbacks['abyss-end'] = function () {
       if (stage && stage.mode === 'abyss') endAbyss(PP.core.i18n.t('toast.abyssStopped'));
     };
     callbacks['emergency-reward'] = requestEmergencyReward;
-    callbacks['dive-normal'] = function () { choosePendingDive(false); };
+    callbacks['dive-normal'] = function () { choosePendingDive('standard'); };
     callbacks['dive-boosted'] = requestBoostedDive;
+    callbacks['dive-covert'] = requestCovertDive;
     callbacks['dive-cancel'] = cancelPendingCampaign;
     callbacks['hand-choice-left'] = function () { chooseSonarHand('left', true); };
     callbacks['hand-choice-right'] = function () { chooseSonarHand('right', true); };
@@ -6241,6 +6932,13 @@
     callbacks.requestCosmeticPurchase = requestCosmeticPurchase;
     callbacks['purchase-cancel'] = function () { pendingCosmeticId = null; ui.hidePurchaseConfirmation(); };
     callbacks['purchase-confirm'] = confirmCosmeticPurchase;
+    function acknowledgeCosmeticMilestone(openCosmetics) {
+      if (!PP.core.storage.acknowledgeCosmeticMilestone(save)) { ui.toast(PP.core.i18n.t('toast.saveError')); return; }
+      ui.hideCosmeticMilestone();
+      if (openCosmetics) ui.showCosmetics(save);
+    }
+    callbacks['cosmetic-milestone-later'] = function () { acknowledgeCosmeticMilestone(false); };
+    callbacks['cosmetic-milestone-open'] = function () { acknowledgeCosmeticMilestone(true); };
     callbacks['remove-ads-product'] = function () {
       if (ads.inFlight || activeAdFlow || PP.data.config.runtime.contest) return;
       ui.showRemoveAdsProduct(purchases.snapshot());
@@ -6433,7 +7131,12 @@
       }));
       else if (result.status === 'insufficient') ui.toast(PP.core.i18n.t('toast.creditInsufficient'));
       else if (result.status === 'storage-error') ui.toast(PP.core.i18n.t('toast.saveError'));
+      renderHub();
       ui.showCosmetics(save);
+    }
+    function maybeShowCosmeticMilestone() {
+      if (save.cosmeticMilestoneAcknowledged || save.resonanceCredits < 4000) return;
+      ui.showCosmeticMilestone(save.resonanceCredits);
     }
     function chooseSonarHand(hand, continueStart) {
       var selectedHand = hand === 'left' ? 'left' : 'right';
@@ -6454,32 +7157,32 @@
         scheduleStageImagePrewarm(pendingCampaignStart.definition);
       }
     }
-    function choosePendingDive(boosted, fromAdRestore) {
+    function choosePendingDive(sonarMode, fromAdRestore) {
       if (!pendingCampaignStart || (activeAdFlow && !fromAdRestore)) return;
       if (pendingCampaignStart.definition.id === 1 && !save.settings.sonarHandSelected) return;
-      pendingCampaignStart.sonarMode = boosted ? 'boosted-run' : 'standard';
+      pendingCampaignStart.sonarMode = sonarMode === 'boosted-run' || sonarMode === 'covert-run' ? sonarMode : 'standard';
       ui.setDivePreparationBusy(false);
       beginPendingCampaign();
     }
-    function requestBoostedDive() {
+    function requestRewardedSonarDive(sonarMode, placement) {
       if (!pendingCampaignStart || activeAdFlow) return;
       if (pendingCampaignStart.definition.id === 1 && !save.settings.sonarHandSelected) return;
       if (!PP.data.config.runtime.advertisingEnabled) {
-        choosePendingDive(false);
+        choosePendingDive('standard');
         return;
       }
-      boostedRewardSequence += 1;
-      var rewardToken = 'boosted-sonar-' + boostedRewardSequence;
+      sonarRewardSequence += 1;
+      var rewardToken = placement + '-' + sonarRewardSequence;
       ui.setDivePreparationBusy(true);
       runAdTransaction({
         fallback: 'select',
-        request: function () { return ads.showRewarded(rewardToken, 'boosted-sonar'); },
+        request: function () { return ads.showRewarded(rewardToken, placement); },
         applyReward: function () { return true; },
         restore: function (result) {
           ui.setDivePreparationBusy(false);
           if (!pendingCampaignStart) { showStageSelect(false); return; }
           if (result.granted) {
-            choosePendingDive(true, true);
+            choosePendingDive(sonarMode, true);
             return;
           }
           input.reset();
@@ -6494,6 +7197,8 @@
         }
       });
     }
+    function requestBoostedDive() { requestRewardedSonarDive('boosted-run', 'boosted-sonar'); }
+    function requestCovertDive() { requestRewardedSonarDive('covert-run', 'covert-sonar'); }
     function showStageSelect(gmTestMode) {
       if (stage) stage.status = 'stopped';
       audio.stopAll();
@@ -6577,7 +7282,7 @@
       camera.reset(stage.player);
       backgroundGradient = null;
       manualResumePending = false;
-      stage.sonarMode = sonarMode === 'boosted-run' ? 'boosted-run' : 'standard';
+      stage.sonarMode = sonarMode === 'boosted-run' || sonarMode === 'covert-run' ? sonarMode : 'standard';
       stage.damageFeedback = { blinkUntil: 0, shakeUntil: 0, impactUntil: 0, lastSource: '' };
       paused = false;
       input.reset();
@@ -6596,12 +7301,16 @@
       resetFrameTiming();
     }
     function startAbyss() {
-      if (!save.records[PP.data.config.campaign.stageCount]) return;
+      var developmentAbyss = PP.data.config.development.gmToolsEnabled
+        && save.developmentUnlocks && save.developmentUnlocks.abyss;
+      if (!save.records[PP.data.config.campaign.stageCount] && !developmentAbyss) return;
       ui.clearToasts();
       pendingCampaignStart = null;
       ui.hideDivePreparation();
       ui.hideHandChoice();
-      stage = PP.systems.createAbyssRun(PP.data.config.abyss.baseSeed, 0, 0, null);
+      var runSeed = PP.systems.createAbyssRunSeed(lastAbyssRunSeed);
+      lastAbyssRunSeed = runSeed;
+      stage = PP.systems.createAbyssRun(runSeed, 0, null, null);
       camera.setWorld(stage.world);
       camera.reset(stage.player);
       backgroundGradient = null;
@@ -6686,19 +7395,24 @@
       resetFrameTiming();
     }
 
-    function emitSignal(source, x, y, intensity, revealSeconds, boosted) {
-      return stage.sonar.emit(source, x, y, intensity, stage.elapsed, revealSeconds, boosted);
+    function emitSignal(source, x, y, intensity, revealSeconds, profile) {
+      return stage.sonar.emit(source, x, y, intensity, stage.elapsed, revealSeconds, profile);
     }
     function useSonar() {
       if (!stage) return;
       var boosted = stage.sonarMode === 'boosted-run';
+      var covert = stage.sonarMode === 'covert-run';
+      var sonarProfile = covert ? PP.data.config.sonar.covert : null;
       var cost = stage.definition.sonarCost;
       if (stage.player.sonarCharge < cost) { ui.toast(PP.core.i18n.t('toast.sonarLow')); return; }
       stage.player.sonarCharge -= cost;
       stage.sonarsUsed += 1;
-      emitSignal('player', stage.player.x, stage.player.y, boosted ? PP.data.config.sonar.boosted.radiusMultiplier : 1,
-        boosted ? PP.data.config.sonar.boosted.revealSeconds : PP.data.config.sonar.revealSeconds, boosted);
-      ui.toast(PP.core.i18n.t(boosted ? 'toast.sonarBoosted' : 'toast.sonar'));
+      emitSignal('player', stage.player.x, stage.player.y,
+        boosted ? PP.data.config.sonar.boosted.radiusMultiplier : (covert ? sonarProfile.radiusMultiplier : 1),
+        boosted ? PP.data.config.sonar.boosted.revealSeconds : (covert ? sonarProfile.revealSeconds : PP.data.config.sonar.revealSeconds),
+        covert ? { sonarMode: 'covert-run', waveSeconds: sonarProfile.waveSeconds } : { sonarMode: boosted ? 'boosted-run' : 'standard' });
+      if (boosted) ui.toast(PP.core.i18n.t('toast.sonarBoosted'));
+      else if (covert) ui.toast(PP.core.i18n.t('toast.sonarCovert'));
       audio.play('sonar');
     }
     function coreVisible(core) {
@@ -6707,9 +7421,9 @@
     }
     function announceCoreDiscovery(core) {
       if (!PP.systems.discoverCoreForPlayer(stage, core)) return false;
-      ui.toast(PP.core.i18n.t('toast.coreDiscovered', {
-        current: PP.systems.playerDiscoveredCoreCount(stage), total: stage.cores.length
-      }), { dedupeKey: 'core-discovered:' + core.id, priority: 'high' });
+      ui.toast(PP.core.i18n.t('toast.coreDiscovered'), {
+        dedupeKey: 'core-discovered:' + core.id, priority: 'high'
+      });
       return true;
     }
     function discoverNearbyFreeCores() {
@@ -6718,12 +7432,27 @@
           && PP.core.utils.distance(stage.player, core) <= PP.data.config.visibility.radius) announceCoreDiscovery(core);
       });
     }
+    function rivalCanInteractWithSonar() {
+      return !!stage.rival && !stage.rival.destroyed && !stage.rival.escaped;
+    }
+    function discardInactiveRivalPulses() {
+      if (rivalCanInteractWithSonar() || !stage.sonar.pulses.length) return;
+      var activeCount = 0;
+      for (var pulseIndex = 0; pulseIndex < stage.sonar.pulses.length; pulseIndex += 1) {
+        var pulse = stage.sonar.pulses[pulseIndex];
+        if (pulse.source === 'rival') continue;
+        stage.sonar.pulses[activeCount] = pulse;
+        activeCount += 1;
+      }
+      stage.sonar.pulses.length = activeCount;
+    }
     function collectPlayerCores() {
       stage.cores.forEach(function (core) {
         if (core.owner !== 'free' || core.pickupCooldown > 0 || !coreVisible(core)) return;
         if (PP.core.utils.distance(stage.player, core) > stage.player.radius + core.radius) return;
         core.owner = 'player';
         stage.player.collected += 1;
+        if (stage.mode === 'abyss') stage.abyss.directCores += 1;
         stage.score += 500 + Math.round(stage.player.power * 2);
         ui.toast(PP.core.i18n.t('toast.core', {
           current: PP.systems.relayProgress(stage), required: stage.definition.requiredCores
@@ -6732,6 +7461,8 @@
       });
     }
     function handleSonarContact(pulse, entity) {
+      if (pulse.source === 'rival' && !rivalCanInteractWithSonar()) return;
+      if (entity === stage.rival && !rivalCanInteractWithSonar()) return;
       if (entity === stage.relay) {
         if (pulse.source === 'player' && PP.systems.discoverRelay(stage)) {
           ui.toast(PP.core.i18n.t('toast.relayDiscovered'), { dedupeKey: 'relay-discovered', priority: 'high' });
@@ -6742,6 +7473,7 @@
       var environmentEvent = PP.systems.environment.onSonarContact(pulse, entity, stage);
       if (!environmentEvent && entity.entityKind === 'guardian') {
         if (pulse.source === 'rival' && stage.rival) stage.rival.recognizeGuardian(entity, stage.elapsed);
+        if (pulse.source === 'player' && pulse.covert) return;
         if (entity.contactSignal(pulse.signal, actors)) {
           if (entity.targetType === 'player') {
             ui.toast(PP.core.i18n.t('toast.guardianDetected'));
@@ -6772,6 +7504,7 @@
       stage.player.knockBackFrom(rival, 95, stage);
       if (transferred) {
         stage.player.collected += 1;
+        if (stage.mode === 'abyss') stage.abyss.directCores += 1;
         stage.score += 500 + Math.round(stage.player.power * 2);
       }
       ui.toast(PP.core.i18n.t(transferred ? 'toast.rivalDestroyedCore' : 'toast.rivalDestroyed'));
@@ -6833,6 +7566,7 @@
       }
       if (input.consumeSonar()) useSonar();
 
+      discardInactiveRivalPulses();
       var sonarActive = stage.sonar.pulses.length > 0;
       var revealables = stage.sonarRevealables || (stage.sonarRevealables = []);
       var sonarObstacles = stage.sonarObstacles;
@@ -6847,7 +7581,7 @@
         var environmentRevealables = stage.environment ? stage.environment.revealables : [];
         for (revealIndex = 0; revealIndex < environmentRevealables.length; revealIndex += 1) revealables.push(environmentRevealables[revealIndex]);
         revealables.push(stage.player);
-        if (stage.rival) revealables.push(stage.rival);
+        if (rivalCanInteractWithSonar()) revealables.push(stage.rival);
         if (!PP.systems.relayDiscovered(stage)) revealables.push(stage.relay);
       }
       stage.sonar.update(dt, stage.elapsed, revealables, handleSonarContact, sonarObstacles, stage);
@@ -6896,6 +7630,7 @@
       showScreen('result');
       audio.stopAll();
       audio.play(won ? 'win' : 'fail');
+      if (won && stage.mode !== 'abyss') maybeShowCosmeticMilestone();
     }
     function finish(won, message, force) {
       if (!stage || (!force && stage.status !== 'playing')) return;
@@ -6907,15 +7642,11 @@
         stage.score += Math.round(stage.player.power * 18) + Math.max(0, Math.round((stage.definition.timeLimit - stage.elapsed) * 12));
         stars = PP.systems.calculateStars(stage);
         var difficultyId = PP.core.storage.normalizeDifficulty(save, stage.difficultyId);
-        var difficultyRecords = PP.core.storage.recordsForDifficulty(save, difficultyId);
-        var previous = difficultyRecords[stage.definition.id];
-        var improved = !previous || stars > (previous.bestStars || 0) || stage.score > (previous.bestScore || 0) || stage.elapsed < (previous.bestTime || Infinity);
         var creditReport = PP.core.storage.recordClear(save, stage.definition.id, {
           stars: stars, score: stage.score, power: stage.player.power,
           time: stage.elapsed, sonars: stage.sonarsUsed, hits: stage.hits
         }, difficultyId);
         if (!creditReport.persisted) {
-          improved = false;
           ui.toast(PP.core.i18n.t('toast.saveError'));
           resultMessage += PP.core.i18n.t('result.saveError');
         }
@@ -6928,7 +7659,6 @@
         if (creditReport.creditsEarned > 0) resultMessage += PP.core.i18n.t('toast.credits', {
           stars: creditReport.newStars, credits: creditReport.creditsEarned
         });
-        if (improved) resultMessage += PP.core.i18n.t('toast.record');
         var onboardingComplete = [1, 2, 3, 4].every(function (id) { return !!save.records[id]; });
         audio.stopAll();
         function presentClearOutcome() {
@@ -6951,10 +7681,10 @@
     }
     function advanceAbyssSegment() {
       var previous = stage;
-      var score = previous.abyss.totalScore + previous.score + 1000 + previous.definition.difficultyTier * 100;
+      previous.abyss.activeSeconds += previous.elapsed;
       var nextIndex = previous.abyss.segmentIndex + 1;
       ui.clearToasts();
-      stage = PP.systems.createAbyssRun(previous.abyss.seed, nextIndex, score, previous.player);
+      stage = PP.systems.createAbyssRun(previous.abyss.seed, nextIndex, previous.abyss, previous.player);
       camera.setWorld(stage.world);
       camera.reset(stage.player);
       backgroundGradient = null;
@@ -6964,22 +7694,20 @@
       ui.setPaused(false);
       ui.setAbyssMode(true);
       ui.toast(PP.core.i18n.t('toast.abyssSegment', {
-        segment: nextIndex + 1, tier: stage.definition.difficultyTier
+        segment: nextIndex + 1
       }));
       audio.play('core');
     }
     function endAbyss(message) {
       if (!stage || stage.mode !== 'abyss' || stage.status === 'lost') return;
       paused = false;
-      var completed = stage.abyss.segmentIndex;
-      var totalScore = stage.abyss.totalScore + stage.score;
-      stage.score = totalScore;
+      var result = PP.systems.calculateAbyssScore(stage.abyss, stage.elapsed, stage.definition.coreTotal);
+      stage.score = result.score;
+      stage.abyssResult = result;
       stage.status = 'lost';
       stage.resultShown = false;
-      if (!PP.core.storage.recordAbyssBest(save, completed, totalScore)) ui.toast(PP.core.i18n.t('toast.saveError'));
-      showResult(false, PP.core.i18n.t('toast.abyssResult', {
-        message: message, segment: completed, score: totalScore
-      }), 0);
+      if (!PP.core.storage.recordAbyssBest(save, result.completedSegments, result.score)) ui.toast(PP.core.i18n.t('toast.saveError'));
+      showResult(false, message, 0);
       renderHub();
     }
     function requestEmergencyReward() {
@@ -7029,12 +7757,14 @@
           return report.granted;
         },
         restore: function (result) {
+          renderHub();
           ui.setResult(stage, true, PP.core.i18n.t(result.granted ? 'result.doubleGranted' : 'result.doubleNone', {
             credits: stage.creditEarned
           }), Number(stage.resultStars) || 0);
           showScreen('result');
           ui.toast(PP.core.i18n.t(stage.creditDoubleSaveFailed ? 'toast.saveError'
             : (result.granted ? 'toast.doubleGranted' : 'toast.doubleNone')));
+          if (result.granted) maybeShowCosmeticMilestone();
         }
       });
     }
@@ -7272,30 +8002,26 @@
         ctx.arc(0, 0, radius * 0.68, 0, Math.PI * 2);
       }
     }
-    function drawGuardianSkinOverlay(cosmetic, guardian, alpha) {
+    function drawCoreSignal(entity, owner) {
+      if (drawImage('entity-resonance-core', entity.x, entity.y, 60, 60, stage.elapsed * 0.55)) return;
+      context.save(); context.translate(entity.x, entity.y); context.rotate(stage.elapsed * 0.55);
+      context.fillStyle = owner === 'rival' ? '#ff9a6b' : '#ffd369';
+      context.shadowBlur = 24; context.shadowColor = context.fillStyle;
+      context.beginPath(); context.moveTo(0, -22); context.lineTo(22, 0);
+      context.lineTo(0, 22); context.lineTo(-22, 0); context.closePath(); context.fill(); context.restore();
+    }
+    function drawGuardianSkin(cosmetic, guardian, alpha) {
       var image = assets.image(cosmetic.assetId);
       if (!image) return false;
       var radius = guardian.radius;
+      var frameIndex = guardian.type === 'pin' ? 0 : (guardian.type === 'hound' ? 1 : 2);
       context.save();
       context.globalAlpha = alpha === undefined ? 1 : alpha;
       context.translate(guardian.x, guardian.y);
       context.rotate(guardian.phase * 0.1);
-      guardianSilhouettePath(context, guardian.type, radius * 0.76);
-      context.clip();
-      context.drawImage(image, -radius * 1.125, -radius * 1.125, radius * 2.25, radius * 2.25);
+      context.drawImage(image, frameIndex * 176, 0, 176, 176, -radius * 1.08, -radius * 1.08, radius * 2.16, radius * 2.16);
       context.restore();
       return true;
-    }
-    function drawGuardianSkinFallback(cosmetic, guardian) {
-      context.save();
-      context.translate(guardian.x, guardian.y);
-      context.rotate(guardian.phase * 0.1);
-      guardianSilhouettePath(context, guardian.type, guardian.radius * 0.76);
-      context.clip();
-      context.globalAlpha = 0.34;
-      context.fillStyle = cosmetic.color;
-      context.fillRect(-guardian.radius, -guardian.radius, guardian.radius * 2, guardian.radius * 2);
-      context.restore();
     }
     function circleVisibleToCamera(entity, radius) {
       radius = Math.max(0, Number(radius === undefined ? entity && entity.radius : radius) || 0) + 16;
@@ -7395,11 +8121,6 @@
           return;
         }
         if (zone.environmentKind === 'decoyWave') {
-          if (!zone.activated || zone.resolved) return;
-          if (drawImage('entity-resonance-core', zone.x, zone.y, 60, 60, stage.elapsed * 0.55)) return;
-          ctx.save(); ctx.translate(zone.x, zone.y); ctx.rotate(stage.elapsed * 0.55);
-          ctx.fillStyle = '#ffd369'; ctx.shadowBlur = 24; ctx.shadowColor = ctx.fillStyle;
-          ctx.beginPath(); ctx.moveTo(0, -22); ctx.lineTo(22, 0); ctx.lineTo(0, 22); ctx.lineTo(-22, 0); ctx.closePath(); ctx.fill(); ctx.restore();
           return;
         }
         ctx.save();
@@ -7469,12 +8190,13 @@
         ctx.fillText(PP.core.i18n.t(relayActive ? 'hud.return' : 'hud.relay'), stage.relay.x, stage.relay.y + 6);
       }
 
+      (stage.environment ? stage.environment.zones : []).forEach(function (zone) {
+        if (zone.environmentKind === 'decoyWave' && zone.activated && !zone.resolved) drawCoreSignal(zone, 'free');
+      });
+
       stage.cores.forEach(function (core) {
         if (core.owner === 'player' || core.owner === 'extracted' || !coreVisible(core)) return;
-        if (drawImage('entity-resonance-core', core.x, core.y, 60, 60, stage.elapsed * 0.55)) return;
-        ctx.save(); ctx.translate(core.x, core.y); ctx.rotate(stage.elapsed * 0.55);
-        ctx.fillStyle = core.owner === 'rival' ? '#ff9a6b' : '#ffd369'; ctx.shadowBlur = 24; ctx.shadowColor = ctx.fillStyle;
-        ctx.beginPath(); ctx.moveTo(0, -22); ctx.lineTo(22, 0); ctx.lineTo(0, 22); ctx.lineTo(-22, 0); ctx.closePath(); ctx.fill(); ctx.restore();
+        drawCoreSignal(core, core.owner);
       });
       stage.guardians.forEach(function (guardian) {
         if (guardian.destroyed) return;
@@ -7482,15 +8204,14 @@
         if (!visible) return;
         var guardianImageId = guardian.type === 'pin' ? 'entity-guardian-gate-pin' : (guardian.type === 'hound' ? 'entity-guardian-lock-hound' : 'entity-guardian-chorus-watcher');
         var guardianAlpha = guardian.hitBlinkUntil > stage.elapsed && Math.floor(stage.elapsed * 40) % 2 === 0 ? 0.3 : 1;
-        var drewGuardian = drawImage(guardianImageId, guardian.x, guardian.y, guardian.radius * 2, guardian.radius * 2, guardian.phase * 0.1, guardianAlpha);
+        var drewGuardian = guardianCosmetic
+          ? drawGuardianSkin(guardianCosmetic, guardian, guardianAlpha)
+          : drawImage(guardianImageId, guardian.x, guardian.y, guardian.radius * 2, guardian.radius * 2, guardian.phase * 0.1, guardianAlpha);
         if (!drewGuardian) {
-          ctx.save(); ctx.translate(guardian.x, guardian.y); ctx.rotate(guardian.phase * 0.1); ctx.strokeStyle = guardian.state === 'chase' ? '#ff786f' : '#8aaeb0';
-          ctx.fillStyle = guardian.state === 'chase' ? 'rgba(255,120,111,.28)' : 'rgba(81,119,124,.35)'; ctx.lineWidth = 6;
+          ctx.save(); ctx.translate(guardian.x, guardian.y); ctx.rotate(guardian.phase * 0.1); ctx.strokeStyle = guardianCosmetic ? guardianCosmetic.color : (guardian.state === 'chase' ? '#ff786f' : '#8aaeb0');
+          ctx.fillStyle = guardianCosmetic ? 'rgba(115,190,184,.3)' : (guardian.state === 'chase' ? 'rgba(255,120,111,.28)' : 'rgba(81,119,124,.35)'); ctx.lineWidth = 6;
           guardianSilhouettePath(ctx, guardian.type, guardian.radius * 0.86);
           ctx.fill(); ctx.stroke(); ctx.restore();
-        }
-        if (guardianCosmetic) {
-          if (!drawGuardianSkinOverlay(guardianCosmetic, guardian, guardianAlpha)) drawGuardianSkinFallback(guardianCosmetic, guardian);
         }
         if (guardian.chorusWarning > 0) drawRing(guardian.x, guardian.y, 82, '#ffd369', 8, 0.8);
         if (guardian.chorusWave && circleVisibleToCamera(guardian.chorusWave, guardian.chorusWave.radius)) {
@@ -7558,7 +8279,8 @@
         && !paused && !ads.inFlight && !visibilityHidden;
       if (continuousWorld) simulationClock.advance(frameDelta, update);
       if (hudUpdatePending) {
-        if (!stage) hudUpdatePending = false;
+        var hudSurfaceActive = !!stage && gameScreenVisible && !ads.inFlight && !visibilityHidden;
+        if (!hudSurfaceActive) hudUpdatePending = false;
         else if (now - lastHudUpdateAt >= hudUpdateIntervalMs) setHudNow(stage, now);
       }
       continuousWorld = !!stage && gameScreenVisible && stage.status === 'playing'
