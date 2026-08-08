@@ -4,7 +4,7 @@
   'use strict';
 
   var app = global.PingPanic || {};
-  app.version = '0.7.10';
+  app.version = '0.7.11';
   app.data = app.data || {};
   app.core = app.core || {};
   app.entities = app.entities || {};
@@ -7498,7 +7498,7 @@
       ui.setAbyssMode(true);
       ui.setSonarHand(save.settings.sonarHand);
       showScreen('game');
-      scheduleStageImagePrewarm(stage.definition);
+      scheduleAbyssImagePrewarm(stage);
       setHudNow(stage);
       ui.toast(PP.core.i18n.t('toast.abyssStart'));
       resetFrameTiming();
@@ -7556,6 +7556,13 @@
       }
       if (typeof window.requestIdleCallback === 'function') window.requestIdleCallback(preload, { timeout: 1000 });
       else (window.setTimeout || setTimeout)(preload, 0);
+    }
+    function scheduleAbyssImagePrewarm(abyssStage) {
+      scheduleStageImagePrewarm(abyssStage.definition);
+      scheduleStageImagePrewarm(PP.systems.createAbyssDefinition(
+        abyssStage.abyss.seed,
+        abyssStage.abyss.segmentIndex + 1
+      ));
     }
     function setPaused(value, explicitResume) {
       if (!stage || stage.status !== 'playing') return;
@@ -7865,6 +7872,7 @@
       camera.setWorld(stage.world);
       camera.reset(stage.player);
       backgroundGradient = null;
+      scheduleAbyssImagePrewarm(stage);
       requestWorldRender();
       stage.sonarMode = 'standard';
       stage.damageFeedback = { blinkUntil: 0, shakeUntil: 0, impactUntil: 0, lastSource: '' };
