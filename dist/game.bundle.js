@@ -4,7 +4,7 @@
   'use strict';
 
   var app = global.PingPanic || {};
-  app.version = '0.7.6';
+  app.version = '0.7.7';
   app.data = app.data || {};
   app.core = app.core || {};
   app.entities = app.entities || {};
@@ -205,16 +205,16 @@
       order: ['normal', 'hard', 'extreme'],
       profiles: {
         normal: {
-          id: 'normal', powerDrainMultiplier: 1.5, enemySpeedMultiplier: 1,
+          id: 'normal', powerDrainMultiplier: 1.3, enemySpeedMultiplier: 1,
           enemyDamageMultiplier: 1.2, thermalDamageMultiplier: 2, rewardProfile: 'campaign-normal-v1'
         },
         hard: {
-          id: 'hard', powerDrainMultiplier: 1.8, enemySpeedMultiplier: 1.25,
-          enemyDamageMultiplier: 1.5, thermalDamageMultiplier: 3, rewardProfile: 'campaign-hard-v1'
+          id: 'hard', powerDrainMultiplier: 1.6, enemySpeedMultiplier: 1.25,
+          enemyDamageMultiplier: 1.4, thermalDamageMultiplier: 3, rewardProfile: 'campaign-hard-v1'
         },
         extreme: {
-          id: 'extreme', powerDrainMultiplier: 2.2, enemySpeedMultiplier: 1.5,
-          enemyDamageMultiplier: 2, thermalDamageMultiplier: 5, rewardProfile: 'campaign-extreme-v1'
+          id: 'extreme', powerDrainMultiplier: 1.9, enemySpeedMultiplier: 1.5,
+          enemyDamageMultiplier: 1.8, thermalDamageMultiplier: 5, rewardProfile: 'campaign-extreme-v1'
         }
       },
       rewards: {
@@ -250,9 +250,9 @@
       searchSeconds: 2.5,
       contactDistanceRatio: 2 / 3,
       types: {
-        pin: { radius: 64, speed: 108, damage: 17, health: 45 },
-        hound: { radius: 64, speed: 148, damage: 22, health: 45 },
-        chorus: { radius: 69, speed: 61, damage: 17, health: 45 }
+        pin: { radius: 64, speed: 108, damage: 17, health: 40 },
+        hound: { radius: 64, speed: 148, damage: 22, health: 40 },
+        chorus: { radius: 69, speed: 61, damage: 17, health: 40 }
       },
       chorusWave: {
         intervalSeconds: 1.2,
@@ -267,10 +267,12 @@
     rival: {
       speed: 190,
       projectileSpeed: 190,
-      projectileDamage: 10,
+      projectileDamage: 20,
       fireIntervalSeconds: 1.8,
       projectileRadius: 13,
       collisionDistanceRatio: 0.5,
+      hitReactionSeconds: 0.32,
+      hitReactionCooldownSeconds: 0.35,
       sonarIntervalSeconds: { probe: 3, carrier: 3.6 },
       playerAvoidanceWeight: 0.32,
       guardianAvoidanceWeight: 0.28,
@@ -299,7 +301,7 @@
     environment: {
       thermal: {
         damage: 9, waitSeconds: 5, activeSeconds: 3,
-        hitCooldownSeconds: 0.9, enemySpeedMultiplier: 1.12
+        guardianDamage: 15, hitCooldownSeconds: 0.9, enemySpeedMultiplier: 1.12
       },
       absorption: { rechargeMultiplier: 0.35, movementMultiplier: 0.82 },
       currentBand: { defaultFeather: 72, maximumFeather: 120, maximumBoostMultiplier: 2 },
@@ -363,9 +365,9 @@
       speedCap: 1.75,
       score: { segmentBase: 10000, directCoreUnit: 100, survivalSecondUnit: 1, survivalSecondsCap: 9999 },
       difficultyAnchors: [
-        { segment: 1, powerDrainMultiplier: 1.5, enemyDamageMultiplier: 1.2, enemySpeedMultiplier: 1, thermalDamageMultiplier: 2 },
-        { segment: 26, powerDrainMultiplier: 1.8, enemyDamageMultiplier: 1.5, enemySpeedMultiplier: 1.25, thermalDamageMultiplier: 3 },
-        { segment: 51, powerDrainMultiplier: 2.2, enemyDamageMultiplier: 2, enemySpeedMultiplier: 1.5, thermalDamageMultiplier: 5 },
+        { segment: 1, powerDrainMultiplier: 1.3, enemyDamageMultiplier: 1.2, enemySpeedMultiplier: 1, thermalDamageMultiplier: 2 },
+        { segment: 26, powerDrainMultiplier: 1.6, enemyDamageMultiplier: 1.4, enemySpeedMultiplier: 1.25, thermalDamageMultiplier: 3 },
+        { segment: 51, powerDrainMultiplier: 1.9, enemyDamageMultiplier: 1.8, enemySpeedMultiplier: 1.5, thermalDamageMultiplier: 5 },
         { segment: 76, powerDrainMultiplier: 2.6, enemyDamageMultiplier: 2.5, enemySpeedMultiplier: 1.65, thermalDamageMultiplier: 7 },
         { segment: 101, powerDrainMultiplier: 3, enemyDamageMultiplier: 3, enemySpeedMultiplier: 1.75, thermalDamageMultiplier: 9 }
       ]
@@ -397,6 +399,7 @@
   var TABLES = {
     ko: {
       'language.ko': '한국어', 'language.en': 'English',
+      'boot.loading': '심해 신호 연결 중', 'boot.error': '게임을 불러오지 못했습니다. 다시 실행해 주세요.',
       'sound.on': '소리 끄기', 'sound.off': '소리 켜기',
       'hub.first': '첫 잠수 시작', 'hub.next': '다음 탐사 · STAGE {stage}',
       'hub.abyss': '무저갱 시작',
@@ -453,6 +456,7 @@
       'rival.corePickup': '코어 회수', 'rival.relayMove': '중계문 이동',
       'rival.coreMove': '코어로 이동', 'rival.search': '탐색', 'rival.combat': '교전',
       'rival.sonar': '소나 발사', 'rival.guardianDetected': '수호자에게 발각', 'rival.guardianHit': '수호자에게 피격',
+      'rival.thermalHit': '열수구에 피격', 'rival.chorusHit': '합창 파동에 피격',
       'onboarding.1.title': '1 · 이동하고 귀환하기',
       'onboarding.1.text': '플레이 화면이나 이동 영역을 끌어 드론을 움직이세요. {core}를 회수한 뒤 {relay}으로 이동하면 탐사를 완료합니다.',
       'onboarding.2.title': '2 · 소나로 숨은 신호 찾기',
@@ -510,6 +514,7 @@
       'toast.chorusWarning': '합창 감시자가 원형 파동을 준비합니다.',
       'toast.chorusHit': '합창 파동 피격!', 'toast.guardianHit': '수호자 충돌! 동력 {damage} 감소',
       'toast.guardianDrop': '수호자가 라이벌의 코어를 떨어뜨렸습니다.',
+      'toast.rivalDrop': '라이벌이 피격되어 공명 코어를 떨어뜨렸습니다.',
       'toast.rivalExtracted': '라이벌이 코어 1개를 반출했습니다.', 'toast.rivalShotHit': '라이벌 투사체에 피격되었습니다.',
       'toast.stageInvalid': '코어 상태 오류로 탐사를 종료했습니다.',
       'toast.stageClear': '공명 코어를 중계망에 연결했습니다.', 'toast.powerEmpty': '잔여 동력이 모두 소진됐습니다.',
@@ -564,6 +569,7 @@
     },
     en: {
       'language.ko': '한국어', 'language.en': 'English',
+      'boot.loading': 'Connecting to the deep-sea signal', 'boot.error': 'The game could not be loaded. Please restart it.',
       'sound.on': 'Turn sound off', 'sound.off': 'Turn sound on',
       'hub.first': 'Start First Dive', 'hub.next': 'Next Dive · STAGE {stage}',
       'hub.abyss': 'Enter the Abyss',
@@ -621,6 +627,7 @@
       'rival.corePickup': 'Recovering Core', 'rival.relayMove': 'Moving to Relay',
       'rival.coreMove': 'Moving to Core', 'rival.search': 'Searching', 'rival.combat': 'Engaging',
       'rival.sonar': 'Firing Sonar', 'rival.guardianDetected': 'Guardian Alert', 'rival.guardianHit': 'Hit by Guardian',
+      'rival.thermalHit': 'Hit by Thermal Vent', 'rival.chorusHit': 'Hit by Chorus Wave',
       'onboarding.1.title': '1 · Move, Recover, Return',
       'onboarding.1.text': 'Drag the play area or movement area to move the drone. Recover every {core}, then enter the {relay} to complete the dive.',
       'onboarding.2.title': '2 · Reveal Hidden Signals',
@@ -678,6 +685,7 @@
       'toast.chorusWarning': 'Chorus Watcher is charging a circular wave.',
       'toast.chorusHit': 'Hit by a chorus wave!', 'toast.guardianHit': 'Guardian collision! Power −{damage}',
       'toast.guardianDrop': 'The guardian forced the rival to drop its core.',
+      'toast.rivalDrop': 'The rival was hit and dropped its resonance core.',
       'toast.rivalExtracted': 'The rival extracted one core.', 'toast.rivalShotHit': 'Hit by a rival projectile!',
       'toast.stageInvalid': 'The run ended safely after a core state error.',
       'toast.stageClear': 'Resonance cores connected to the relay.', 'toast.powerEmpty': 'All remaining power was depleted.',
@@ -3006,13 +3014,29 @@
         var difficultyDamage = stage.difficultyModifiers ? stage.difficultyModifiers.enemyDamageMultiplier : 1;
         if (actors.player.damage(rules.damage * difficultyDamage, 'chorus-wave')) events.waveHit = true;
       }
+      var rival = actors.rival;
+      if (!this.chorusWave.hitRival && rival && !rival.destroyed && !rival.escaped) {
+        var rivalDistance = PP.core.utils.distance(this.chorusWave, rival);
+        var reachedRival = rivalDistance >= this.chorusWave.previousRadius
+          && rivalDistance <= this.chorusWave.radius + rival.radius;
+        var rivalVisiblePath = PP.core.utils.waveTargetVisible(this.chorusWave, rival, stage.chorusObstacles);
+        if (reachedRival && rivalVisiblePath) {
+          this.chorusWave.hitRival = true;
+          var rivalHit = rival.receiveHit(stage.elapsed, 'chorus-wave', this);
+          events.rivalHit = rivalHit.reacted;
+          events.rivalCoreDropped = rivalHit.dropped;
+        }
+      }
       if (this.chorusWave.elapsed >= rules.expansionSeconds) this.chorusWave = null;
       return;
     }
     if (this.chorusWarning > 0) {
       this.chorusWarning -= dt;
       if (this.chorusWarning <= 0) {
-        this.chorusWave = { source: 'chorus', x: this.x, y: this.y, radius: 0, previousRadius: 0, elapsed: 0, hit: false };
+        this.chorusWave = {
+          source: 'chorus', x: this.x, y: this.y, radius: 0, previousRadius: 0,
+          elapsed: 0, hit: false, hitRival: false
+        };
         this.chorusCooldown = rules.intervalSeconds;
         events.waveFired = true;
       }
@@ -3047,7 +3071,10 @@
   };
 
   Guardian.prototype.update = function (dt, stage, actors) {
-    var events = { targetStarted: false, targetSwitched: false, waveWarning: false, waveFired: false, waveCancelled: false, waveHit: false };
+    var events = {
+      targetStarted: false, targetSwitched: false, waveWarning: false, waveFired: false,
+      waveCancelled: false, waveHit: false, rivalHit: false, rivalCoreDropped: false
+    };
     if (this.destroyed) return events;
     var now = stage.elapsed;
     this.phase += dt;
@@ -3152,7 +3179,9 @@
     this.carriedCore = null;
     this.extractedCount = 0;
     this.scanTimer = 1.2;
-    this.stunTimer = 0;
+    this.hitBlinkUntil = 0;
+    this.hitReactionUntil = 0;
+    this.hitCooldownUntil = 0;
     this.revealedUntil = 0;
     this.recognitionUntil = 0;
     this.escaped = false;
@@ -3230,23 +3259,35 @@
     );
     return true;
   };
-  Rival.prototype.hitByGuardian = function (now, guardian) {
-    if (!this.carriedCore || this.stunTimer > 0 || this.destroyed || this.escaped) return false;
+  Rival.prototype.receiveHit = function (now, source, attacker) {
+    now = Number.isFinite(now) ? now : 0;
+    if (this.destroyed || this.escaped || now < this.hitCooldownUntil) {
+      return { reacted: false, dropped: false, core: null };
+    }
+    this.hitCooldownUntil = now + PP.data.config.rival.hitReactionCooldownSeconds;
+    this.hitReactionUntil = now + PP.data.config.rival.hitReactionSeconds;
+    this.hitBlinkUntil = this.hitReactionUntil;
     var droppedCore = this.dropCore();
-    this.ignoredCoreId = droppedCore.id;
-    this.ignoredCoreUntil = now + PP.data.config.rival.droppedCoreRetargetDelaySeconds;
-    this.ignoredCoreUntilById[droppedCore.id] = this.ignoredCoreUntil;
-    this.state = 'scan';
-    this.stunTimer = 0;
-    this.scanTimer = 0;
+    if (droppedCore) {
+      this.ignoredCoreId = droppedCore.id;
+      this.ignoredCoreUntil = now + PP.data.config.rival.droppedCoreRetargetDelaySeconds;
+      this.ignoredCoreUntilById[droppedCore.id] = this.ignoredCoreUntil;
+      this.state = 'scan';
+      this.scanTimer = 0;
+    }
     this.navPath = [];
     this.repathTimer = 0;
-    if (guardian && !guardian.destroyed) {
-      this.forcedGuardianTarget = guardian;
+    if (attacker && !attacker.destroyed && source !== 'thermal-vent') {
+      this.forcedGuardianTarget = attacker;
       this.guardianAggroUntil = now + PP.data.config.rival.guardianAggroSeconds;
     }
-    this.announce('rival.guardianHit', PP.data.config.rival.broadcastSeconds.guardianHit, BROADCAST_PRIORITY.guardianHit, now);
-    return true;
+    var broadcastKey = source === 'thermal-vent' ? 'rival.thermalHit'
+      : (source === 'chorus-wave' ? 'rival.chorusHit' : 'rival.guardianHit');
+    this.announce(broadcastKey, PP.data.config.rival.broadcastSeconds.guardianHit, BROADCAST_PRIORITY.guardianHit, now);
+    return { reacted: true, dropped: !!droppedCore, core: droppedCore };
+  };
+  Rival.prototype.hitByGuardian = function (now, guardian) {
+    return this.receiveHit(now, 'guardian-contact', guardian);
   };
   Rival.prototype.destroyByPlayer = function () {
     if (this.destroyed || this.escaped) return null;
@@ -3377,6 +3418,7 @@
     this.scanTimer -= dt;
     this.fireCooldown = Math.max(0, this.fireCooldown - dt);
     this.repathTimer = Math.max(0, this.repathTimer - dt);
+    if (stage.elapsed < this.hitReactionUntil) return event;
     var currentVector = PP.systems.environment
       ? PP.systems.environment.currentVector(stage, this) : { x: 0, y: 0 };
     if (currentVector.x || currentVector.y) {
@@ -3547,8 +3589,7 @@
         if (firstHitType === 'guardian') {
           firstHitActor.takeDamage(PP.data.config.rival.projectileDamage, 'rival-projectile', stage.elapsed);
         } else {
-          var projectileDamage = PP.data.config.rival.projectileDamage * stage.difficultyModifiers.enemyDamageMultiplier;
-          if (stage.player.damage(projectileDamage, 'rival-projectile')) hits += 1;
+          if (stage.player.damage(PP.data.config.rival.projectileDamage, 'rival-projectile')) hits += 1;
         }
         continue;
       }
@@ -3842,7 +3883,10 @@
     return U.clamp(edgeDistance / Math.max(1, band.feather), 0, 1);
   }
   function update(run, dt) {
-    var events = { thermalHit: false, guardianDestroyed: 0, passageChanged: false };
+    var events = {
+      thermalHit: false, guardianDestroyed: 0, rivalHit: false,
+      rivalCoreDropped: false, passageChanged: false
+    };
     if (!run.environment) return events;
     run.environment.zones.forEach(function (zone) {
       Object.keys(zone.hitCooldowns || {}).forEach(function (actorId) {
@@ -3867,17 +3911,28 @@
       }).map(function (guardian) {
         return { key: 'guardian-' + guardian.id, actor: guardian };
       }));
+      if (run.rival && !run.rival.destroyed && !run.rival.escaped) {
+        targets.push({ key: 'rival', actor: run.rival });
+      }
       targets.forEach(function (target) {
         if (!contains(zone, target.actor) || zone.hitCooldowns[target.key] > 0
           || zone.hitCycleByActor[target.key] === cycleId) return;
         zone.hitCooldowns[target.key] = PP.data.config.environment.thermal.hitCooldownSeconds;
         zone.hitCycleByActor[target.key] = cycleId;
-        var thermalMultiplier = run.difficultyModifiers
-          ? Number(run.difficultyModifiers.thermalDamageMultiplier) || 1 : 1;
-        var damage = PP.data.config.environment.thermal.damage * thermalMultiplier;
         if (target.key === 'player') {
+          var thermalMultiplier = run.difficultyModifiers
+            ? Number(run.difficultyModifiers.thermalDamageMultiplier) || 1 : 1;
+          var damage = PP.data.config.environment.thermal.damage * thermalMultiplier;
           if (run.player.damage(damage, 'thermal-vent')) events.thermalHit = true;
-        } else if (target.actor.takeDamage(damage, 'thermal-vent', run.elapsed)) {
+        } else if (target.key === 'rival') {
+          var rivalHit = target.actor.receiveHit(run.elapsed, 'thermal-vent', null);
+          events.rivalHit = events.rivalHit || rivalHit.reacted;
+          events.rivalCoreDropped = events.rivalCoreDropped || rivalHit.dropped;
+        } else if (target.actor.takeDamage(
+          PP.data.config.environment.thermal.guardianDamage,
+          'thermal-vent',
+          run.elapsed
+        )) {
           events.guardianDestroyed += 1;
         }
       });
@@ -6191,6 +6246,7 @@
       var product = app.querySelector('[data-action="remove-ads-product"]');
       setForcedAdsRemoved(model.entitlementRemoved);
       title.setAttribute('data-hub-state', model.state);
+      title.setAttribute('data-hub-menu', model.hardUnlocked ? 'expanded' : 'standard');
       title.classList.toggle('has-gm-divergence', model.developmentTestAccess);
       elements['hub-gm-entry'].hidden = !PP.data.config.development.gmToolsEnabled;
       primary.hidden = !model.showPrimaryAction;
@@ -6583,6 +6639,38 @@
   function boot() {
     var app = document.getElementById('app');
     if (!app) throw new Error('#app 요소가 없습니다.');
+    var bootScreen = document.getElementById('boot-screen');
+    var bootProgress = bootScreen ? bootScreen.querySelector('[data-role="boot-progress"]') : null;
+    var bootVersion = bootScreen ? bootScreen.querySelector('[data-role="boot-version"]') : null;
+    var bootMessage = bootScreen ? bootScreen.querySelector('[data-role="boot-message"]') : null;
+    var bootStartedAt = window.performance && typeof window.performance.now === 'function'
+      ? 0 : Date.now();
+    function bootElapsed() {
+      return window.performance && typeof window.performance.now === 'function'
+        ? window.performance.now() - bootStartedAt : Date.now() - bootStartedAt;
+    }
+    function setBootProgress(percent) {
+      if (bootProgress) bootProgress.style.width = Math.max(0, Math.min(100, percent)) + '%';
+    }
+    function finishBootWhenReady(task) {
+      return Promise.resolve(task).then(function () {
+        if (!bootScreen) return;
+        setBootProgress(90);
+        var remaining = Math.max(0, 1500 - bootElapsed());
+        (window.setTimeout || setTimeout)(function () {
+          setBootProgress(100);
+          bootScreen.classList.add('is-complete');
+          bootScreen.setAttribute('aria-hidden', 'true');
+        }, remaining);
+      }).catch(function (error) {
+        console.error('[PingPanic] 초기 로딩 실패', error);
+        if (!bootScreen) return;
+        bootScreen.setAttribute('data-state', 'error');
+        if (bootMessage) bootMessage.textContent = PP.core.i18n.t('boot.error');
+      });
+    }
+    if (bootVersion) bootVersion.textContent = 'v' + PP.version;
+    setBootProgress(18);
 
     function updateAppHeight() {
       var viewportHeight = window.visualViewport && Number(window.visualViewport.height);
@@ -6653,6 +6741,7 @@
     }
     var callbacks = {};
     var ui = PP.ui.createScreens(app, callbacks);
+    setBootProgress(48);
     ads = new PP.systems.AdCoordinator(PP.platform.current, {
       ownershipProvider: function () { return purchases ? purchases.isOwned() : false; },
       externalBlocker: function () {
@@ -6857,7 +6946,7 @@
         ads.interstitialShowCount = 0;
       };
     }
-    assets.preloadImages(['title-key-art', 'ui-resonance-credit', 'ui-campaign-ending-seal']).then(function () {
+    var essentialBootAssets = assets.preloadImages(['title-key-art', 'ui-resonance-credit', 'ui-campaign-ending-seal']).then(function () {
       var titleUrl = assets.url('title-key-art');
       if (assets.image('title-key-art') && titleUrl) ui.elements['title-screen'].style.backgroundImage = 'linear-gradient(rgba(1,8,13,.18), rgba(1,8,13,.88)), url("' + titleUrl + '")';
       var endingUrl = assets.url('ui-campaign-ending-seal');
@@ -6902,8 +6991,10 @@
       }
     }) : null;
     renderHub();
+    setBootProgress(72);
     refreshRemoveAdsOwnership('start');
     ui.setSonarHand(save.settings.sonarHand);
+    if (bootMessage) bootMessage.textContent = PP.core.i18n.t('boot.loading');
 
     callbacks['hub-primary'] = function () {
       if (!hubModel) renderHub();
@@ -7611,6 +7702,7 @@
         }
         if (events.waveWarning) ui.toast(PP.core.i18n.t('toast.chorusWarning'));
         if (events.waveHit) ui.toast(PP.core.i18n.t('toast.chorusHit'));
+        if (events.rivalCoreDropped) ui.toast(PP.core.i18n.t('toast.rivalDrop'));
         var contactDistance = (guardian.radius + stage.player.radius) * PP.data.config.guardian.contactDistanceRatio;
         if (PP.core.utils.distance(guardian, stage.player) < contactDistance && guardian.hitCooldown <= 0) {
           guardian.hitCooldown = 0.8;
@@ -7620,10 +7712,11 @@
         }
         if (stage.rival && stage.rival.carriedCore && !stage.rival.escaped && !stage.rival.destroyed
           && PP.core.utils.distance(guardian, stage.rival) < guardian.radius + stage.rival.radius) {
-          if (stage.rival.hitByGuardian(stage.elapsed, guardian)) {
+          var rivalHit = stage.rival.hitByGuardian(stage.elapsed, guardian);
+          if (rivalHit.reacted) {
             PP.entities.Rival.separateFromGuardian(guardian, stage.rival, stage);
             guardian.hitCooldown = 0.8;
-            ui.toast(PP.core.i18n.t('toast.guardianDrop'));
+            if (rivalHit.dropped) ui.toast(PP.core.i18n.t('toast.rivalDrop'));
           }
         }
       });
@@ -7640,6 +7733,7 @@
       stage.cores.forEach(function (core) { core.pickupCooldown = Math.max(0, core.pickupCooldown - dt); });
       var environmentEvents = PP.systems.environment.update(stage, dt);
       if (environmentEvents.thermalHit) ui.toast(PP.core.i18n.t('toast.thermal'));
+      if (environmentEvents.rivalCoreDropped) ui.toast(PP.core.i18n.t('toast.rivalDrop'));
       stage.player.update(dt, input, stage);
       discoverNearbyFreeCores();
       if (PP.systems.discoverRelayByProximity(stage)) {
@@ -8339,8 +8433,13 @@
         var rivalVisible = stage.rival.revealedUntil > stage.elapsed || stage.rival.isRecognizing(stage)
           || PP.core.utils.distance(stage.rival, stage.player) <= PP.data.config.visibility.radius;
         var rivalImageId = rivalCosmetic ? rivalCosmetic.assetId : (stage.rival.preset === 'carrier' ? 'entity-rival-carrier-drone' : 'entity-rival-probe-drone');
-        if (rivalVisible && !drawImage(rivalImageId, stage.rival.x, stage.rival.y, stage.rival.radius * 2, stage.rival.radius * 2, 0)) {
-          ctx.save(); ctx.translate(stage.rival.x, stage.rival.y); ctx.strokeStyle = rivalCosmetic ? rivalCosmetic.color : '#ff9a6b'; ctx.lineWidth = 8; ctx.setLineDash([13, 9]);
+        var rivalImpactRatio = stage.rival.hitReactionUntil > stage.elapsed
+          ? (stage.rival.hitReactionUntil - stage.elapsed) / PP.data.config.rival.hitReactionSeconds : 0;
+        var rivalImpactX = rivalImpactRatio > 0 ? Math.sin(stage.elapsed * 86) * 10 * rivalImpactRatio : 0;
+        var rivalAlpha = stage.rival.hitBlinkUntil > stage.elapsed && Math.floor(stage.elapsed * 38) % 2 === 0 ? 0.38 : 1;
+        var rivalDrawX = stage.rival.x + rivalImpactX;
+        if (rivalVisible && !drawImage(rivalImageId, rivalDrawX, stage.rival.y, stage.rival.radius * 2, stage.rival.radius * 2, 0, rivalAlpha)) {
+          ctx.save(); ctx.translate(rivalDrawX, stage.rival.y); ctx.globalAlpha = rivalAlpha; ctx.strokeStyle = rivalCosmetic ? rivalCosmetic.color : '#ff9a6b'; ctx.lineWidth = 8; ctx.setLineDash([13, 9]);
           ctx.beginPath(); ctx.arc(0, 0, stage.rival.radius, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
         }
       }
@@ -8424,6 +8523,7 @@
       if (!actualHidden) refreshRemoveAdsOwnership('foreground');
       resetFrameTiming();
     });
+    finishBootWhenReady(essentialBootAssets);
     window.requestAnimationFrame(frame);
   }
 

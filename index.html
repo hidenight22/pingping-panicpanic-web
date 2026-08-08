@@ -8,7 +8,22 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <div id="app"><p class="boot-fallback">게임을 불러오는 중입니다. 화면이 바뀌지 않으면 <code>npm.cmd run build</code>를 실행해 주세요.</p></div>
-    <script defer src="dist/game.bundle.js?v=0.7.6"></script>
+    <section id="boot-screen" class="boot-screen" role="status" aria-live="polite" aria-label="게임 불러오는 중">
+      <div class="boot-copy">
+        <p class="boot-eyebrow">PINGPING PANICPANIC</p>
+        <div class="boot-title-line">
+          <h1><span>소나 쏠래말래</span><span>쏠래말래</span></h1>
+          <span class="boot-version" data-role="boot-version"></span>
+        </div>
+        <p class="boot-tagline">보려면 쏘고, 쏘면 들킵니다.</p>
+      </div>
+      <div class="boot-sonar" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="boot-status">
+        <div class="boot-progress" aria-hidden="true"><i data-role="boot-progress"></i></div>
+        <p data-role="boot-message">심해 신호 연결 중</p>
+      </div>
+    </section>
+    <div id="app"></div>
+    <script defer src="dist/game.bundle.js?v=0.7.7"></script>
   </body>
 </html>
