@@ -4,7 +4,7 @@
   'use strict';
 
   var app = global.PingPanic || {};
-  app.version = '0.7.5';
+  app.version = '0.7.6';
   app.data = app.data || {};
   app.core = app.core || {};
   app.entities = app.entities || {};
@@ -422,7 +422,7 @@
       'pause.title': '일시정지', 'pause.copy': '탐사와 모든 신호가 일시 정지되었습니다.',
       'pause.resume': '계속하기', 'pause.restart': '다시 하기', 'pause.quit': '해역으로',
       'pause.abyssEnd': '무저갱 종료',
-      'hud.core': '코어', 'hud.drag': '이동 영역', 'hud.move': '이 영역이나 플레이 화면을 끌어 이동',
+      'hud.core': '코어', 'hud.drag': '끌어서 이동', 'hud.move': '화면 어디서든 끌어서 이동',
       'hud.boosted': '이번 잠수 · 증폭 소나 장비', 'hud.covert': '이번 잠수 · 은폐 소나 장비',
       'hud.powerAria': '잔여 동력 {power}퍼센트',
       'prep.title': '잠수 준비', 'prep.copy': '사용할 소나 장비를 선택하세요.',
@@ -589,7 +589,7 @@
       'pause.title': 'Paused', 'pause.copy': 'The dive and all signals are paused.',
       'pause.resume': 'Resume', 'pause.restart': 'Restart', 'pause.quit': 'Zones',
       'pause.abyssEnd': 'End Abyss Run',
-      'hud.core': 'CORE', 'hud.drag': 'MOVEMENT AREA', 'hud.move': 'Drag here or the play area to move',
+      'hud.core': 'CORE', 'hud.drag': 'DRAG TO MOVE', 'hud.move': 'Drag anywhere to move',
       'hud.boosted': 'This dive · Boosted sonar equipped', 'hud.covert': 'This dive · Covert sonar equipped',
       'hud.powerAria': '{power}% power remaining',
       'prep.title': 'Dive Preparation', 'prep.copy': 'Choose your sonar equipment.',
@@ -1887,9 +1887,15 @@
       height: positiveDimension(source.height, positiveDimension(fallback.height, 1))
     };
   }
-  function centeredOrClamped(position, worldSize, viewportSize) {
-    if (worldSize <= viewportSize) return (worldSize - viewportSize) / 2;
-    return PP.core.utils.clamp(position, 0, worldSize - viewportSize);
+  function normalizedInset(value, viewportSize) {
+    return PP.core.utils.clamp(Number(value) || 0, 0, viewportSize * 0.45);
+  }
+  function centeredOrClamped(position, worldSize, viewportSize, startInset, endInset) {
+    startInset = normalizedInset(startInset, viewportSize);
+    endInset = normalizedInset(endInset, viewportSize);
+    var safeSize = viewportSize - startInset - endInset;
+    if (worldSize <= safeSize) return (worldSize - viewportSize - startInset + endInset) / 2;
+    return PP.core.utils.clamp(position, startInset > 0 ? -startInset : 0, worldSize - viewportSize + endInset);
   }
 
   function Camera(world, viewport, options) {
@@ -1900,6 +1906,7 @@
       width: Math.min(this.viewport.width, positiveDimension(options.deadZoneWidth, this.viewport.width * 0.36)),
       height: Math.min(this.viewport.height, positiveDimension(options.deadZoneHeight, this.viewport.height * 0.36))
     };
+    this.safeInsets = { top: 0, right: 0, bottom: 0, left: 0 };
     this.x = 0;
     this.y = 0;
     this.reset();
@@ -1909,40 +1916,71 @@
     var resolved = copySize(world, PP.data.config.world);
     var changed = resolved.width !== this.world.width || resolved.height !== this.world.height;
     this.world = resolved;
-    this.x = centeredOrClamped(this.x, this.world.width, this.viewport.width);
-    this.y = centeredOrClamped(this.y, this.world.height, this.viewport.height);
+    this.x = centeredOrClamped(this.x, this.world.width, this.viewport.width, this.safeInsets.left, this.safeInsets.right);
+    this.y = centeredOrClamped(this.y, this.world.height, this.viewport.height, this.safeInsets.top, this.safeInsets.bottom);
     return changed;
+  };
+  Camera.prototype.setSafeInsets = function (insets) {
+    insets = insets || {};
+    var next = {
+      top: normalizedInset(insets.top, this.viewport.height),
+      right: normalizedInset(insets.right, this.viewport.width),
+      bottom: normalizedInset(insets.bottom, this.viewport.height),
+      left: normalizedInset(insets.left, this.viewport.width)
+    };
+    var changed = Object.keys(next).some(function (key) {
+      return Math.abs(next[key] - this.safeInsets[key]) > 0.5;
+    }, this);
+    if (!changed) return false;
+    this.safeInsets = next;
+    this.x = centeredOrClamped(this.x, this.world.width, this.viewport.width, next.left, next.right);
+    this.y = centeredOrClamped(this.y, this.world.height, this.viewport.height, next.top, next.bottom);
+    return true;
+  };
+  Camera.prototype.getSafeFrame = function (padding) {
+    padding = Math.max(0, Number(padding) || 0);
+    var left = this.safeInsets.left + padding;
+    var top = this.safeInsets.top + padding;
+    var right = this.viewport.width - this.safeInsets.right - padding;
+    var bottom = this.viewport.height - this.safeInsets.bottom - padding;
+    if (right < left) right = left;
+    if (bottom < top) bottom = top;
+    return { left: left, top: top, right: right, bottom: bottom, width: right - left, height: bottom - top };
   };
   Camera.prototype.reset = function (target) {
     var targetX = target && Number.isFinite(target.x) ? target.x : this.world.width / 2;
     var targetY = target && Number.isFinite(target.y) ? target.y : this.world.height / 2;
-    this.x = centeredOrClamped(targetX - this.viewport.width / 2, this.world.width, this.viewport.width);
-    this.y = centeredOrClamped(targetY - this.viewport.height / 2, this.world.height, this.viewport.height);
+    var safeFrame = this.getSafeFrame();
+    this.x = centeredOrClamped(targetX - (safeFrame.left + safeFrame.right) / 2, this.world.width, this.viewport.width, this.safeInsets.left, this.safeInsets.right);
+    this.y = centeredOrClamped(targetY - (safeFrame.top + safeFrame.bottom) / 2, this.world.height, this.viewport.height, this.safeInsets.top, this.safeInsets.bottom);
     return this;
   };
   Camera.prototype.follow = function (target) {
     if (!target) return false;
     var previousX = this.x;
     var previousY = this.y;
-    if (this.world.width <= this.viewport.width) {
-      this.x = centeredOrClamped(this.x, this.world.width, this.viewport.width);
+    var safeFrame = this.getSafeFrame();
+    if (this.world.width <= safeFrame.width) {
+      this.x = centeredOrClamped(this.x, this.world.width, this.viewport.width, this.safeInsets.left, this.safeInsets.right);
     } else {
-      var left = (this.viewport.width - this.deadZone.width) / 2;
-      var right = left + this.deadZone.width;
+      var horizontalDeadZone = Math.min(this.deadZone.width, safeFrame.width);
+      var left = safeFrame.left + (safeFrame.width - horizontalDeadZone) / 2;
+      var right = left + horizontalDeadZone;
       var screenX = target.x - this.x;
       if (screenX < left) this.x = target.x - left;
       else if (screenX > right) this.x = target.x - right;
-      this.x = centeredOrClamped(this.x, this.world.width, this.viewport.width);
+      this.x = centeredOrClamped(this.x, this.world.width, this.viewport.width, this.safeInsets.left, this.safeInsets.right);
     }
-    if (this.world.height <= this.viewport.height) {
-      this.y = centeredOrClamped(this.y, this.world.height, this.viewport.height);
+    if (this.world.height <= safeFrame.height) {
+      this.y = centeredOrClamped(this.y, this.world.height, this.viewport.height, this.safeInsets.top, this.safeInsets.bottom);
     } else {
-      var top = (this.viewport.height - this.deadZone.height) / 2;
-      var bottom = top + this.deadZone.height;
+      var verticalDeadZone = Math.min(this.deadZone.height, safeFrame.height);
+      var top = safeFrame.top + (safeFrame.height - verticalDeadZone) / 2;
+      var bottom = top + verticalDeadZone;
       var screenY = target.y - this.y;
       if (screenY < top) this.y = target.y - top;
       else if (screenY > bottom) this.y = target.y - bottom;
-      this.y = centeredOrClamped(this.y, this.world.height, this.viewport.height);
+      this.y = centeredOrClamped(this.y, this.world.height, this.viewport.height, this.safeInsets.top, this.safeInsets.bottom);
     }
     return this.x !== previousX || this.y !== previousY;
   };
@@ -5768,8 +5806,8 @@
       '  </section>',
       '  <section class="screen game-screen" data-screen="game" data-role="game-screen">',
       '    <canvas data-role="canvas" width="1000" height="1500" aria-label="심해 회수 구역"></canvas>',
-      '    <div class="hud"><div class="hud-line"><button class="pause-control" data-action="pause" aria-label="일시정지"><span class="pause-icon" aria-hidden="true"></span></button><strong data-role="stage-label">1</strong><span><i data-i18n="hud.core">코어</i> <b data-role="core-label">0 / 3</b></span></div><div class="hud-badges"><div class="rival-broadcast" data-role="rival-broadcast" hidden>라이벌 · 탐색</div><div class="sonar-mode-badge" data-role="boosted-sonar-hud" hidden>이번 잠수 · 증폭 소나 장비</div></div><div class="power-track" data-role="power-track" aria-label="잔여 동력"><i data-role="power-bar"></i><span class="power-threshold" aria-hidden="true"></span></div></div>',
-      '    <div class="game-controls" data-role="game-controls" data-sonar-hand="right"><div class="movement-guide" data-role="movement-guide"><b>DRAG</b><span data-i18n="hud.drag">이동 영역</span></div><div class="sonar-track"><i data-role="sonar-bar"></i></div><button class="sonar-button" data-role="sonar-button" data-action="sonar">SONAR<span>TAP</span></button><small data-i18n="hud.move">이 영역이나 플레이 화면을 끌어 이동</small></div>',
+      '    <div class="hud" data-role="game-hud"><div class="hud-line"><button class="pause-control" data-action="pause" aria-label="일시정지"><span class="pause-icon" aria-hidden="true"></span></button><strong data-role="stage-label">1</strong><span><i data-i18n="hud.core">코어</i> <b data-role="core-label">0 / 3</b></span></div><div class="hud-badges"><div class="rival-broadcast" data-role="rival-broadcast" hidden>라이벌 · 탐색</div><div class="sonar-mode-badge" data-role="boosted-sonar-hud" hidden>이번 잠수 · 증폭 소나 장비</div></div><div class="power-track" data-role="power-track" aria-label="잔여 동력"><i data-role="power-bar"></i><span class="power-threshold" aria-hidden="true"></span></div></div>',
+      '    <div class="game-controls" data-role="game-controls" data-sonar-hand="right"><div class="movement-guide" data-role="movement-guide"><b>DRAG</b><span data-i18n="hud.drag">끌어서 이동</span></div><div class="sonar-track"><i data-role="sonar-bar"></i></div><button class="sonar-button" data-role="sonar-button" data-action="sonar">SONAR<span>TAP</span></button><small data-i18n="hud.move">화면 어디서든 끌어서 이동</small></div>',
       '    <div class="pause-panel" data-role="pause-panel" hidden><div><h2 data-role="pause-title">일시정지</h2><p data-role="pause-copy">탐사와 모든 신호가 일시 정지되었습니다.</p><button class="primary" data-action="resume">계속하기</button><button data-action="pause-restart">다시 하기</button><button class="sound-toggle pause-sound-toggle" data-role="pause-sound" data-action="pause-sound" aria-label="소리 끄기" aria-pressed="true" title="소리 끄기">' + soundIcon + '<span class="visually-hidden" data-role="pause-sound-label">소리 끄기</span></button><fieldset class="hand-settings"><legend data-role="pause-hand-legend">소나 버튼 위치</legend><div><button data-action="pause-hand-left" aria-pressed="false">왼쪽</button><button data-action="pause-hand-right" aria-pressed="true">오른쪽</button></div></fieldset><button data-action="abyss-end" hidden>무저갱 종료</button><button data-action="quit">해역으로</button><button data-action="pause-main">메인 화면</button></div></div>',
       '  </section>',
       '  <section class="screen ending-screen" data-screen="ending"><div class="ending-card"><img data-role="ending-seal" alt=""><p class="eyebrow">CAMPAIGN COMPLETE</p><h2 data-role="ending-title">중계망 완전 복구</h2><p data-role="ending-copy">100개의 신호가 다시 이어졌습니다.</p><div class="menu-stack"><button class="primary" data-role="ending-next" data-action="ending-next">다음 난이도 시작</button><button data-action="ending-result">결과 확인</button><button data-action="ending-main">메인으로</button></div></div></section>',
@@ -5799,7 +5837,7 @@
     [
       'title-screen', 'hub-gm-entry', 'hub-sound', 'hub-sound-label', 'settings-language-current', 'hub-actions', 'hub-difficulty', 'hub-progress', 'hub-secondary', 'hub-progress-kicker', 'hub-progress-value',
       'hub-progress-meta', 'hub-progress-stars', 'hub-progress-fill', 'hub-abyss-best', 'pause-sound', 'pause-sound-label',
-      'game-screen', 'canvas', 'zone-tabs', 'stage-list', 'game-controls', 'movement-guide', 'sonar-button',
+      'game-screen', 'canvas', 'zone-tabs', 'stage-list', 'game-hud', 'game-controls', 'movement-guide', 'sonar-button',
       'stage-label', 'core-label', 'rival-broadcast', 'boosted-sonar-hud', 'power-track', 'power-bar', 'sonar-bar', 'pause-panel', 'pause-title', 'pause-copy', 'pause-hand-legend',
       'result-mark', 'result-zone', 'result-title', 'result-message', 'result-campaign-summary', 'result-stars', 'result-credits',
       'result-abyss-summary', 'result-abyss-segments', 'result-abyss-cores', 'result-abyss-survival', 'result-abyss-score', 'ad-overlay', 'ad-copy',
@@ -6686,10 +6724,46 @@
       height: Number(canvas.height) || viewport.height,
       pixels: (Number(canvas.width) || viewport.width) * (Number(canvas.height) || viewport.height)
     };
+    function rectBottom(rect) { return Number.isFinite(rect.bottom) ? rect.bottom : rect.top + rect.height; }
+    function syncCameraSafeArea(canvasRect) {
+      if (!canvasRect || !(canvasRect.height > 0)) return false;
+      var hud = ui.elements['game-hud'];
+      var controls = ui.elements['game-controls'];
+      var canvasBottom = rectBottom(canvasRect);
+      var midpoint = canvasRect.top + canvasRect.height / 2;
+      var topOverlap = 0;
+      var bottomOverlap = 0;
+      if (hud && hud.getBoundingClientRect) {
+        var hudRect = hud.getBoundingClientRect();
+        if (hudRect.top <= midpoint && rectBottom(hudRect) > canvasRect.top) {
+          topOverlap = PP.core.utils.clamp(rectBottom(hudRect) - canvasRect.top, 0, canvasRect.height * 0.45);
+        }
+      }
+      if (controls && controls.getBoundingClientRect) {
+        var controlsRect = controls.getBoundingClientRect();
+        if (rectBottom(controlsRect) >= midpoint && controlsRect.top < canvasBottom) {
+          bottomOverlap = PP.core.utils.clamp(canvasBottom - controlsRect.top, 0, canvasRect.height * 0.45);
+        }
+      }
+      var scale = viewport.height / canvasRect.height;
+      var margin = 24;
+      var changed = camera.setSafeInsets({
+        top: topOverlap > 0 ? topOverlap * scale + margin : 0,
+        bottom: bottomOverlap > 0 ? bottomOverlap * scale + margin : 0,
+        left: 0,
+        right: 0
+      });
+      if (changed) {
+        if (stage && stage.player) camera.follow(stage.player);
+        requestWorldRender();
+      }
+      return changed;
+    }
     function syncCanvasBackingResolution() {
       if (!canvas || !gameScreenVisible || !canvas.getBoundingClientRect) return false;
       var rect = canvas.getBoundingClientRect();
       if (!(rect.width > 0) || !(rect.height > 0)) return false;
+      var safeAreaChanged = syncCameraSafeArea(rect);
       var resolved = PP.core.utils.resolveCanvasBackingSize(
         rect.width,
         rect.height,
@@ -6699,7 +6773,7 @@
       );
       var changed = canvas.width !== resolved.width || canvas.height !== resolved.height;
       canvasBacking = resolved;
-      if (!changed) return false;
+      if (!changed) return safeAreaChanged;
       canvas.width = resolved.width;
       canvas.height = resolved.height;
       backgroundGradient = null;
@@ -6716,6 +6790,12 @@
     window.addEventListener('orientationchange', syncCanvasBackingResolution);
     if (window.visualViewport && window.visualViewport.addEventListener) {
       window.visualViewport.addEventListener('resize', syncCanvasBackingResolution);
+    }
+    if (typeof window.ResizeObserver === 'function') {
+      var safeAreaObserver = new window.ResizeObserver(syncCanvasBackingResolution);
+      [canvas, ui.elements['game-hud'], ui.elements['game-controls']].forEach(function (element) {
+        if (element) safeAreaObserver.observe(element);
+      });
     }
     var input = new PP.core.Input(canvas, ui.elements['movement-guide'], function () {
       var onboardingOpen = pendingOnboardingStageId > 0 && !ui.elements['onboarding-panel'].hidden;
@@ -6743,6 +6823,7 @@
             worldWidth: camera.world.width, worldHeight: camera.world.height,
             viewportWidth: camera.viewport.width, viewportHeight: camera.viewport.height
           },
+          cameraSafeArea: camera.getSafeFrame(),
           pendingStageId: pendingCampaignStart ? pendingCampaignStart.definition.id : 0,
           sonarHand: save.settings.sonarHand,
           bgm: bgm.state(),
@@ -7342,7 +7423,7 @@
     }
     var stagePrewarmTasks = {};
     function stageImageIds(definition) {
-      var ids = ['entity-player-recovery-drone', 'entity-resonance-core', 'entity-player-relay-gate', 'effect-impact-fracture'];
+      var ids = ['entity-player-recovery-drone', 'entity-resonance-core', 'entity-player-relay-gate', 'effect-impact-fracture', 'ui-marker-core', 'ui-marker-relay-exit'];
       function add(id) { if (id && ids.indexOf(id) < 0) ids.push(id); }
       var background = backgroundImageId(definition);
       add(background);
@@ -8030,6 +8111,35 @@
         && entity.y + radius >= camera.y
         && entity.y - radius <= camera.y + camera.viewport.height;
     }
+    function drawCoveredObjectiveMarker(entity, assetId, color) {
+      var screen = camera.worldToScreen(entity);
+      var safe = camera.getSafeFrame(34);
+      var insideViewport = screen.x >= 0 && screen.x <= camera.viewport.width
+        && screen.y >= 0 && screen.y <= camera.viewport.height;
+      var insideSafeFrame = screen.x >= safe.left && screen.x <= safe.right
+        && screen.y >= safe.top && screen.y <= safe.bottom;
+      if (!insideViewport || insideSafeFrame) return false;
+      var markerX = PP.core.utils.clamp(screen.x, safe.left, safe.right);
+      var markerY = PP.core.utils.clamp(screen.y, safe.top, safe.bottom);
+      if (!drawImage(assetId, markerX, markerY, 52, 52, 0, 0.94)) {
+        context.save();
+        context.fillStyle = color;
+        context.strokeStyle = '#03141f';
+        context.lineWidth = 6;
+        context.beginPath();
+        context.arc(markerX, markerY, 17, 0, Math.PI * 2);
+        context.fill(); context.stroke(); context.restore();
+      }
+      return true;
+    }
+    function drawCoveredObjectiveMarkers(visibleFreeCores) {
+      if (PP.systems.relayDiscovered(stage)) {
+        drawCoveredObjectiveMarker(stage.relay, 'ui-marker-relay-exit', '#57e3d6');
+      }
+      visibleFreeCores.forEach(function (core) {
+        drawCoveredObjectiveMarker(core, 'ui-marker-core', '#ffd369');
+      });
+    }
     function firstParticleCoordinate(origin, spacing, minimum) {
       return origin + Math.max(0, Math.ceil((minimum - origin) / spacing)) * spacing;
     }
@@ -8194,8 +8304,10 @@
         if (zone.environmentKind === 'decoyWave' && zone.activated && !zone.resolved) drawCoreSignal(zone, 'free');
       });
 
+      var visibleFreeCores = [];
       stage.cores.forEach(function (core) {
         if (core.owner === 'player' || core.owner === 'extracted' || !coreVisible(core)) return;
+        if (core.owner === 'free') visibleFreeCores.push(core);
         drawCoreSignal(core, core.owner);
       });
       stage.guardians.forEach(function (guardian) {
@@ -8264,6 +8376,7 @@
         if (!drawImage('effect-impact-fracture', player.x, player.y, 210, 210, stage.elapsed * 8, impactAlpha)) drawRing(player.x, player.y, 82 + (1 - impactAlpha) * 70, '#ff786f', 12, impactAlpha);
       }
       ctx.restore();
+      drawCoveredObjectiveMarkers(visibleFreeCores);
       if (impactAlpha > 0) {
         var vignette = ctx.createRadialGradient(viewW / 2, viewH / 2, viewW * 0.18, viewW / 2, viewH / 2, viewH * 0.68);
         vignette.addColorStop(0, 'rgba(255,40,30,0)'); vignette.addColorStop(1, 'rgba(120,0,0,' + (impactAlpha * 0.56) + ')');
