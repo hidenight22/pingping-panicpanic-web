@@ -94,6 +94,14 @@ button.primary { border: 0; background: linear-gradient(135deg, var(--cyan), #64
 .title-orbit::after { inset: 38%; background: var(--cyan); box-shadow: 0 0 30px var(--cyan); }
 .title-orbit i { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 14px var(--gold); }
 .title-orbit i:nth-child(1) { left: 9%; top: 46%; }.title-orbit i:nth-child(2) { right: 14%; top: 25%; }.title-orbit i:nth-child(3) { right: 24%; bottom: 10%; }
+@supports (container-type: size) and (width: 1cqh) {
+  .hub-art-spacer { container-type: size; }
+  .title-orbit {
+    --title-orbit-size: clamp(0px, calc(100cqh - 8px), min(42vw, 170px));
+    width: var(--title-orbit-size);
+    height: var(--title-orbit-size);
+  }
+}
 .hub-actions { display: flex; flex: 0 0 auto; flex-direction: column; min-height: 0; }
 .hub-actions button { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .hub-difficulty { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-bottom: 8px; }
@@ -377,7 +385,7 @@ button[data-attention="true"]::after { content: ""; position: absolute; z-index:
   .hub-brand { min-height: 36px; padding: 0 2px 3px; }
   .hub-brand .eyebrow, .hub-brand > p:last-child, .hub-title-tail { display: none; }
   .hub-brand h1 { font-size: clamp(27px, 7.8vw, 34px); white-space: nowrap; }
-  .hub-art-spacer { display: none; }
+  .hub-art-spacer { display: block; min-height: 18px; }
   .hub-progress { min-height: 70px; margin-bottom: 4px; padding: 7px 10px; }
   .hub-primary, .hub-secondary { margin-bottom: 4px; }
   .hub-primary { min-height: 48px; }
@@ -407,7 +415,7 @@ button[data-attention="true"]::after { content: ""; position: absolute; z-index:
 @media (max-height: 560px) {
   .hub-brand { min-height: 34px; }
   .hub-brand .eyebrow, .hub-brand > p:last-child { display: none; }
-  .hub-art-spacer { display: none; }
+  .hub-art-spacer { display: block; min-height: 12px; }
   .hub-abyss-best { font-size: 9px; }
 }
 
@@ -440,7 +448,7 @@ button[data-attention="true"]::after { content: ""; position: absolute; z-index:
   .hub-screen[data-hub-menu="expanded"] .hub-brand > p:last-child,
   .hub-screen[data-hub-menu="expanded"] .hub-title-tail { display: none; }
   .hub-screen[data-hub-menu="expanded"] .hub-brand h1 { font-size: clamp(27px, 7.4vw, 34px); white-space: nowrap; }
-  .hub-screen[data-hub-menu="expanded"] .hub-art-spacer { display: none; }
+  .hub-screen[data-hub-menu="expanded"] .hub-art-spacer { display: block; min-height: 18px; }
   .hub-screen[data-hub-menu="expanded"] .hub-progress { min-height: 68px; padding: 6px 10px; }
   .hub-screen[data-hub-menu="expanded"] .hub-difficulty { margin-bottom: 4px; padding: 3px; }
   .hub-screen[data-hub-menu="expanded"] .hub-primary,

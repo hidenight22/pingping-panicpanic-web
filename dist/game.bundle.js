@@ -4,7 +4,7 @@
   'use strict';
 
   var app = global.PingPanic || {};
-  app.version = '0.7.7';
+  app.version = '0.7.10';
   app.data = app.data || {};
   app.core = app.core || {};
   app.entities = app.entities || {};
@@ -2865,9 +2865,11 @@
   };
   Player.prototype.damage = function (amount, source, force) {
     if (!force && this.invulnerable > 0) return false;
-    this.power = Math.max(0, this.power - amount);
+    var numericAmount = Number(amount);
+    var finalAmount = Number.isFinite(numericAmount) ? Math.max(0, Math.floor(numericAmount)) : 0;
+    this.power = Math.max(0, this.power - finalAmount);
     this.invulnerable = PP.data.config.player.invulnerableSeconds;
-    this.damageEvents.push({ amount: amount, source: source || 'unknown' });
+    this.damageEvents.push({ amount: finalAmount, source: source || 'unknown' });
     return true;
   };
   Player.prototype.forceDamage = function (amount, source) { return this.damage(amount, source, true); };
@@ -4342,7 +4344,7 @@
       guardian.baseSpeed = guardian.speed;
       guardian.baseDamage = guardian.damage;
       guardian.speed *= difficultyProfile.enemySpeedMultiplier;
-      guardian.damage *= difficultyProfile.enemyDamageMultiplier;
+      guardian.damage = Math.floor(guardian.damage * difficultyProfile.enemyDamageMultiplier);
       guardians.push(guardian);
     }
     var rival = definition.rivalPreset ? new PP.entities.Rival(rivalAnchor.x, rivalAnchor.y, definition.rivalPreset) : null;
@@ -7514,7 +7516,7 @@
     }
     var stagePrewarmTasks = {};
     function stageImageIds(definition) {
-      var ids = ['entity-player-recovery-drone', 'entity-resonance-core', 'entity-player-relay-gate', 'effect-impact-fracture', 'ui-marker-core', 'ui-marker-relay-exit'];
+      var ids = ['entity-player-recovery-drone', 'entity-resonance-core', 'entity-player-relay-gate', 'effect-impact-fracture'];
       function add(id) { if (id && ids.indexOf(id) < 0) ids.push(id); }
       var background = backgroundImageId(definition);
       add(background);
@@ -8205,35 +8207,6 @@
         && entity.y + radius >= camera.y
         && entity.y - radius <= camera.y + camera.viewport.height;
     }
-    function drawCoveredObjectiveMarker(entity, assetId, color) {
-      var screen = camera.worldToScreen(entity);
-      var safe = camera.getSafeFrame(34);
-      var insideViewport = screen.x >= 0 && screen.x <= camera.viewport.width
-        && screen.y >= 0 && screen.y <= camera.viewport.height;
-      var insideSafeFrame = screen.x >= safe.left && screen.x <= safe.right
-        && screen.y >= safe.top && screen.y <= safe.bottom;
-      if (!insideViewport || insideSafeFrame) return false;
-      var markerX = PP.core.utils.clamp(screen.x, safe.left, safe.right);
-      var markerY = PP.core.utils.clamp(screen.y, safe.top, safe.bottom);
-      if (!drawImage(assetId, markerX, markerY, 52, 52, 0, 0.94)) {
-        context.save();
-        context.fillStyle = color;
-        context.strokeStyle = '#03141f';
-        context.lineWidth = 6;
-        context.beginPath();
-        context.arc(markerX, markerY, 17, 0, Math.PI * 2);
-        context.fill(); context.stroke(); context.restore();
-      }
-      return true;
-    }
-    function drawCoveredObjectiveMarkers(visibleFreeCores) {
-      if (PP.systems.relayDiscovered(stage)) {
-        drawCoveredObjectiveMarker(stage.relay, 'ui-marker-relay-exit', '#57e3d6');
-      }
-      visibleFreeCores.forEach(function (core) {
-        drawCoveredObjectiveMarker(core, 'ui-marker-core', '#ffd369');
-      });
-    }
     function firstParticleCoordinate(origin, spacing, minimum) {
       return origin + Math.max(0, Math.ceil((minimum - origin) / spacing)) * spacing;
     }
@@ -8398,10 +8371,8 @@
         if (zone.environmentKind === 'decoyWave' && zone.activated && !zone.resolved) drawCoreSignal(zone, 'free');
       });
 
-      var visibleFreeCores = [];
       stage.cores.forEach(function (core) {
         if (core.owner === 'player' || core.owner === 'extracted' || !coreVisible(core)) return;
-        if (core.owner === 'free') visibleFreeCores.push(core);
         drawCoreSignal(core, core.owner);
       });
       stage.guardians.forEach(function (guardian) {
@@ -8475,7 +8446,6 @@
         if (!drawImage('effect-impact-fracture', player.x, player.y, 210, 210, stage.elapsed * 8, impactAlpha)) drawRing(player.x, player.y, 82 + (1 - impactAlpha) * 70, '#ff786f', 12, impactAlpha);
       }
       ctx.restore();
-      drawCoveredObjectiveMarkers(visibleFreeCores);
       if (impactAlpha > 0) {
         var vignette = ctx.createRadialGradient(viewW / 2, viewH / 2, viewW * 0.18, viewW / 2, viewH / 2, viewH * 0.68);
         vignette.addColorStop(0, 'rgba(255,40,30,0)'); vignette.addColorStop(1, 'rgba(120,0,0,' + (impactAlpha * 0.56) + ')');
